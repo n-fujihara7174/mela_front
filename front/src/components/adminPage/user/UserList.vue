@@ -61,7 +61,8 @@ export default {
       users: [],
       searchParam: {
         userName: null,
-        userId: null
+        userId: null,
+        status: null
       }
     }
   },
@@ -97,7 +98,10 @@ export default {
     searchUsers: async function () {
       const result = await axios.get('http://localhost:3000/users', {
         params: {
-          searchParam: this.searchParam
+          user_name: this.searchParam.userName,
+          user_id: this.searchParam.userId,
+          delete: this.searchParam.status,
+          is_search: 'True'
         }
       })
       this.books = result.data
