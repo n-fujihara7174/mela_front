@@ -1,0 +1,37 @@
+tr,th,td {
+  border-collapse: collapse;
+  border:1px solid;
+  border-color: #d3d3d3;
+  padding: 10px;
+}
+
+.user-list {
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+.user-list-wrapper {
+  width: 3500px;
+}
+
+.table-header {
+  background-color: #1E90FF;
+  color: #DCDCDC;
+}
+
+.id {
+  width: 80px;
+}
+
+.user-name, .display-user-id, .phone-number{
+  width: 200px;
+}
+
+.self-introduction, .email, .image {
+  width: 500px;
+}
+
+.birthday {
+  width: 110px;
+}
+

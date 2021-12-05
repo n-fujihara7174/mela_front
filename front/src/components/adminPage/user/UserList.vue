@@ -1,26 +1,35 @@
 <template>
   <div id="UserList" class="user-list">
     <h2>ユーザー一覧</h2>
-    <div>
+    <div class="user-list-wrapper">
+      <div class="serch-wrapper">
+        <div class="serch-user-name">
+          <label>ユーザー名</label>
+          <input v-model="searchParam.userName">
+          <label>{{ searchParam.userName }}</label>
+          <button @click="searchUsers" >送信</button>
+        </div>
+      </div>
       <table>
-        <tr>
-          <th>id</th>
-          <th>ユーザー名</th>
-          <th>表示用ユーザーID</th>
-          <th>自己紹介</th>
-          <th>メアド</th>
-          <th>電話番号</th>
-          <th>生年月日</th>
-          <th>画像</th>
-          <th>いいね通知</th>
-          <th>コメント通知</th>
-          <th>メッセージ通知</th>
-          <th>カレンダー通知</th>
-          <th>削除フラグ</th>
-          <th>登録日時</th>
-          <th>更新日時</th>
+        <tr class="table-header">
+          <th class="id">id</th>
+          <th class="user-name">ユーザー名</th>
+          <th class="display-user-id">表示用ユーザーID</th>
+          <th class="self-introduction">自己紹介</th>
+          <th class="email">メールアドレス</th>
+          <th class="phone-number">電話番号</th>
+          <th class="birthday">生年月日</th>
+          <th class="image">画像</th>
+          <th class="like">いいね通知</th>
+          <th class="comment">コメント通知</th>
+          <th class="message">メッセージ通知</th>
+          <th class="calender">カレンダー通知</th>
+          <th class="is_delete">削除</th>
+          <th class="created-at">登録日時</th>
+          <th class="updated-at">更新日時</th>
         </tr>
         <tr v-for="(user, index) in users" :key="index">
+          <td>{{ user.id }}</td>
           <td>{{ user.user_name }}</td>
           <td>{{ user.display_user_id }}</td>
           <td>{{ user.self_introduction }}</td>
@@ -28,11 +37,11 @@
           <td>{{ user.phone_number }}</td>
           <td>{{ user.birthday }}</td>
           <td>{{ user.image }}</td>
-          <td>{{ user.can_like_notification }}</td>
-          <td>{{ user.can_coment_notification }}</td>
-          <td>{{ user.can_message_notification }}</td>
-          <td>{{ user.can_calender_notification }}</td>
-          <td>{{ user.is_delete }}</td>
+          <td>{{ judgeFlag(user.can_like_notification) }}</td>
+          <td>{{ judgeFlag(user.can_comment_notification) }}</td>
+          <td>{{ judgeFlag(user.can_message_notification) }}</td>
+          <td>{{ judgeFlag(user.can_calender_notification) }}</td>
+          <td>{{ judgeDelete(user.is_delete) }}</td>
           <td>{{ user.created_at }}</td>
           <td>{{ user.updated_at }}</td>
         </tr>
@@ -51,9 +60,8 @@ export default {
     return {
       users: [],
       searchParam: {
-        name: null,
-        product: null,
-        author: null
+        userName: null,
+        userId: null
       }
     }
   },
@@ -71,19 +79,30 @@ export default {
     fetchUsers: async function () {
       const result = await axios.get('http://localhost:3000/users')
       this.users = result.data
+    },
+    judgeFlag: function (flag) {
+      if (flag) {
+        return '◯'
+      } else {
+        return ''
+      }
+    },
+    judgeDelete: function (flag) {
+      if (flag) {
+        return '削除'
+      } else {
+        return ''
+      }
+    },
+    searchUsers: async function () {
+      const result = await axios.get('http://localhost:3000/users', {
+        params: {
+          searchParam: this.searchParam
+        }
+      })
+      this.books = result.data
     }
-    /* searchBooks: async function(){
-        const result = await axios.get('http://localhost:3000/books',{
-          params: {
-            searchName: this.searchParam.name,
-            searchProduct: this.searchParam.product,
-            searchAuthor: this.searchParam.author,
-            searchFlg: "検索"
-          }
-        })
-          this.books = result.data;
-        },
-    goToRegisterBook: function(){
+    /* goToRegisterBook: function(){
             this.$router.push("/CreateBook");
             this.$router.forward();
         } */
@@ -91,25 +110,6 @@ export default {
 }
 </script>
 
-<style>
-main {
-  display: -webkit-flex;
-  display: flex;
-  flex-wrap: nowrap;
-  height: 100%;
-}
-.card {
-  width: 300px;
-  margin: 0 20px;
-  margin-bottom: 30px;
-}
-.book-index {
-  height: 95vh;
-}
-.card-contents {
-  margin-left: 0px;
-}
-.card {
-  height: 40vh;
-}
+<style scoped>
+@import '../../../css/adminPage/user/listStyle.css';
 </style>
