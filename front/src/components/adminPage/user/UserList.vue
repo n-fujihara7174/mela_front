@@ -96,15 +96,16 @@ export default {
       }
     },
     searchUsers: async function () {
-      const result = await axios.get('http://localhost:3000/users', {
-        params: {
-          user_name: this.searchParam.userName,
-          user_id: this.searchParam.userId,
-          delete: this.searchParam.status,
-          is_search: 'True'
-        }
-      })
-      this.books = result.data
+      if (this.searchParam.userName != null || this.searchParam.usreId != null || this.searchParam.isDelete != null) {
+        const result = await axios.get('http://localhost:3000/users', {
+          params: {
+            user_name: this.searchParam.userName,
+            user_id: this.searchParam.userId,
+            is_delete: this.searchParam.isDelete
+          }
+        })
+        this.books = result.data
+      }
     }
     /* goToRegisterBook: function(){
             this.$router.push("/CreateBook");
