@@ -6,46 +6,47 @@
         <div class="serch-user-name">
           <label>ユーザー名</label>
           <input v-model="searchParam.userName">
-          <label>{{ searchParam.userName }}</label>
           <button @click="searchUsers" >送信</button>
         </div>
       </div>
-      <table>
-        <tr class="table-header">
-          <th class="id">id</th>
-          <th class="user-name">ユーザー名</th>
-          <th class="display-user-id">表示用ユーザーID</th>
-          <th class="self-introduction">自己紹介</th>
-          <th class="email">メールアドレス</th>
-          <th class="phone-number">電話番号</th>
-          <th class="birthday">生年月日</th>
-          <th class="image">画像</th>
-          <th class="like">いいね通知</th>
-          <th class="comment">コメント通知</th>
-          <th class="message">メッセージ通知</th>
-          <th class="calender">カレンダー通知</th>
-          <th class="is_delete">削除</th>
-          <th class="created-at">登録日時</th>
-          <th class="updated-at">更新日時</th>
-        </tr>
-        <tr v-for="(user, index) in users" :key="index">
-          <td>{{ user.id }}</td>
-          <td>{{ user.user_name }}</td>
-          <td>{{ user.display_user_id }}</td>
-          <td>{{ user.self_introduction }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.phone_number }}</td>
-          <td>{{ user.birthday }}</td>
-          <td>{{ user.image }}</td>
-          <td>{{ judgeFlag(user.can_like_notification) }}</td>
-          <td>{{ judgeFlag(user.can_comment_notification) }}</td>
-          <td>{{ judgeFlag(user.can_message_notification) }}</td>
-          <td>{{ judgeFlag(user.can_calender_notification) }}</td>
-          <td>{{ judgeDelete(user.is_delete) }}</td>
-          <td>{{ user.created_at }}</td>
-          <td>{{ user.updated_at }}</td>
-        </tr>
-      </table>
+      <template>
+        <table>
+          <tr class="table-header">
+            <th class="id">id</th>
+            <th class="user-name">ユーザー名</th>
+            <th class="display-user-id">表示用ユーザーID</th>
+            <th class="self-introduction">自己紹介</th>
+            <th class="email">メールアドレス</th>
+            <th class="phone-number">電話番号</th>
+            <th class="birthday">生年月日</th>
+            <th class="image">画像</th>
+            <th class="like">いいね通知</th>
+            <th class="comment">コメント通知</th>
+            <th class="message">メッセージ通知</th>
+            <th class="calender">カレンダー通知</th>
+            <th class="is_delete">削除</th>
+            <th class="created-at">登録日時</th>
+            <th class="updated-at">更新日時</th>
+          </tr>
+          <tr v-for="(user, index) in users" :key="index">
+            <td>{{ user.id }}</td>
+            <td>{{ user.user_name }}</td>
+            <td>{{ user.display_user_id }}</td>
+            <td>{{ user.self_introduction }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phone_number }}</td>
+            <td>{{ user.birthday }}</td>
+            <td>{{ user.image }}</td>
+            <td>{{ judgeFlag(user.can_like_notification) }}</td>
+            <td>{{ judgeFlag(user.can_comment_notification) }}</td>
+            <td>{{ judgeFlag(user.can_message_notification) }}</td>
+            <td>{{ judgeFlag(user.can_calender_notification) }}</td>
+            <td>{{ judgeDelete(user.is_delete) }}</td>
+            <td>{{ user.created_at }}</td>
+            <td>{{ user.updated_at }}</td>
+          </tr>
+        </table>
+        </template>
     </div>
   </div>
 </template>
@@ -63,7 +64,8 @@ export default {
         userName: null,
         userId: null,
         status: null
-      }
+      },
+      testValue: 'テスト'
     }
   },
   // 実行するメソッドを定義？
@@ -104,7 +106,7 @@ export default {
             is_delete: this.searchParam.isDelete
           }
         })
-        this.books = result.data
+        this.$set(this.books = result.data)
       }
     }
     /* goToRegisterBook: function(){
