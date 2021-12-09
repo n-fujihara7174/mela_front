@@ -4,8 +4,8 @@
     <div class="user-list-wrapper">
       <div class="serch-wrapper">
         <div class="serch-user-name">
-          <label>ユーザー名</label>
-          <input v-model="searchParam.userName">
+          <label>ユーザーID、メールアドレス</label>
+          <input v-model="searchParam.userIdOrEmail">
           <button @click="searchUsers" >送信</button>
         </div>
       </div>
@@ -13,12 +13,13 @@
         <tr class="table-header">
           <th class="id">id</th>
           <th class="user-name">ユーザー名</th>
-          <th class="display-user-id">表示用ユーザーID</th>
+          <th class="user-id">表示用ユーザーID</th>
           <th class="self-introduction">自己紹介</th>
           <th class="email">メールアドレス</th>
           <th class="phone-number">電話番号</th>
           <th class="birthday">生年月日</th>
           <th class="image">画像</th>
+          <th class="post-count">投稿数</th>
           <th class="like">いいね通知</th>
           <th class="comment">コメント通知</th>
           <th class="message">メッセージ通知</th>
@@ -36,6 +37,7 @@
           <td>{{ user.phone_number }}</td>
           <td>{{ user.birthday }}</td>
           <td>{{ user.image }}</td>
+          <th>{{ user.post_count }}</th>
           <td>{{ judgeFlag(user.can_like_notification) }}</td>
           <td>{{ judgeFlag(user.can_comment_notification) }}</td>
           <td>{{ judgeFlag(user.can_message_notification) }}</td>
@@ -59,11 +61,8 @@ export default {
     return {
       users: [],
       searchParam: {
-        userName: null,
-        userId: null,
-        status: null
-      },
-      testValue: 'テスト'
+        userIdOrEmail: null
+      }
     }
   },
   // 実行するメソッドを定義？
@@ -96,16 +95,13 @@ export default {
       }
     },
     searchUsers: async function () {
-      if (this.searchParam.userName != null || this.searchParam.usreId != null || this.searchParam.isDelete != null) {
+      if (this.searchParam.userIdOrEmail != null) {
         const result = await axios.get('http://localhost:3000/users', {
           params: {
-            user_name: this.searchParam.userName,
-            user_id: this.searchParam.userId,
-            is_delete: this.searchParam.isDelete
+            user_id_or_email: this.searchParam.userIdOrEmail
           }
         })
         this.users = { ...result.data }
-        console.log(this.users)
       }
     }
     /* goToRegisterBook: function(){
