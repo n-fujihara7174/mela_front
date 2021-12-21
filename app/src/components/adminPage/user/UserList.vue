@@ -5,8 +5,8 @@
       <div class="serch-wrapper">
         <div class="serch-user-name">
           <label>ユーザーID、メールアドレス</label>
-          <input v-model="searchParam.userIdOrEmail">
-          <button @click="searchUsers" >送信</button>
+          <input v-model="refState.searchParam.userIdOrEmail" />
+          <button @click="searchUsers">送信</button>
         </div>
       </div>
       <table>
@@ -28,10 +28,10 @@
           <th class="created-at">登録日時</th>
           <th class="updated-at">更新日時</th>
         </tr>
-        <tr v-for="(user, index) in users" :key="index">
+        <tr v-for="(user, index) in refState.users" :key="index">
           <td>{{ user.id }}</td>
           <td>{{ user.user_name }}</td>
-          <td>{{ user.display_user_id }}</td>
+          <td>{{ user.user_id }}</td>
           <td>{{ user.self_introduction }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.phone_number }}</td>
@@ -51,66 +51,95 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /* eslint-disable no-console */
-import axios from 'axios'
-export default {
-  // ここの書き方があやふや
-  data: function () {
-    return {
-      users: [],
-      searchParam: {
-        userIdOrEmail: null
-      }
-    }
-  },
-  // 実行するメソッドを定義？
-  mounted: function () {
-    this.fetchUsers()
-  },
-  /* computed:{
-        FilterBook: function(){
-            return this.books.filter(book => book.delete_flg == false)
-        }
-    }, */
-  // メソッド定義する場所
-  methods: {
-    fetchUsers: async function () {
-      const result = await axios.get('http://localhost:3000/users')
-      this.users = { ...result.data }
-    },
-    judgeFlag: function (flag) {
-      if (flag) {
-        return '◯'
-      } else {
-        return ''
-      }
-    },
-    judgeDelete: function (flag) {
-      if (flag) {
-        return '削除'
-      } else {
-        return ''
-      }
-    },
-    searchUsers: async function () {
-      if (this.searchParam.userIdOrEmail != null) {
-        const result = await axios.get('http://localhost:3000/users', {
-          params: {
-            user_id_or_email: this.searchParam.userIdOrEmail
-          }
-        })
-        this.users = { ...result.data }
-      }
-    }
-    /* goToRegisterBook: function(){
-            this.$router.push("/CreateBook");
-            this.$router.forward();
-        } */
-  }
+import { defineComponent, reactive, onMounted } from "vue";
+import axios from "axios";
+
+interface User {
+  id: number;
+  user_name: string;
+  user_id: string;
+  self_introduction: string;
+  email: string;
+  phone_number: number;
+  birthday: Date;
+  image: string;
+  post_count: number;
+  can_like_notification: boolean;
+  can_comment_notification: boolean;
+  can_message_notification: boolean;
+  can_calender_notification: boolean;
+  is_delete: boolean;
+  created_at: Date;
+  updated_at: Date;
 }
+
+interface SearchParam {
+  userIdOrEmail: string;
+}
+
+interface State {
+  searchParam: SearchParam;
+  users: Array<User>;
+}
+
+export default defineComponent({
+  setup() {
+    const searchParamInit: SearchParam = {
+      userIdOrEmail: "",
+    };
+
+    const refState = reactive<State>({
+      searchParam: searchParamInit,
+      users: [],
+    });
+
+    const fetchUsers = async () => {
+      const result = await axios.get("http://localhost:3000/users");
+      refState.users = { ...result.data };
+    };
+
+    onMounted(fetchUsers)
+
+    const searchUsers = async () => {
+      if (refState.searchParam.userIdOrEmail != null) {
+        const result = await axios.get("http://localhost:3000/users", {
+          params: {
+            user_id_or_email: refState.searchParam.userIdOrEmail,
+          },
+        });
+        refState.users = { ...result.data };
+      }
+    };
+
+    const judgeFlag = (flag: boolean) => {
+      if (flag) {
+        return "◯";
+      } else {
+        return "";
+      }
+    };
+
+    const judgeDelete = (flag: boolean) => {
+      if (flag) {
+        return "削除";
+      } else {
+        return "";
+      }
+    };
+
+    return {
+      refState,
+      fetchUsers,
+      judgeFlag,
+      judgeDelete,
+      searchUsers,
+    };
+  },
+});
 </script>
 
 <style scoped>
-@import '../../../css/adminPage/user/listStyle.css';
+@import "../../../css/adminPage/user/listStyle.css";
 </style>
