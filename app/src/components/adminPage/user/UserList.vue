@@ -5,7 +5,7 @@
       <div class="serch-wrapper">
         <div class="serch-user-name">
           <label>ユーザーID、メールアドレス</label>
-          <input v-model="refState.searchParam.userIdOrEmail" />
+          <input v-model="refState.searchValue.userIdOrEmail" />
           <button @click="searchUsers">送信</button>
         </div>
       </div>
@@ -13,7 +13,7 @@
         <tr class="table-header">
           <th class="id">id</th>
           <th class="user-name">ユーザー名</th>
-          <th class="user-id">表示用ユーザーID</th>
+          <th class="user-id">ユーザーID</th>
           <th class="self-introduction">自己紹介</th>
           <th class="email">メールアドレス</th>
           <th class="phone-number">電話番号</th>
@@ -55,43 +55,26 @@
 /* eslint-disable no-console */
 import { defineComponent, reactive, onMounted } from "vue";
 import axios from "axios";
+import {User} from "@/types/User"
 
-interface User {
-  id: number;
-  user_name: string;
-  user_id: string;
-  self_introduction: string;
-  email: string;
-  phone_number: number;
-  birthday: Date;
-  image: string;
-  post_count: number;
-  can_like_notification: boolean;
-  can_comment_notification: boolean;
-  can_message_notification: boolean;
-  can_calender_notification: boolean;
-  is_delete: boolean;
-  created_at: Date;
-  updated_at: Date;
-}
-
-interface SearchParam {
+//検索
+interface SearchValue {
   userIdOrEmail: string;
 }
 
 interface State {
-  searchParam: SearchParam;
+  searchValue: SearchValue;
   users: Array<User>;
 }
 
 export default defineComponent({
   setup() {
-    const searchParamInit: SearchParam = {
+    const searchValueInit: SearchValue = {
       userIdOrEmail: "",
     };
 
     const refState = reactive<State>({
-      searchParam: searchParamInit,
+      searchValue: searchValueInit,
       users: [],
     });
 
@@ -103,10 +86,10 @@ export default defineComponent({
     onMounted(fetchUsers)
 
     const searchUsers = async () => {
-      if (refState.searchParam.userIdOrEmail != null) {
+      if (refState.searchValue.userIdOrEmail != null) {
         const result = await axios.get("http://localhost:3000/users", {
           params: {
-            user_id_or_email: refState.searchParam.userIdOrEmail,
+            user_id_or_email: refState.searchValue.userIdOrEmail,
           },
         });
         refState.users = { ...result.data };
