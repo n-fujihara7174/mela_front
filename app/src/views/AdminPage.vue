@@ -3,7 +3,7 @@
     <div id="header">
       <Header></Header>
     </div>
-    <div class="main-contents">
+    <div class="main-contents mt-3">
       <router-view />
     </div>
   </div>

@@ -4,54 +4,32 @@
       <h2>ユーザー一覧</h2>
     </div>
     <div class="user-list-wrapper">
-      <div class="serch-wrapper row">
+      <!-- <div class="serch-wrapper row mb-4">
         <div class="serch-user-name col-1">
           <label class="search-parameter-label small">ユーザーID、メールアドレス</label>
           <input v-model="refState.searchValue.userIdOrEmail" />
         </div>
-        <div class="col-xxl-2">
+        <div class="col-1 d-flex align-items-end">
           <button @click="searchUsers">検索</button>
         </div>
-      </div>
-      <table class="table table-striped">
+      </div> -->
+      <table class="table table-hover table-sm shadow">
         <thead>
-          <tr class="table-header">
-            <th class="id">id</th>
-            <th class="user-name">ユーザー名</th>
-            <th class="user-id">ユーザーID</th>
-            <th class="self-introduction">自己紹介</th>
-            <th class="email">メールアドレス</th>
-            <th class="phone-number">電話番号</th>
-            <th class="birthday">生年月日</th>
-            <th class="image">画像</th>
-            <th class="post-count">投稿数</th>
-            <th class="like">いいね通知</th>
-            <th class="comment">コメント通知</th>
-            <th class="message">メッセージ通知</th>
-            <th class="calender">カレンダー通知</th>
-            <th class="is_delete">削除</th>
-            <th class="created-at">登録日時</th>
-            <th class="updated-at">更新日時</th>
+          <tr>
+            <th class="user-name px-3">ユーザー名</th>
+            <th class="user-id px-3">ユーザーID</th>
+            <th class="email px-3">メールアドレス</th>
+            <th class="phone-number px-3">電話番号</th>
+            <th class="is_delete px-3">削除</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(user, index) in refState.users" :key="index">
-          <td>{{ user.id }}</td>
-          <td>{{ user.user_name }}</td>
-          <td>{{ user.user_id }}</td>
-          <td>{{ user.self_introduction }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.phone_number }}</td>
-          <td>{{ user.birthday }}</td>
-          <td>{{ user.image }}</td>
-          <th>{{ user.post_count }}</th>
-          <td>{{ judgeFlag(user.can_like_notification) }}</td>
-          <td>{{ judgeFlag(user.can_comment_notification) }}</td>
-          <td>{{ judgeFlag(user.can_message_notification) }}</td>
-          <td>{{ judgeFlag(user.can_calender_notification) }}</td>
-          <td>{{ judgeDelete(user.is_delete) }}</td>
-          <td>{{ user.created_at }}</td>
-          <td>{{ user.updated_at }}</td>
+          <td class="px-3">{{ user.user_name }}</td>
+          <td class="px-3">{{ user.user_id }}</td>
+          <td class="px-3">{{ user.email }}</td>
+          <td class="px-3">{{ user.phone_number }}</td>
+          <td class="px-3">{{ judgeDelete(user.is_delete) }}</td>
         </tr>
         </tbody>
       </table>
@@ -132,41 +110,37 @@ export default defineComponent({
 </script>
 
 <style scoped>
-tr,th,td {
-  border-collapse: collapse;
-  border:1px solid;
-  border-color: #d3d3d3;
-  padding: 10px;
-}
-
 .user-list {
   margin-left: 60px;
   margin-right: 60px;
 }
 
 .user-list-wrapper {
-  width: 2500px;
+  width: 100%;
 }
 
-.table-header {
-  background-color: #666666;
-  color: #DCDCDC;
+
+.user-name {
+  width: 20%;
 }
 
-.id {
-  width: 80px;
+.email {
+  width: 35%;
 }
 
-.user-name, .display-user-id, .phone-number, .self-introduction, .email, .image{
-  width: 200px;
+.display-user-id {
+  width: 20%;
 }
 
-.birthday {
-  width: 110px;
+.phone-number {
+  width: 15%;
+}
+
+.is_delete {
+  width: 10%;
 }
 
 .search-parameter-label {
   display: block;
 }
-
 </style>
