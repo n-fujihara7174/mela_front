@@ -1,18 +1,19 @@
 <template>
-  <div id="UserList" class="mx-xl-5">
-    <div class="mb-5">
-      <h2>ユーザー一覧</h2>
+  <div id="UserList" class="mx-xl-5 mt-5">
+    <div class="d-flex">
+      <div class="me-auto">
+        <h2>ユーザー一覧</h2>
+      </div>
+      <div class="search-wrapper mb-4 d-flex">
+        <div class="search-user-name">
+          <input id="userNameAndUserId" class="form-control" placeholder="ユーザー名、ユーザーID" v-model="refState.searchValue.userIdOrEmail" />
+        </div>
+        <div>
+          <button @click="searchUsers" type="button" class="btn btn-primary serch-btn">検索</button>
+        </div>
+      </div>
     </div>
     <div class="user-list-wrapper">
-      <!-- <div class="serch-wrapper row mb-4">
-        <div class="serch-user-name col-1">
-          <label class="search-parameter-label small">ユーザーID、メールアドレス</label>
-          <input v-model="refState.searchValue.userIdOrEmail" />
-        </div>
-        <div class="col-1 d-flex align-items-end">
-          <button @click="searchUsers">検索</button>
-        </div>
-      </div> -->
       <table class="table table-hover table-sm shadow">
         <thead>
           <tr>
@@ -21,15 +22,17 @@
             <th class="email px-3">メールアドレス</th>
             <th class="phone-number px-3">電話番号</th>
             <th class="is_delete px-3">削除</th>
+            <th>#</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(user, index) in refState.users" :key="index">
-          <td class="px-3">{{ user.user_name }}</td>
-          <td class="px-3">{{ user.user_id }}</td>
-          <td class="px-3">{{ user.email }}</td>
-          <td class="px-3">{{ user.phone_number }}</td>
-          <td class="px-3">{{ judgeDelete(user.is_delete) }}</td>
+          <td class="px-3 align-middle">{{ user.user_name }}</td>
+          <td class="px-3 align-middle">{{ user.user_id }}</td>
+          <td class="px-3 align-middle">{{ user.email }}</td>
+          <td class="px-3 align-middle">{{ user.phone_number }}</td>
+          <td class="px-3 align-middle">{{ judgeDelete(user.is_delete) }}</td>
+          <td class="px=3 align-middle"><button type="button" class="btn btn-primary">詳細</button></td>
         </tr>
         </tbody>
       </table>
@@ -110,15 +113,23 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.user-list {
-  margin-left: 60px;
-  margin-right: 60px;
-}
-
 .user-list-wrapper {
   width: 100%;
 }
 
+.search-wrapper {
+  padding-right: 4px;
+}
+
+.search-wrapper input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.search-wrapper button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
 
 .user-name {
   width: 20%;
