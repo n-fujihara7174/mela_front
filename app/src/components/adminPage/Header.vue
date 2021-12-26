@@ -25,6 +25,8 @@ img {
   width: 40px;
   border-radius: 50%;
   margin-right: 30px;
+  border: 1px solid;
+  border-color: #636363;
 }
 
 .header {

@@ -21,8 +21,8 @@
             <th class="user-id px-3">ユーザーID</th>
             <th class="email px-3">メールアドレス</th>
             <th class="phone-number px-3">電話番号</th>
-            <th class="is_delete px-3">削除</th>
-            <th>#</th>
+            <th class="is-delete px-3">削除</th>
+            <th class="detail-button text-center">詳細</th>
           </tr>
         </thead>
         <tbody>
@@ -32,7 +32,7 @@
           <td class="px-3 align-middle">{{ user.email }}</td>
           <td class="px-3 align-middle">{{ user.phone_number }}</td>
           <td class="px-3 align-middle">{{ judgeDelete(user.is_delete) }}</td>
-          <td class="px=3 align-middle"><button type="button" class="btn btn-primary">詳細</button></td>
+          <td class="px=3 align-middle text-center"><button type="button" class="btn btn-primary">詳細</button></td>
         </tr>
         </tbody>
       </table>
@@ -144,11 +144,15 @@ export default defineComponent({
 }
 
 .phone-number {
-  width: 15%;
+  width: 10%;
 }
 
-.is_delete {
-  width: 10%;
+.is-delete {
+  width: 5%;
+}
+
+.detail-button {
+  width: 10%
 }
 
 .search-parameter-label {
