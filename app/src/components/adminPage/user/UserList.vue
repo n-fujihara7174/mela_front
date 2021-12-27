@@ -6,10 +6,29 @@
       </div>
       <div class="search-wrapper mb-4 d-flex">
         <div class="search-user-name">
-          <input id="userNameAndUserId" class="form-control" placeholder="ユーザー名、ユーザーID" v-model="refState.searchValue.userIdOrEmail" />
+          <input
+            id="userNameAndUserId"
+            class="form-control"
+            placeholder="ユーザー名、ユーザーID"
+            v-model="refState.searchValue.userIdOrEmail"
+          />
         </div>
         <div>
-          <button @click="searchUsers" type="button" class="btn btn-primary serch-btn">検索</button>
+          <button
+            @click="createUser"
+            type="button"
+            class="btn btn-primary search-btn">
+            新規登録
+          </button>
+        </div>
+        <div>
+          <button
+            @click="searchUsers"
+            type="button"
+            class="btn btn-primary serch-btn"
+          >
+            検索
+          </button>
         </div>
       </div>
     </div>
@@ -27,13 +46,15 @@
         </thead>
         <tbody>
           <tr v-for="(user, index) in refState.users" :key="index">
-          <td class="px-3 align-middle">{{ user.user_name }}</td>
-          <td class="px-3 align-middle">{{ user.user_id }}</td>
-          <td class="px-3 align-middle">{{ user.email }}</td>
-          <td class="px-3 align-middle">{{ user.phone_number }}</td>
-          <td class="px-3 align-middle">{{ judgeDelete(user.is_delete) }}</td>
-          <td class="px=3 align-middle text-center"><button type="button" class="btn btn-primary">詳細</button></td>
-        </tr>
+            <td class="px-3 align-middle">{{ user.user_name }}</td>
+            <td class="px-3 align-middle">{{ user.user_id }}</td>
+            <td class="px-3 align-middle">{{ user.email }}</td>
+            <td class="px-3 align-middle">{{ user.phone_number }}</td>
+            <td class="px-3 align-middle">{{ judgeDelete(user.is_delete) }}</td>
+            <td class="px=3 align-middle text-center">
+              <button type="button" class="btn btn-primary">詳細</button>
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -41,10 +62,9 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable no-console */
 import { defineComponent, reactive, onMounted } from "vue";
 import axios from "axios";
-import {User} from "@/types/User"
+import { User } from "@/types/User";
 
 //検索
 interface SearchValue {
@@ -72,7 +92,7 @@ export default defineComponent({
       refState.users = { ...result.data };
     };
 
-    onMounted(fetchUsers)
+    onMounted(fetchUsers);
 
     const searchUsers = async () => {
       if (refState.searchValue.userIdOrEmail != null) {
@@ -152,7 +172,7 @@ export default defineComponent({
 }
 
 .detail-button {
-  width: 10%
+  width: 10%;
 }
 
 .search-parameter-label {

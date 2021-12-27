@@ -1,10 +1,12 @@
 <template>
   <div class="header container shadow d-flex align-items-center">
-    <div class="me-auto ms-5">
-      管理者ページ
-    </div>
+    <div class="me-auto ms-5">管理者ページ</div>
     <div>
-      <img src="../../image/人物のアイコン素材.jpeg" alt="ユーザーアイコン" class="image-fluid">
+      <img
+        src="../../image/人物のアイコン素材.jpeg"
+        alt="ユーザーアイコン"
+        class="image-fluid"
+      />
     </div>
     <div class="user-name">
       <label>ユーザー名</label>
@@ -13,8 +15,8 @@
 </template>
 
 <style>
-div .header{
-  background-color: #FFFFFF;
+div .header {
+  background-color: #ffffff;
   max-width: none;
   padding: 0;
   margin: 0;

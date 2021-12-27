@@ -10,10 +10,10 @@
 </template>
 
 <script lang="ts">
-import Header from '../components/adminPage/Header.vue'
+import Header from "../components/adminPage/Header.vue";
 export default {
   components: {
-    Header
-  }
-}
+    Header,
+  },
+};
 </script>
