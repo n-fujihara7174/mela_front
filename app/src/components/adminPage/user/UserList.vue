@@ -5,30 +5,23 @@
         <h2>ユーザー一覧</h2>
       </div>
       <div class="search-wrapper mb-4 d-flex">
-        <div class="search-user-name">
-          <input
-            id="userNameAndUserId"
-            class="form-control"
-            placeholder="ユーザー名、ユーザーID"
-            v-model="refState.searchValue.userIdOrEmail"
-          />
-        </div>
-        <div>
-          <button
-            @click="createUser"
-            type="button"
-            class="btn btn-primary search-btn">
-            新規登録
-          </button>
-        </div>
-        <div>
-          <button
-            @click="searchUsers"
-            type="button"
-            class="btn btn-primary serch-btn"
-          >
-            検索
-          </button>
+        <div class="flex-column">
+          <div align="right">
+            <button type="button" class="btn btn-primary create-user-btn">
+              新規登録
+            </button>
+          </div>
+          <div class="d-flex">
+            <div class="search-user-name">
+              <input
+                id="userNameAndUserId"
+                class="form-control"
+                placeholder="ユーザー名、ユーザーID"
+                @keyup.enter="searchUsers"
+                v-model="refState.searchValue.userIdOrEmail"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -52,7 +45,7 @@
             <td class="px-3 align-middle">{{ user.phone_number }}</td>
             <td class="px-3 align-middle">{{ judgeDelete(user.is_delete) }}</td>
             <td class="px=3 align-middle text-center">
-              <button type="button" class="btn btn-primary">詳細</button>
+              <button type="button" class="btn btn-primary" @click="transitionDetail(user.id)">詳細</button>
             </td>
           </tr>
         </tbody>
@@ -63,6 +56,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import axios from "axios";
 import { User } from "@/types/User";
 
@@ -78,6 +72,8 @@ interface State {
 
 export default defineComponent({
   setup() {
+    const router = useRouter();
+
     const searchValueInit: SearchValue = {
       userIdOrEmail: "",
     };
@@ -104,6 +100,14 @@ export default defineComponent({
         refState.users = { ...result.data };
       }
     };
+    const transitionDetail = (id: number) => {
+      router.push({
+        name: "UserDetail",
+        params: {
+          id: id
+        }
+      })
+    }
 
     const judgeFlag = (flag: boolean) => {
       if (flag) {
@@ -127,6 +131,7 @@ export default defineComponent({
       judgeFlag,
       judgeDelete,
       searchUsers,
+      transitionDetail,
     };
   },
 });
@@ -146,7 +151,7 @@ export default defineComponent({
   border-bottom-right-radius: 0;
 }
 
-.search-wrapper button {
+.search-user-btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
 }
@@ -177,5 +182,14 @@ export default defineComponent({
 
 .search-parameter-label {
   display: block;
+}
+
+.create-user-btn {
+  width: 200px;
+  margin-bottom: 30px;
+}
+
+.search-user-name {
+  width: 400px;
 }
 </style>
