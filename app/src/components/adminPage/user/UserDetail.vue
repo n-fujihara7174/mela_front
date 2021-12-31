@@ -27,8 +27,16 @@ import { defineComponent, reactive, onMounted } from "vue";
 import axios from "axios";
 import { User } from "@/types/User";
 
+interface UserExtend extends User {
+  post_count: number;
+  like_count: number;
+  follow_count: number;
+  follower_count: number;
+  message_user_count: number;
+}
+
 interface State {
-  user: User;
+  user: UserExtend;
 }
 
 export default defineComponent({
@@ -42,6 +50,11 @@ export default defineComponent({
   setup(props) {
     const refState = reactive<State>({
       user: {
+        post_count: 0,
+        like_count: 0,
+        follow_count: 0,
+        follower_count: 0,
+        message_user_count: 0,
         id: 0,
         user_name: "",
         user_id: "",
@@ -50,7 +63,6 @@ export default defineComponent({
         phone_number: 0,
         birthday: new Date(),
         image: "",
-        post_count: 0,
         can_like_notification: false,
         can_comment_notification: false,
         can_message_notification: false,
@@ -62,11 +74,9 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      console.log(refState);
       const result = await axios.get("http://localhost:3000/users/" + props.id);
-      console.log(result.data)
-      refState.user = result.data[0]
-      console.log(refState.user)
+      refState.user = result.data[0];
+      console.log(refState.user);
     });
 
     return {
