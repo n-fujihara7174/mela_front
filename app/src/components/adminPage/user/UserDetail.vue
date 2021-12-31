@@ -14,6 +14,10 @@
         <span>メールアドレス</span>
         <span>{{ refState.user.email }}</span>
       </div>
+      <div>
+        <span>メールアドレス</span>
+        <span>{{ refState.user.email }}</span>
+      </div>
     </div>
   </div>
 </template>
