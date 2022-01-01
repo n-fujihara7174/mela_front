@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="user-list-wrapper">
-      <table class="table table-hover table-sm shadow">
+      <table class="table table-sm shadow">
         <thead>
           <tr>
             <th class="user-name px-3">ユーザー名</th>
@@ -45,7 +45,13 @@
             <td class="px-3 align-middle">{{ user.phone_number }}</td>
             <td class="px-3 align-middle">{{ judgeDelete(user.is_delete) }}</td>
             <td class="px=3 align-middle text-center">
-              <button type="button" class="btn btn-primary" @click="transitionDetail(user.id)">詳細</button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                @click="transitionDetail(user.id)"
+              >
+                詳細
+              </button>
             </td>
           </tr>
         </tbody>
@@ -104,10 +110,10 @@ export default defineComponent({
       router.push({
         name: "UserDetail",
         params: {
-          id: id
-        }
-      })
-    }
+          id: id,
+        },
+      });
+    };
 
     const judgeFlag = (flag: boolean) => {
       if (flag) {
@@ -144,11 +150,6 @@ export default defineComponent({
 
 .search-wrapper {
   padding-right: 4px;
-}
-
-.search-wrapper input {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
 }
 
 .search-user-btn {

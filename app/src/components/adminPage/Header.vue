@@ -1,6 +1,6 @@
 <template>
   <div class="header container shadow d-flex align-items-center">
-    <div class="me-auto ms-5">管理者ページ</div>
+    <div class="me-auto ms-5">管理者画面</div>
     <div>
       <img
         src="../../image/人物のアイコン素材.jpeg"
