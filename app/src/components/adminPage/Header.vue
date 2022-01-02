@@ -16,7 +16,7 @@
 
 <style>
 div .header {
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   max-width: none;
   padding: 0;
   margin: 0;

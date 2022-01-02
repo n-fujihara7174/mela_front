@@ -1,7 +1,7 @@
 <template>
   <div id="UserList" class="mx-xl-5 mt-5">
     <div class="d-flex">
-      <div class="me-auto">
+      <div class="me-auto backdrop">
         <h2>ユーザー一覧</h2>
       </div>
       <div class="search-wrapper mb-4 d-flex">
@@ -26,7 +26,7 @@
       </div>
     </div>
     <div class="user-list-wrapper">
-      <table class="table table-sm shadow">
+      <table class="table table-sm shadow table-hover">
         <thead>
           <tr>
             <th class="user-name px-3">ユーザー名</th>

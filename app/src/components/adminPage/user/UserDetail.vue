@@ -6,129 +6,70 @@
     </div>
     <div class="mt-5">
       <h2>詳細画面</h2>
-      <div>
-      </div>
-      <div class="mt-5">
-        <div class="d-flex align-items-center">
-          <div>
-            <img
-            src="@/image/人物のアイコン素材.jpeg"
-            alt=""
-            class="select-user-icon"
-            />
-          </div>
-          <div class="w-100">
-            <div>
-              <ul class="d-flex flex-wrap justify-content-between align-items-center">
-                <li class="count">
-                  <div>
-                    <p>投稿数</p>
-                    <span>{{ refState.user.post_count }}</span>
-                  </div>
-                </li>
-                <li class="count">
-                  <div>
-                    <p>いいね数</p>
-                    <span>{{ refState.user.like_count }}</span>
-                  </div>
-                </li>
-                <li class="count">
-                  <div>
-                    <p>フォロー数</p>
-                    <span>{{ refState.user.follow_count }}</span>
-                  </div>
-                </li>
-                <li class="count">
-                  <div>
-                    <p>フォロワー数</p>
-                    <span>{{ refState.user.follower_count }}</span>
-                  </div>
-                </li>
-                <li class="count">
-                  <div>
-                    <p>メッセージ数</p>
-                    <span>{{ refState.user.message_user_count }}</span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <ul class="d-flex flex-wrap justify-content-between align-items-center">
-                <li class="count">
-                <div>
-                  <p>ユーザーID</p>
-                  <span>{{ refState.user.user_id }}</span>
-                </div>
-              </li>
-              <li class="count">
-                <div>
-                  <p>ユーザー名</p>
-                  <span>{{ refState.user.user_name }}</span>
-                </div>
-              </li>
-              <li class="count">
-                <div>
-                  <p>メールアドレス</p>
-                  <span>{{ refState.user.email }}</span>
-                </div>
-              </li>
-              <li class="count">
-                <div>
-                  <p>電話番号</p>
-                  <span>{{ refState.user.phone_number }}</span>
-                </div>
-              </li>
-              <li class="count">
-                <div>
-                  <p>生年月日</p>
-                  <span>{{ refState.user.birthday }}</span>
-                </div>
-              </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="mt-5 d-flex">
-        <div class="w-50">
-          <div>自己紹介</div>
-            <span>{{ refState.user.self_introduction }}</span>
-        </div>
-        <div class="w-50">
-          <ul class="d-flex flex-wrap justify-content-between">
-            <li class="notification-related">
-              <div>いいね通知</div>
-              <span>{{ judgeFlag(refState.user.can_like_notification) }}</span>
-            </li>
-            <li class="notification-related">
-              <div>コメント通知</div>
-              <span>{{ judgeFlag(refState.user.can_comment_notification) }}</span>
-            </li>
-            <li class="notification-related">
-              <div>メッセージ通知</div>
-              <span>{{ judgeFlag(refState.user.can_message_notification) }}</span>
-            </li>
-            <li class="notification-related">
-              <div>カレンダー通知</div>
-              <span>{{ judgeFlag(refState.user.can_calender_notification) }}</span>
-            </li>
-          </ul>
-          <ul class="d-flex flex-wrap justify-content-between">
-            <li class="others-data">
-              <div>削除</div>
-              <span>{{ refState.user.is_delete }}</span>
-            </li>
-            <li class="others-data">
-              <div>登録日</div>
-              <span>{{ refState.user.created_at }}</span>
-            </li>
-            <li class="others-data">
-              <div>更新日</div>
-              <span>{{ refState.user.updated_at }}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <table class="table table-sm shadow table-hover">
+        <tr>
+          <th>No</th>
+          <td>{{ refState.user.id }}</td>
+        </tr>
+        <tr>
+          <th>ユーザー名</th>
+          <td>
+            <input type="text" v-model="refState.user.user_name" />
+            <label>{{ refState.user.user_name }}</label>
+          </td>
+        </tr>
+        <tr>
+          <th>ユーザーID</th>
+          <td><input type="text" v-model="refState.user.user_id" /></td>
+        </tr>
+        <tr>
+          <th>メールアドレス</th>
+          <td><input type="text" v-model="refState.user.email" /></td>
+        </tr>
+        <tr>
+          <th>電話番号</th>
+          <td><input type="text" v-model="refState.user.phone_number" /></td>
+        </tr>
+        <tr>
+          <th>生年月日</th>
+          <td><input type="text" v-model="refState.user.birthday" /></td>
+        </tr>
+        <tr>
+          <th>画像</th>
+          <td><input type="text" v-model="refState.user.image" /></td>
+        </tr>
+        <tr>
+          <th>自己紹介</th>
+          <td>
+            <input type="text" v-model="refState.user.self_introduction" />
+          </td>
+        </tr>
+        <tr>
+          <th>いいね通知</th>
+          <td>{{ refState.user.can_like_notification }}</td>
+        </tr>
+        <tr>
+          <th>コメント通知</th>
+          <td>{{ refState.user.can_comment_notification }}</td>
+        </tr>
+        <tr>
+          <th>メッセージ通知</th>
+          <td>{{ refState.user.can_message_notification }}</td>
+        </tr>
+        <tr>
+          <th>削除</th>
+          <td>{{ refState.user.is_delete }}</td>
+        </tr>
+        <tr>
+          <th>登録日</th>
+          <td>{{ refState.user.created_at }}</td>
+        </tr>
+        <tr>
+          <th>更新日</th>
+          <td>{{ refState.user.updated_at }}</td>
+        </tr>
+      </table>
+      <button @click="testconsole">テスト</button>
     </div>
   </div>
 </template>
@@ -201,7 +142,7 @@ export default defineComponent({
 
     const judgeFlag = (flag: boolean) => {
       if (flag) {
-        return "◯";
+        return "通知を行う";
       } else {
         return "";
       }
@@ -215,10 +156,15 @@ export default defineComponent({
       }
     };
 
+    const testconsole = () => {
+      console.log(refState.user.user_name);
+    };
+
     return {
       refState,
       transitionList,
       judgeFlag,
+      testconsole,
     };
   },
 });
@@ -230,8 +176,23 @@ ul {
   padding-left: 0;
 }
 
-.count {
-  width: 10%;
+li,
+.self-introduction {
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #636363;
+}
+
+.w-19 {
+  width: 19%;
+}
+
+.w-24 {
+  width: 24%;
+}
+
+.w-49 {
+  width: 49%;
 }
 
 .noti {
@@ -244,7 +205,10 @@ ul {
   width: 100px;
 }
 
-.notification-related {
-  width: 25%;
+.table th {
+  width: 15%;
+  padding: 10px 20px;
+  border-top: 1px #e0e0e0 solid;
+  border-bottom: 0;
 }
 </style>
