@@ -7,7 +7,11 @@
       <div class="search-wrapper mb-4 d-flex">
         <div class="flex-column">
           <div align="right">
-            <button type="button" class="btn btn-primary create-user-btn">
+            <button
+              type="button"
+              class="btn btn-primary create-user-btn"
+              @click="transitionDetail(0)"
+            >
               新規登録
             </button>
           </div>
@@ -89,6 +93,7 @@ export default defineComponent({
       users: [],
     });
 
+    //ユーザー一覧取得
     const fetchUsers = async () => {
       const result = await axios.get("http://localhost:3000/users");
       refState.users = { ...result.data };
@@ -96,6 +101,7 @@ export default defineComponent({
 
     onMounted(fetchUsers);
 
+    //ユーザー一覧取得（検索パラメータあり）
     const searchUsers = async () => {
       if (refState.searchValue.userIdOrEmail != null) {
         const result = await axios.get("http://localhost:3000/users", {

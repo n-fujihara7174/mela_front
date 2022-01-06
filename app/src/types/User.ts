@@ -3,6 +3,7 @@ export interface User {
   id: number;
   user_name: string;
   user_id: string;
+  password: string;
   self_introduction: string;
   email: string;
   phone_number: number;
