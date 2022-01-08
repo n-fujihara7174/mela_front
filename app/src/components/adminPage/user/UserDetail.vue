@@ -8,7 +8,7 @@
       <h2>詳細画面</h2>
       <table class="table table-sm shadow table-hover mt-5">
         <tbody>
-          <tr :class="{ 'display-none': ! refState.isUpdate }">
+          <tr :class="{ 'display-none': !refState.isUpdate }">
             <th>No</th>
             <td class="align-middle">{{ refState.user.id }}</td>
           </tr>
@@ -20,7 +20,14 @@
                 class="form-control"
                 v-model="refState.user.user_name"
               />
-              <label :class="{ 'display-none': judgeDisplay(refState.error_message.user_name[0]) }">{{ refState.error_message.user_name[0] }}</label>
+              <label
+                :class="{
+                  'display-none': judgeDisplay(refState.error_message.user_name[0]),
+                  'is-valid': !(isInvalid(refState.error_message.user_name)),
+                  'is-invalid': isInvalid(refState.error_message.user_name),
+                }"
+                >{{ refState.error_message.user_name[0] }}</label
+              >
             </td>
           </tr>
           <tr>
@@ -31,40 +38,66 @@
                 class="form-control"
                 v-model="refState.user.user_id"
               />
-              <label :class="{ 'display-none': judgeDisplay(refState.error_message.user_id[0]) }">{{ refState.error_message.user_id[0] }}</label>
+              <label
+                :class="{
+                  'display-none': judgeDisplay(refState.error_message.user_id[0]),
+                  'is-valid': !(isInvalid(refState.error_message.user_id)),
+                }"
+                >{{ refState.error_message.user_id[0] }}</label
+              >
             </td>
           </tr>
           <tr>
             <th>メールアドレス</th>
             <td>
+              <label
+                :class="{
+                  'display-none': judgeDisplay(refState.error_message.email[0]),
+                  'is-valid': !(isInvalid(refState.error_message.email))
+                }"
+                >{{ refState.error_message.email[0] }}</label
+              >
               <input
                 type="text"
                 class="form-control"
                 v-model="refState.user.email"
               />
-              <label :class="{ 'display-none': judgeDisplay(refState.error_message.email[0]) }">{{ refState.error_message.email[0] }}</label>
             </td>
           </tr>
           <tr>
             <th>電話番号</th>
             <td>
+              <label
+                :class="{
+                  'display-none': judgeDisplay(refState.error_message.phone_number[0]),
+                  'is-valid': !(isInvalid(refState.error_message.phone_number)),
+                }"
+                class="invalid-feedback"
+                >{{ refState.error_message.phone_number[0] }}</label
+              >
               <input
                 type="text"
                 class="form-control"
                 v-model="refState.user.phone_number"
               />
-              <label :class="{ 'display-none': judgeDisplay(refState.error_message.phone_number[0]) }">{{ refState.error_message.phone_number[0] }}</label>
             </td>
           </tr>
           <tr>
             <th>生年月日</th>
+            <label
+                :class="{
+                  'display-none': judgeDisplay(refState.error_message.user_name[0]),
+                  'is-valid': !(isInvalid(refState.error_message.user_name)),
+                }"
+                class="invalid-feedback"
+                >{{ refState.error_message.birthday[0] }}</label
+              >
             <td>
               <input
                 type="text"
                 class="form-control"
                 v-model="refState.user.birthday"
               />
-              <label :class="{ 'display-none': judgeDisplay(refState.error_message.user_name[0]) }">{{ refState.error_message.birthday[0] }}</label>
             </td>
           </tr>
           <tr>
@@ -160,12 +193,12 @@ export default defineComponent({
 
     const initErrorMessage: ErrorMessage = {
       user_name: "",
-        user_id: "",
-        password_digest: "",
-        email: "",
-        phone_number: "",
-        birthday: "",
-    }
+      user_id: "",
+      password_digest: "",
+      email: "",
+      phone_number: "",
+      birthday: "",
+    };
 
     const refState = reactive<State>({
       user: {
@@ -207,7 +240,7 @@ export default defineComponent({
       const result = await axios.get("http://localhost:3000/users/" + props.id);
       refState.user = result.data[0];
       refState.isUpdate = Boolean(refState.user.id);
-      console.log(refState.isUpdate)
+      console.log(refState.isUpdate);
     });
 
     //ユーザー新規登録
@@ -242,6 +275,7 @@ export default defineComponent({
         .catch((error) => {
           //エラーメッセージを格納
           Object.assign(refState.error_message, reactive(error.response.data));
+          console.log(refState.error_message)
         });
     };
 
@@ -278,21 +312,22 @@ export default defineComponent({
 
     const judgeDisplay = (displayText: string) => {
       const isDisplay = !!displayText;
+      console.log(displayText)
+      console.log(isDisplay)
       return !isDisplay;
     };
 
-    const arrayToString = (ary: Array<string>): string => {
-      const str = ary.join("¥n");
-      return str;
-    };
+    const isInvalid = (errorMesssage: string) => {
+      return !!errorMesssage
+    }
 
     return {
       refState,
       transitionList,
       judgeFlag,
       postUser,
-      arrayToString,
       judgeDisplay,
+      isInvalid,
     };
   },
 });
@@ -350,5 +385,15 @@ textarea {
 
 .display-none {
   display: none;
+}
+
+.is-valid {
+  color: #50a84a;
+  font-size: 11px;
+}
+
+.is-invalid {
+  color: #ad4444;
+  font-size: 11px;
 }
 </style>
