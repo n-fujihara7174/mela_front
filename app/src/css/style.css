@@ -4,6 +4,11 @@ body {
   color: #636363;
 }
 
+textarea {
+  resize: none;
+  height: 100px;
+}
+
 .table {
   border-radius: 6px;
   background-color: #FFFFFF;
@@ -26,3 +31,38 @@ body {
 .table tr:hover button {
   opacity: 1;
 }
+
+.display-none {
+  display: none;
+}
+
+.is-valid {
+  color: #50a84a;
+  font-size: 11px;
+}
+
+.is-invalid {
+  color: #ad4444;
+  font-size: 11px;
+}
+
+.is-valid-textbox {
+  border-color: #50a84a;
+}
+
+.is-invalid-textbox {
+  border-color: #ad4444;
+}
+
+.w-19 {
+  width: 19%;
+}
+
+.w-24 {
+  width: 24%;
+}
+
+.w-49 {
+  width: 49%;
+}
+
