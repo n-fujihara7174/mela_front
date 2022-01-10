@@ -3,6 +3,7 @@ const requireErrorMessage = "必ず入力してください";
 
 export const lengthCheck = (CheckTarget: string, MaxNum: number) => {
   if(CheckTarget.length > MaxNum){
+    console.log("validationCheck内 : " + lengthErrorMessage.replace("?", MaxNum.toString()))
     return lengthErrorMessage.replace("?", MaxNum.toString());
   }else{
     return ""

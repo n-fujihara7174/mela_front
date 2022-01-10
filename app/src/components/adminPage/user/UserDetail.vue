@@ -2,10 +2,13 @@
   <div class="mx-xl-5">
     <div class="mt-4">
       <a href="#" @click="transitionList">ユーザー一覧画面</a>
-      <span> > 詳細画面</span>
+      <span v-if="!refState.isUpdate"> > 登録画面</span>
+      <span v-if="refState.isUpdate"> > 編集画面</span>
     </div>
     <div class="mt-5">
-      <h2>詳細画面</h2>
+      <h2 v-if="!refState.isUpdate">登録画面</h2>
+      <h2 v-if="refState.isUpdate">編集画面</h2>
+
       <table class="table table-sm shadow table-hover mt-5">
         <tbody>
           <tr :class="{ 'display-none': !refState.isUpdate }">
@@ -20,10 +23,10 @@
                 class="form-control"
                 :class="{
                   'is-valid-textbox':
-                    !isInvalid(refState.error_message.user_name[0]) &&
+                    !isInvalid(refState.error_message.user_name) &&
                     refState.isNotInit,
                   'is-invalid-textbox':
-                    isInvalid(refState.error_message.user_name[0]) &&
+                    isInvalid(refState.error_message.user_name) &&
                     refState.isNotInit,
                 }"
                 v-model="refState.user.user_name"
@@ -31,12 +34,12 @@
               <label
                 :class="{
                   'display-none': judgeDisplay(
-                    refState.error_message.user_name[0]
+                    refState.error_message.user_name
                   ),
-                  'is-valid': !isInvalid(refState.error_message.user_name[0]),
-                  'is-invalid': isInvalid(refState.error_message.user_name[0]),
+                  'is-valid': !isInvalid(refState.error_message.user_name),
+                  'is-invalid': isInvalid(refState.error_message.user_name),
                 }"
-                >{{ refState.error_message.user_name[0] }}</label
+                >{{ refState.error_message.user_name }}</label
               >
             </td>
           </tr>
@@ -48,23 +51,21 @@
                 class="form-control"
                 :class="{
                   'is-valid-textbox':
-                    !isInvalid(refState.error_message.user_id[0]) &&
+                    !isInvalid(refState.error_message.user_id) &&
                     refState.isNotInit,
                   'is-invalid-textbox':
-                    isInvalid(refState.error_message.user_id[0]) &&
+                    isInvalid(refState.error_message.user_id) &&
                     refState.isNotInit,
                 }"
                 v-model="refState.user.user_id"
               />
               <label
                 :class="{
-                  'display-none': judgeDisplay(
-                    refState.error_message.user_id[0]
-                  ),
-                  'is-valid': !isInvalid(refState.error_message.user_id[0]),
-                  'is-invalid': isInvalid(refState.error_message.user_id[0]),
+                  'display-none': judgeDisplay(refState.error_message.user_id),
+                  'is-valid': !isInvalid(refState.error_message.user_id),
+                  'is-invalid': isInvalid(refState.error_message.user_id),
                 }"
-                >{{ refState.error_message.user_id[0] }}</label
+                >{{ refState.error_message.user_id }}</label
               >
             </td>
           </tr>
@@ -76,10 +77,10 @@
                 class="form-control"
                 :class="{
                   'is-valid-textbox':
-                    !isInvalid(refState.error_message.email[0]) &&
+                    !isInvalid(refState.error_message.email) &&
                     refState.isNotInit,
                   'is-invalid-textbox':
-                    isInvalid(refState.error_message.email[0]) &&
+                    isInvalid(refState.error_message.email) &&
                     refState.isNotInit,
                 }"
                 v-model="refState.user.email"
@@ -87,12 +88,12 @@
               <label
                 :class="{
                   'display-none': judgeDisplay(
-                    refState.error_message.phone_number[0]
+                    refState.error_message.phone_number
                   ),
-                  'is-valid': !isInvalid(refState.error_message.email[0]),
-                  'is-invalid': isInvalid(refState.error_message.email[0]),
+                  'is-valid': !isInvalid(refState.error_message.email),
+                  'is-invalid': isInvalid(refState.error_message.email),
                 }"
-                >{{ refState.error_message.email[0] }}</label
+                >{{ refState.error_message.email }}</label
               >
             </td>
           </tr>
@@ -104,10 +105,10 @@
                 class="form-control"
                 :class="{
                   'is-valid-textbox':
-                    !isInvalid(refState.error_message.phone_number[0]) &&
+                    !isInvalid(refState.error_message.phone_number) &&
                     refState.isNotInit,
                   'is-invalid-textbox':
-                    isInvalid(refState.error_message.phone_number[0]) &&
+                    isInvalid(refState.error_message.phone_number) &&
                     refState.isNotInit,
                 }"
                 v-model="refState.user.phone_number"
@@ -115,17 +116,13 @@
               <label
                 :class="{
                   'display-none': judgeDisplay(
-                    refState.error_message.phone_number[0]
+                    refState.error_message.phone_number
                   ),
-                  'is-valid': !isInvalid(
-                    refState.error_message.phone_number[0]
-                  ),
-                  'is-invalid': isInvalid(
-                    refState.error_message.phone_number[0]
-                  ),
+                  'is-valid': !isInvalid(refState.error_message.phone_number),
+                  'is-invalid': isInvalid(refState.error_message.phone_number),
                 }"
                 class="invalid-feedback"
-                >{{ refState.error_message.phone_number[0] }}</label
+                >{{ refState.error_message.phone_number }}</label
               >
             </td>
           </tr>
@@ -137,24 +134,22 @@
                 class="form-control"
                 :class="{
                   'is-valid-textbox':
-                    !isInvalid(refState.error_message.birthday[0]) &&
+                    !isInvalid(refState.error_message.birthday) &&
                     refState.isNotInit,
                   'is-invalid-textbox':
-                    isInvalid(refState.error_message.birthday[0]) &&
+                    isInvalid(refState.error_message.birthday) &&
                     refState.isNotInit,
                 }"
                 v-model="refState.user.birthday"
               />
               <label
                 :class="{
-                  'display-none': judgeDisplay(
-                    refState.error_message.birthday[0]
-                  ),
-                  'is-valid': !isInvalid(refState.error_message.birthday[0]),
-                  'is-invalid': isInvalid(refState.error_message.birthday[0]),
+                  'display-none': judgeDisplay(refState.error_message.birthday),
+                  'is-valid': !isInvalid(refState.error_message.birthday),
+                  'is-invalid': isInvalid(refState.error_message.birthday),
                 }"
                 class="invalid-feedback"
-                >{{ refState.error_message.birthday[0] }}</label
+                >{{ refState.error_message.birthday }}</label
               >
             </td>
           </tr>
@@ -166,22 +161,22 @@
                 class="form-control"
                 :class="{
                   'is-valid-textbox':
-                    !isInvalid(refState.error_message.image[0]) &&
+                    !isInvalid(refState.error_message.image) &&
                     refState.isNotInit,
                   'is-invalid-textbox':
-                    isInvalid(refState.error_message.image[0]) &&
+                    isInvalid(refState.error_message.image) &&
                     refState.isNotInit,
                 }"
                 v-model="refState.user.image"
               />
               <label
                 :class="{
-                  'display-none': judgeDisplay(refState.error_message.image[0]),
-                  'is-valid': !isInvalid(refState.error_message.image[0]),
-                  'is-invalid': isInvalid(refState.error_message.image[0]),
+                  'display-none': judgeDisplay(refState.error_message.image),
+                  'is-valid': !isInvalid(refState.error_message.image),
+                  'is-invalid': isInvalid(refState.error_message.image),
                 }"
                 class="invalid-feedback"
-                >{{ refState.error_message.image[0] }}</label
+                >{{ refState.error_message.image }}</label
               >
             </td>
           </tr>
@@ -193,10 +188,10 @@
                 class="form-control"
                 :class="{
                   'is-valid-textbox':
-                    !isInvalid(refState.error_message.self_introduction[0]) &&
+                    !isInvalid(refState.error_message.self_introduction) &&
                     refState.isNotInit,
                   'is-invalid-textbox':
-                    isInvalid(refState.error_message.self_introduction[0]) &&
+                    isInvalid(refState.error_message.self_introduction) &&
                     refState.isNotInit,
                 }"
                 v-model="refState.user.self_introduction"
@@ -204,17 +199,17 @@
               <label
                 :class="{
                   'display-none': judgeDisplay(
-                    refState.error_message.self_introduction[0]
+                    refState.error_message.self_introduction
                   ),
                   'is-valid': !isInvalid(
-                    refState.error_message.self_introduction[0]
+                    refState.error_message.self_introduction
                   ),
                   'is-invalid': isInvalid(
-                    refState.error_message.self_introduction[0]
+                    refState.error_message.self_introduction
                   ),
                 }"
                 class="invalid-feedback"
-                >{{ refState.error_message.self_introduction[0] }}</label
+                >{{ refState.error_message.self_introduction }}</label
               >
             </td>
           </tr>
@@ -280,7 +275,22 @@
           </tr>
         </tbody>
       </table>
-      <button @click="postUser">テスト</button>
+      <button
+        type="button"
+        class="btn btn-primary create-user-btn"
+        @click="createUser"
+        v-if="!refState.isUpdate"
+      >
+        登録
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary create-user-btn"
+        @click="updateUser"
+        v-if="refState.isUpdate"
+      >
+        更新
+      </button>
     </div>
   </div>
 </template>
@@ -350,7 +360,7 @@ export default defineComponent({
         id: 0,
         user_name: "",
         user_id: "",
-        password: "",
+        password_digest: "",
         self_introduction: "",
         email: "",
         phone_number: 0,
@@ -382,8 +392,7 @@ export default defineComponent({
     onMounted(async () => {
       const result = await axios.get("http://localhost:3000/users/" + props.id);
       refState.user = result.data[0];
-      refState.isUpdate = Boolean(refState.user.id);
-      console.log(refState.isUpdate);
+      refState.isUpdate = !!refState.user.id;
     });
 
     //ユーザー新規登録
@@ -393,19 +402,74 @@ export default defineComponent({
           user: refState.user,
         })
         .then((response) => {
-          console.log("create");
-          console.log(response);
+          //一覧画面に遷移
+            transitionList();
         })
         .catch((error) => {
-          console.log(error);
-        });
+            refState.error_message.user_name = hasProperty(
+              error.response.data,
+              "user_name"
+            )
+              ? error.response.data.user_name[0]
+              : "";
+            refState.error_message.user_id = hasProperty(
+              error.response.data,
+              "user_id"
+            )
+              ? error.response.data.user_id[0]
+              : "";
+
+            refState.error_message.password_digest = hasProperty(
+              error.response.data,
+              "password_digest"
+            )
+              ? error.response.data.password_digest[0]
+              : "";
+
+            refState.error_message.email = hasProperty(
+              error.response.data,
+              "email"
+            )
+              ? error.response.data.email[0]
+              : "";
+
+            refState.error_message.phone_number = hasProperty(
+              error.response.data,
+              "phone_number"
+            )
+              ? error.response.data.phone_number[0]
+              : "";
+
+            refState.error_message.birthday = hasProperty(
+              error.response.data,
+              "birthday"
+            )
+              ? error.response.data.birthday[0]
+              : "";
+
+            refState.error_message.image = hasProperty(
+              error.response.data,
+              "image"
+            )
+              ? error.response.data.image[0]
+              : "";
+
+            refState.error_message.self_introduction = hasProperty(
+              error.response.data,
+              "self_introduction"
+            )
+              ? error.response.data.self_introduction[0]
+              : "";
+            refState.isNotInit = true;
+          });
     };
 
     //ユーザー更新
     const updateUser = async () => {
       //エラーメッセージをクリア
       Object.assign(refState.error_message, reactive(initErrorMessage));
-      //if (frontValidationCheck(refState.user)) {
+      if (frontValidationCheck()) {
+        console.log("ifの中");
         //更新処理をapiに投げる
         await axios
           .patch("http://localhost:3000/users/" + props.id, {
@@ -417,66 +481,140 @@ export default defineComponent({
           })
           .catch((error) => {
             //エラーメッセージを格納
-            Object.assign(
+            //refState.error_message.user_name = error.response.data.
+            /* Object.assign(
               refState.error_message,
               reactive(error.response.data)
-            );
-            refState.isNotInit = true;
-            console.log(refState.error_message);
-          });
-      //}
-    };
+            ); */
 
-    //ユーザー登録・更新処理
-    const postUser = () => {
-      if (props.id == "0") {
-        createUser();
-      } else {
-        updateUser();
+            refState.error_message.user_name = hasProperty(
+              error.response.data,
+              "user_name"
+            )
+              ? error.response.data.user_name[0]
+              : "";
+            refState.error_message.user_id = hasProperty(
+              error.response.data,
+              "user_id"
+            )
+              ? error.response.data.user_id[0]
+              : "";
+
+            refState.error_message.password_digest = hasProperty(
+              error.response.data,
+              "password_digest"
+            )
+              ? error.response.data.password_digest[0]
+              : "";
+
+            refState.error_message.email = hasProperty(
+              error.response.data,
+              "email"
+            )
+              ? error.response.data.email[0]
+              : "";
+
+            refState.error_message.phone_number = hasProperty(
+              error.response.data,
+              "phone_number"
+            )
+              ? error.response.data.phone_number[0]
+              : "";
+
+            refState.error_message.birthday = hasProperty(
+              error.response.data,
+              "birthday"
+            )
+              ? error.response.data.birthday[0]
+              : "";
+
+            refState.error_message.image = hasProperty(
+              error.response.data,
+              "image"
+            )
+              ? error.response.data.image[0]
+              : "";
+
+            refState.error_message.self_introduction = hasProperty(
+              error.response.data,
+              "self_introduction"
+            )
+              ? error.response.data.self_introduction[0]
+              : "";
+            refState.isNotInit = true;
+          });
       }
     };
 
+    //一覧画面に遷移
     const transitionList = () => {
       router.push({
         name: "UserList",
       });
     };
 
-    const frontValidationCheck = (userObject: UserExtend): boolean => {
-      let valid = true;
+    //フロント側のバリデーション
+    const frontValidationCheck = (): boolean => {
+      const errorMessage = {
+        user_name: "",
+        user_id: "",
+        password_digest: "",
+        email: "",
+        phone_number: "",
+        birthday: "",
+        image: "",
+        self_introduction: "",
+      };
 
-      //ユーザー名チェック
-      refState.error_message.user_name = requireCheck(userObject.user_name);
-      refState.error_message.user_name = lengthCheck(userObject.user_name, 45);
-      valid = !!refState.error_message.user_name;
+      const assignValue = (str1: string, str2: string): string => {
+        if (str1 == "") {
+          return str2;
+        } else {
+          return str1;
+        }
+      };
 
-      //ユーザーIDチェック
-      refState.error_message.user_id = requireCheck(userObject.user_id);
-      refState.error_message.user_id = lengthCheck(userObject.user_id, 45);
-      valid = !!refState.error_message.user_id;
-
-      //メールアドレスチェック
-      refState.error_message.email = requireCheck(userObject.email);
-      refState.error_message.email = lengthCheck(userObject.email, 256);
-      valid = !!refState.error_message.email;
-
-      //電話番号チェック
-      refState.error_message.phone_number = requireCheck(
-        userObject.phone_number.toString()
+      errorMessage.user_name = assignValue(
+        lengthCheck(refState.user.user_name, 45),
+        requireCheck(refState.user.user_name)
       );
-      refState.error_message.phone_number = lengthCheck(
-        userObject.phone_number.toString(),
-        11
+      errorMessage.user_id = assignValue(
+        lengthCheck(refState.user.user_id, 45),
+        requireCheck(refState.user.user_id)
       );
-      valid = !!refState.error_message.phone_number;
-
-      //自己紹介チェック
-      refState.error_message.user_name = lengthCheck(
-        userObject.self_introduction,
+      errorMessage.password_digest = assignValue(
+        lengthCheck(refState.user.password_digest, 45),
+        requireCheck(refState.user.password_digest)
+      );
+      errorMessage.email = assignValue(
+        lengthCheck(refState.user.email, 45),
+        requireCheck(refState.user.email)
+      );
+      errorMessage.phone_number = assignValue(
+        lengthCheck(refState.user.phone_number.toString(), 45),
+        requireCheck(refState.user.phone_number.toString())
+      );
+      errorMessage.birthday = requireCheck(refState.user.birthday.toString());
+      errorMessage.image = lengthCheck(refState.user.email, 1000);
+      errorMessage.self_introduction = lengthCheck(
+        refState.user.self_introduction,
         120
       );
 
-      return valid;
+      Object.assign(refState.error_message, reactive(errorMessage));
+
+      console.log(refState.error_message);
+
+      return !(
+        !!refState.error_message.user_name ||
+        !!refState.error_message.user_id ||
+        !!refState.error_message.password_digest ||
+        !!refState.error_message.email ||
+        !!refState.error_message.phone_number ||
+        !!refState.error_message.birthday ||
+        !!refState.error_message.image ||
+        !!refState.error_message.self_introduction
+      );
     };
 
     const judgeFlag = (flag: boolean) => {
@@ -497,8 +635,6 @@ export default defineComponent({
 
     const judgeDisplay = (displayText: string) => {
       const isDisplay = !!displayText;
-      console.log(displayText);
-      console.log(isDisplay);
       return !isDisplay;
     };
 
@@ -506,13 +642,18 @@ export default defineComponent({
       return !!errorMesssage;
     };
 
+    const hasProperty = (obj: any, key: string) => {
+      return Object.prototype.hasOwnProperty.call(obj, key);
+    };
+
     return {
       refState,
       judgeFlag,
-      postUser,
       judgeDisplay,
       isInvalid,
       transitionList,
+      createUser,
+      updateUser,
     };
   },
 });
