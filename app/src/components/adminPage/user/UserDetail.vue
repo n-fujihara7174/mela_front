@@ -296,11 +296,18 @@
 </template>
 
 <script lang="ts">
+import axios from "axios";
+import dayjs from "dayjs";
+
 import { defineComponent, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
 import { User } from "@/types/User";
-import { lengthCheck, requireCheck } from "@/composables/validationCheck";
+import {
+  lengthCheck,
+  requireCheck,
+  checkDateFormat,
+  checkDateValue,
+} from "@/composables/validationCheck";
 
 interface UserExtend extends User {
   post_count: number;
@@ -364,15 +371,15 @@ export default defineComponent({
         self_introduction: "",
         email: "",
         phone_number: 0,
-        birthday: new Date(),
+        birthday: "",
         image: "",
         can_like_notification: false,
         can_comment_notification: false,
         can_message_notification: false,
         can_calender_notification: false,
         is_delete: false,
-        created_at: new Date(),
-        updated_at: new Date(),
+        created_at: "",
+        updated_at: "",
       },
       error_message: {
         user_name: "",
@@ -392,6 +399,15 @@ export default defineComponent({
     onMounted(async () => {
       const result = await axios.get("http://localhost:3000/users/" + props.id);
       refState.user = result.data[0];
+      refState.user.created_at = dayjs(refState.user.created_at).format(
+        "YYYY/MM/DD HH:mm:ss"
+      );
+      refState.user.updated_at = dayjs(refState.user.updated_at).format(
+        "YYYY/MM/DD HH:mm:ss"
+      );
+      refState.user.birthday = dayjs(refState.user.birthday).format(
+        "YYYY/MM/DD"
+      );
       refState.isUpdate = !!refState.user.id;
     });
 
@@ -401,67 +417,81 @@ export default defineComponent({
         .post("http://localhost:3000/users/", {
           user: refState.user,
         })
-        .then((response) => {
+        .then(() => {
           //一覧画面に遷移
-            transitionList();
+          transitionList();
         })
         .catch((error) => {
-            refState.error_message.user_name = hasProperty(
-              error.response.data,
-              "user_name"
-            )
-              ? error.response.data.user_name[0]
-              : "";
-            refState.error_message.user_id = hasProperty(
-              error.response.data,
-              "user_id"
-            )
-              ? error.response.data.user_id[0]
-              : "";
+          //エラーメッセージを格納
+          refState.error_message.user_name = hasProperty(
+            error.response.data,
+            "user_name"
+          )
+            ? error.response.data.user_name[0]
+            : "";
 
-            refState.error_message.password_digest = hasProperty(
-              error.response.data,
-              "password_digest"
-            )
-              ? error.response.data.password_digest[0]
-              : "";
+          refState.error_message.user_id = hasProperty(
+            error.response.data,
+            "user_id"
+          )
+            ? error.response.data.user_id[0]
+            : "";
 
-            refState.error_message.email = hasProperty(
-              error.response.data,
-              "email"
-            )
-              ? error.response.data.email[0]
-              : "";
+          refState.error_message.password_digest = hasProperty(
+            error.response.data,
+            "password_digest"
+          )
+            ? error.response.data.password_digest[0]
+            : "";
 
-            refState.error_message.phone_number = hasProperty(
-              error.response.data,
-              "phone_number"
-            )
-              ? error.response.data.phone_number[0]
-              : "";
+          refState.error_message.email = hasProperty(
+            error.response.data,
+            "email"
+          )
+            ? error.response.data.email[0]
+            : "";
 
-            refState.error_message.birthday = hasProperty(
-              error.response.data,
-              "birthday"
-            )
-              ? error.response.data.birthday[0]
-              : "";
+          refState.error_message.phone_number = hasProperty(
+            error.response.data,
+            "phone_number"
+          )
+            ? error.response.data.phone_number[0]
+            : "";
 
-            refState.error_message.image = hasProperty(
-              error.response.data,
-              "image"
-            )
-              ? error.response.data.image[0]
-              : "";
+          refState.error_message.birthday = hasProperty(
+            error.response.data,
+            "birthday"
+          )
+            ? error.response.data.birthday[0]
+            : "";
 
-            refState.error_message.self_introduction = hasProperty(
-              error.response.data,
-              "self_introduction"
-            )
-              ? error.response.data.self_introduction[0]
-              : "";
-            refState.isNotInit = true;
-          });
+          refState.error_message.image = hasProperty(
+            error.response.data,
+            "image"
+          )
+            ? error.response.data.image[0]
+            : "";
+
+          refState.error_message.self_introduction = hasProperty(
+            error.response.data,
+            "self_introduction"
+          )
+            ? error.response.data.self_introduction[0]
+            : "";
+
+          refState.isNotInit = true;
+
+          return !(
+            !!refState.error_message.user_name ||
+            !!refState.error_message.user_id ||
+            !!refState.error_message.password_digest ||
+            !!refState.error_message.email ||
+            !!refState.error_message.phone_number ||
+            !!refState.error_message.birthday ||
+            !!refState.error_message.image ||
+            !!refState.error_message.self_introduction
+          );
+        });
     };
 
     //ユーザー更新
@@ -475,17 +505,30 @@ export default defineComponent({
           .patch("http://localhost:3000/users/" + props.id, {
             user: refState.user,
           })
-          .then((response) => {
+          .then(() => {
             //一覧画面に遷移
             transitionList();
           })
           .catch((error) => {
             //エラーメッセージを格納
-            //refState.error_message.user_name = error.response.data.
-            /* Object.assign(
-              refState.error_message,
-              reactive(error.response.data)
-            ); */
+            const errorMessage = {
+              user_name: "",
+              user_id: "",
+              password_digest: "",
+              email: "",
+              phone_number: "",
+              birthday: "",
+              image: "",
+              self_introduction: "",
+            };
+
+            const assignValue = (str1: string, str2: string): string => {
+              if (str1 == "") {
+                return str2;
+              } else {
+                return str1;
+              }
+            };
 
             refState.error_message.user_name = hasProperty(
               error.response.data,
@@ -543,6 +586,17 @@ export default defineComponent({
               : "";
             refState.isNotInit = true;
           });
+
+        return !(
+          !!refState.error_message.user_name ||
+          !!refState.error_message.user_id ||
+          !!refState.error_message.password_digest ||
+          !!refState.error_message.email ||
+          !!refState.error_message.phone_number ||
+          !!refState.error_message.birthday ||
+          !!refState.error_message.image ||
+          !!refState.error_message.self_introduction
+        );
       }
     };
 
@@ -578,23 +632,36 @@ export default defineComponent({
         lengthCheck(refState.user.user_name, 45),
         requireCheck(refState.user.user_name)
       );
+
       errorMessage.user_id = assignValue(
         lengthCheck(refState.user.user_id, 45),
         requireCheck(refState.user.user_id)
       );
+
       errorMessage.password_digest = assignValue(
         lengthCheck(refState.user.password_digest, 45),
         requireCheck(refState.user.password_digest)
       );
+
       errorMessage.email = assignValue(
         lengthCheck(refState.user.email, 45),
         requireCheck(refState.user.email)
       );
+
       errorMessage.phone_number = assignValue(
         lengthCheck(refState.user.phone_number.toString(), 45),
         requireCheck(refState.user.phone_number.toString())
       );
-      errorMessage.birthday = requireCheck(refState.user.birthday.toString());
+
+      errorMessage.birthday = checkDateFormat(refState.user.birthday);
+      if (!errorMessage.birthday) {
+        errorMessage.birthday = checkDateValue(refState.user.birthday);
+      }
+      errorMessage.birthday = assignValue(
+        errorMessage.birthday,
+        requireCheck(refState.user.birthday.toString())
+      );
+
       errorMessage.image = lengthCheck(refState.user.email, 1000);
       errorMessage.self_introduction = lengthCheck(
         refState.user.self_introduction,
@@ -602,8 +669,6 @@ export default defineComponent({
       );
 
       Object.assign(refState.error_message, reactive(errorMessage));
-
-      console.log(refState.error_message);
 
       return !(
         !!refState.error_message.user_name ||
