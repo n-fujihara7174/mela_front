@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-xl-5">
+  <div class="input-form mx-xl-5">
     <div class="mt-4">
       <a href="#" @click="transitionList">ユーザー一覧画面</a>
       <span v-if="!refState.isUpdate"> > 登録画面</span>
@@ -121,7 +121,6 @@
                   'is-valid': !isInvalid(refState.error_message.phone_number),
                   'is-invalid': isInvalid(refState.error_message.phone_number),
                 }"
-                class="invalid-feedback"
                 >{{ refState.error_message.phone_number }}</label
               >
             </td>
@@ -129,26 +128,44 @@
           <tr>
             <th>生年月日</th>
             <td>
-              <input
-                type="text"
-                class="form-control"
+              <div
+                class="birthday-form"
                 :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.birthday) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.birthday) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.user.birthday"
-              />
+                'is-valid-textbox':
+                  !isInvalid(refState.error_message.birthday) &&
+                  refState.isNotInit,
+                'is-invalid-textbox':
+                  isInvalid(refState.error_message.birthday) &&
+                  refState.isNotInit,
+                  }">
+                <input
+                type="tel"
+                maxlength="4"
+                class=" input-year"
+                placeholder="1990"
+                v-model="refState.birthday.year"
+                />/
+                <input
+                type="tel"
+                maxlength="2"
+                class="input-month"
+                placeholder="01"
+                v-model="refState.birthday.month"
+                />/
+                <input
+                type="tel"
+                maxlength="2"
+                class="input-day"
+                placeholder="01"
+                v-model="refState.birthday.day"
+                />
+              </div>
               <label
                 :class="{
                   'display-none': judgeDisplay(refState.error_message.birthday),
                   'is-valid': !isInvalid(refState.error_message.birthday),
                   'is-invalid': isInvalid(refState.error_message.birthday),
                 }"
-                class="invalid-feedback"
                 >{{ refState.error_message.birthday }}</label
               >
             </td>
@@ -175,7 +192,6 @@
                   'is-valid': !isInvalid(refState.error_message.image),
                   'is-invalid': isInvalid(refState.error_message.image),
                 }"
-                class="invalid-feedback"
                 >{{ refState.error_message.image }}</label
               >
             </td>
@@ -208,7 +224,6 @@
                     refState.error_message.self_introduction
                   ),
                 }"
-                class="invalid-feedback"
                 >{{ refState.error_message.self_introduction }}</label
               >
             </td>
@@ -291,6 +306,12 @@
       >
         更新
       </button>
+      <button 
+        type="button"
+        class="btn btn-primary create-user-btn"
+        @click="transitionList">
+        キャンセル
+      </button>
     </div>
   </div>
 </template>
@@ -308,6 +329,7 @@ import {
   checkDateFormat,
   checkDateValue,
 } from "@/composables/validationCheck";
+
 
 interface UserExtend extends User {
   post_count: number;
@@ -328,8 +350,15 @@ interface ErrorMessage {
   self_introduction: string;
 }
 
+interface Birthday {
+  year: string;
+  month: string;
+  day: string;
+}
+
 interface State {
   user: UserExtend;
+  birthday: Birthday;
   error_message: ErrorMessage;
   isUpdate: boolean;
   isNotInit: boolean;
@@ -381,6 +410,11 @@ export default defineComponent({
         created_at: "",
         updated_at: "",
       },
+      birthday: {
+        year: "",
+        month: "",
+        day: ""
+      },
       error_message: {
         user_name: "",
         user_id: "",
@@ -408,6 +442,8 @@ export default defineComponent({
       refState.user.birthday = dayjs(refState.user.birthday).format(
         "YYYY/MM/DD"
       );
+      //誕生日を分割する
+      splitBirthday()
       refState.isUpdate = !!refState.user.id;
     });
 
@@ -480,17 +516,6 @@ export default defineComponent({
             : "";
 
           refState.isNotInit = true;
-
-          return !(
-            !!refState.error_message.user_name ||
-            !!refState.error_message.user_id ||
-            !!refState.error_message.password_digest ||
-            !!refState.error_message.email ||
-            !!refState.error_message.phone_number ||
-            !!refState.error_message.birthday ||
-            !!refState.error_message.image ||
-            !!refState.error_message.self_introduction
-          );
         });
     };
 
@@ -498,6 +523,10 @@ export default defineComponent({
     const updateUser = async () => {
       //エラーメッセージをクリア
       Object.assign(refState.error_message, reactive(initErrorMessage));
+
+      //生年月日入力欄の値をマージする
+      mergeBirthday()
+
       if (frontValidationCheck()) {
         console.log("ifの中");
         //更新処理をapiに投げる
@@ -510,26 +539,6 @@ export default defineComponent({
             transitionList();
           })
           .catch((error) => {
-            //エラーメッセージを格納
-            const errorMessage = {
-              user_name: "",
-              user_id: "",
-              password_digest: "",
-              email: "",
-              phone_number: "",
-              birthday: "",
-              image: "",
-              self_introduction: "",
-            };
-
-            const assignValue = (str1: string, str2: string): string => {
-              if (str1 == "") {
-                return str2;
-              } else {
-                return str1;
-              }
-            };
-
             refState.error_message.user_name = hasProperty(
               error.response.data,
               "user_name"
@@ -586,19 +595,29 @@ export default defineComponent({
               : "";
             refState.isNotInit = true;
           });
-
-        return !(
-          !!refState.error_message.user_name ||
-          !!refState.error_message.user_id ||
-          !!refState.error_message.password_digest ||
-          !!refState.error_message.email ||
-          !!refState.error_message.phone_number ||
-          !!refState.error_message.birthday ||
-          !!refState.error_message.image ||
-          !!refState.error_message.self_introduction
-        );
       }
+      console.log(refState.error_message);
     };
+
+    const mergeBirthday = () => {
+      const year = escape(refState.birthday.year);
+      const month = escape(refState.birthday.month)
+      const day = escape(refState.birthday.day)
+      refState.user.birthday = year + "/" + month + "/" + day
+    }
+
+    const splitBirthday = () => {
+      const aryBirthday = refState.user.birthday.split('/')
+      refState.birthday.year = aryBirthday[0]
+      refState.birthday.month = aryBirthday[1]
+      refState.birthday.day = aryBirthday[2]
+    }
+
+    const checkNumber = (checkTarget: string):string => {
+      if(isNaN(checkTarget)){
+        
+      }
+    }
 
     //一覧画面に遷移
     const transitionList = () => {
@@ -609,16 +628,7 @@ export default defineComponent({
 
     //フロント側のバリデーション
     const frontValidationCheck = (): boolean => {
-      const errorMessage = {
-        user_name: "",
-        user_id: "",
-        password_digest: "",
-        email: "",
-        phone_number: "",
-        birthday: "",
-        image: "",
-        self_introduction: "",
-      };
+      console.log("frontValidationCheckの中");
 
       const assignValue = (str1: string, str2: string): string => {
         if (str1 == "") {
@@ -628,47 +638,49 @@ export default defineComponent({
         }
       };
 
-      errorMessage.user_name = assignValue(
+      refState.error_message.user_name = assignValue(
         lengthCheck(refState.user.user_name, 45),
         requireCheck(refState.user.user_name)
       );
 
-      errorMessage.user_id = assignValue(
+      refState.error_message.user_id = assignValue(
         lengthCheck(refState.user.user_id, 45),
         requireCheck(refState.user.user_id)
       );
 
-      errorMessage.password_digest = assignValue(
+      refState.error_message.password_digest = assignValue(
         lengthCheck(refState.user.password_digest, 45),
         requireCheck(refState.user.password_digest)
       );
 
-      errorMessage.email = assignValue(
+      refState.error_message.email = assignValue(
         lengthCheck(refState.user.email, 45),
         requireCheck(refState.user.email)
       );
 
-      errorMessage.phone_number = assignValue(
+      refState.error_message.phone_number = assignValue(
         lengthCheck(refState.user.phone_number.toString(), 45),
         requireCheck(refState.user.phone_number.toString())
       );
 
-      errorMessage.birthday = checkDateFormat(refState.user.birthday);
-      if (!errorMessage.birthday) {
-        errorMessage.birthday = checkDateValue(refState.user.birthday);
+      refState.error_message.birthday = checkDateFormat(refState.user.birthday);
+      if (!refState.error_message.birthday) {
+        refState.error_message.birthday = checkDateValue(
+          refState.user.birthday
+        );
       }
-      errorMessage.birthday = assignValue(
-        errorMessage.birthday,
+      refState.error_message.birthday = assignValue(
+        refState.error_message.birthday,
         requireCheck(refState.user.birthday.toString())
       );
 
-      errorMessage.image = lengthCheck(refState.user.email, 1000);
-      errorMessage.self_introduction = lengthCheck(
+      refState.error_message.image = lengthCheck(refState.user.email, 1000);
+      refState.error_message.self_introduction = lengthCheck(
         refState.user.self_introduction,
         120
       );
 
-      Object.assign(refState.error_message, reactive(errorMessage));
+      refState.isNotInit = true;
 
       return !(
         !!refState.error_message.user_name ||
@@ -725,6 +737,14 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+button {
+  width: 150px;
+  margin-top: 30px;
+  margin-bottom: 100px;
+  margin-right: 50px;
+}
+
 .table th {
   width: 15%;
   padding: 10px 40px;
@@ -733,5 +753,33 @@ export default defineComponent({
 
 .table td {
   border-style: none;
+}
+
+.birthday-form {
+  width:160px;
+  padding: 6px 12px;
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+  background-color: #FFFFFF;
+}
+
+.birthday-form input {
+  border: none;
+  text-align: right;
+}
+
+.input-year {
+  width: 50px;
+  text-align: right;
+}
+
+.input-month {
+  width: 25px;
+  text-align: right;
+}
+
+.input-day {
+  width: 25px;
+  text-align: right;
 }
 </style>
