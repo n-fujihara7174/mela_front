@@ -129,35 +129,39 @@
             <th>生年月日</th>
             <td>
               <div
-                class="birthday-form"
                 :class="{
-                'is-valid-textbox':
-                  !isInvalid(refState.error_message.birthday) &&
-                  refState.isNotInit,
-                'is-invalid-textbox':
-                  isInvalid(refState.error_message.birthday) &&
-                  refState.isNotInit,
-                  }">
+                  'is-valid-textbox':
+                    !isInvalid(refState.error_message.birthday) &&
+                    refState.isNotInit,
+                  'is-invalid-textbox':
+                    isInvalid(refState.error_message.birthday) &&
+                    refState.isNotInit,
+                }"
+                class="birthday-form form-control"
+              >
                 <input
-                type="tel"
-                maxlength="4"
-                class=" input-year"
-                placeholder="1990"
-                v-model="refState.birthday.year"
+                  type="tel"
+                  maxlength="4"
+                  class="input-year"
+                  placeholder="1990"
+                  @input="checkInputYear"
+                  v-model="refState.birthday.year"
                 />/
                 <input
-                type="tel"
-                maxlength="2"
-                class="input-month"
-                placeholder="01"
-                v-model="refState.birthday.month"
+                  type="tel"
+                  maxlength="2"
+                  class="input-month"
+                  placeholder="01"
+                  @input="checkInputMonth"
+                  v-model="refState.birthday.month"
                 />/
                 <input
-                type="tel"
-                maxlength="2"
-                class="input-day"
-                placeholder="01"
-                v-model="refState.birthday.day"
+                  type="tel"
+                  maxlength="2"
+                  class="input-day"
+                  placeholder="01"
+                  @input="checkInputDay"
+                  v-model="refState.birthday.day"
                 />
               </div>
               <label
@@ -306,10 +310,11 @@
       >
         更新
       </button>
-      <button 
+      <button
         type="button"
         class="btn btn-primary create-user-btn"
-        @click="transitionList">
+        @click="transitionList"
+      >
         キャンセル
       </button>
     </div>
@@ -329,7 +334,6 @@ import {
   checkDateFormat,
   checkDateValue,
 } from "@/composables/validationCheck";
-
 
 interface UserExtend extends User {
   post_count: number;
@@ -413,7 +417,7 @@ export default defineComponent({
       birthday: {
         year: "",
         month: "",
-        day: ""
+        day: "",
       },
       error_message: {
         user_name: "",
@@ -443,7 +447,7 @@ export default defineComponent({
         "YYYY/MM/DD"
       );
       //誕生日を分割する
-      splitBirthday()
+      splitBirthday();
       refState.isUpdate = !!refState.user.id;
     });
 
@@ -525,7 +529,7 @@ export default defineComponent({
       Object.assign(refState.error_message, reactive(initErrorMessage));
 
       //生年月日入力欄の値をマージする
-      mergeBirthday()
+      mergeBirthday();
 
       if (frontValidationCheck()) {
         console.log("ifの中");
@@ -601,23 +605,37 @@ export default defineComponent({
 
     const mergeBirthday = () => {
       const year = escape(refState.birthday.year);
-      const month = escape(refState.birthday.month)
-      const day = escape(refState.birthday.day)
-      refState.user.birthday = year + "/" + month + "/" + day
-    }
+      const month = escape(refState.birthday.month);
+      const day = escape(refState.birthday.day);
+      refState.user.birthday = year + "/" + month + "/" + day;
+    };
 
     const splitBirthday = () => {
-      const aryBirthday = refState.user.birthday.split('/')
-      refState.birthday.year = aryBirthday[0]
-      refState.birthday.month = aryBirthday[1]
-      refState.birthday.day = aryBirthday[2]
-    }
+      const aryBirthday = refState.user.birthday.split("/");
+      refState.birthday.year = aryBirthday[0];
+      refState.birthday.month = aryBirthday[1];
+      refState.birthday.day = aryBirthday[2];
+    };
 
-    const checkNumber = (checkTarget: string):string => {
-      if(isNaN(checkTarget)){
-        
-      }
-    }
+    //生年月日入力欄に入力された文字が数字かチェック
+    const checkInputYear = () => {
+      refState.birthday.year = replaceStringToEmpty(refState.birthday.year);
+    };
+
+    //生年月日入力欄に入力された文字が数字かチェック
+    const checkInputMonth = () => {
+      refState.birthday.month = replaceStringToEmpty(refState.birthday.month);
+    };
+
+    //生年月日入力欄に入力された文字が数字かチェック
+    const checkInputDay = () => {
+      refState.birthday.day = replaceStringToEmpty(refState.birthday.day);
+    };
+
+    const replaceStringToEmpty = (checkTarget: string) => {
+      const regex = new RegExp("[^0-9]");
+      return checkTarget.replace(regex,'');
+    };
 
     //一覧画面に遷移
     const transitionList = () => {
@@ -731,13 +749,15 @@ export default defineComponent({
       transitionList,
       createUser,
       updateUser,
+      checkInputYear,
+      checkInputMonth,
+      checkInputDay,
     };
   },
 });
 </script>
 
 <style scoped>
-
 button {
   width: 150px;
   margin-top: 30px;
@@ -756,11 +776,8 @@ button {
 }
 
 .birthday-form {
-  width:160px;
+  width: 160px;
   padding: 6px 12px;
-  border-radius: 0.25rem;
-  border: 1px solid #ced4da;
-  background-color: #FFFFFF;
 }
 
 .birthday-form input {
