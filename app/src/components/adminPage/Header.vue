@@ -2,6 +2,12 @@
   <div class="header container shadow d-flex align-items-center">
     <div class="me-auto ms-5">管理者画面</div>
     <div>
+      <a href="#" @click="transitionUserList">ユーザー一覧</a>
+    </div>
+    <div>
+      <a href="#" @click="transitionPostList">投稿一覧</a>
+    </div>
+    <div>
       <img
         src="../../image/人物のアイコン素材.jpeg"
         alt="ユーザーアイコン"
@@ -13,6 +19,37 @@
     </div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { useRouter } from "vue-router";
+
+export default defineComponent({
+  setup() {
+    const router = useRouter();
+
+    //ユーザー一覧画面に遷移
+    const transitionUserList = () => {
+      router.push({
+        name: "UserList",
+      });
+    };
+
+    //投稿一覧画面に遷移
+    const transitionPostList = () => {
+      router.push({
+        name: "PostList",
+      });
+    };
+
+    return {
+      transitionUserList,
+      transitionPostList,
+    };
+  },
+})
+</script>
+
 
 <style>
 div .header {
