@@ -16,13 +16,22 @@
             </button>
           </div>
           <div class="d-flex">
-            <div class="search-user-name">
+            <div class="search-parameter-form">
+              <label for="searchUserName">ユーザー名</label>
               <input
-                id="userNameAndUserId"
+                id="searchUserName"
                 class="form-control"
-                placeholder="ユーザー名、ユーザーID"
                 @keyup.enter="searchPosts"
-                v-model="refState.searchValue.userIdOrEmail"
+                v-model="refState.searchValue.user_name"
+              />
+            </div>
+            <div class="search-parameter-form">
+              <label for="searchUserName">投稿内容</label>
+              <input
+                id="searchUserName"
+                class="form-control"
+                @keyup.enter="searchPosts"
+                v-model="refState.searchValue.post_contents"
               />
             </div>
           </div>
@@ -33,18 +42,19 @@
       <table class="table table-sm shadow table-hover">
         <thead>
           <tr>
-            <th class="user-name px-3">No</th>
-            <th class="user-id px-3">ユーザーID</th>
-            <th class="email px-3">内容</th>
-            <th class="phone-number px-3">画像</th>
+            <th class="key-value px-3">No</th>
+            <th class="user-name px-3">ユーザー名</th>
+            <th class="post-contents px-3">投稿内容</th>
+            <th class="image px-3">画像</th>
             <th class="is-delete px-3">削除</th>
-            <th class="detail-button text-center">登録日</th>
+            <th class="created_at px-3">登録日</th>
+            <th class="detail-button text-center"></th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(post, index) in refState.posts" :key="index">
             <td class="px-3 align-middle">{{ post.id }}</td>
-            <td class="px-3 align-middle">{{ post.user_id }}</td>
+            <td class="px-3 align-middle">{{ post.user_name }}</td>
             <td class="px-3 align-middle">{{ post.post_contents }}</td>
             <td class="px-3 align-middle">{{ post.post_image }}</td>
             <td class="px-3 align-middle">{{ judgeDelete(post.is_delete) }}</td>
@@ -73,7 +83,8 @@ import { Post } from "@/types/Post";
 
 //検索
 interface SearchValue {
-  allText: string;
+  user_name: string;
+  post_contents: string;
 }
 
 interface State {
@@ -86,7 +97,8 @@ export default defineComponent({
     const router = useRouter();
 
     const searchValueInit: SearchValue = {
-      allText: "",
+      user_name: "",
+      post_contents: "",
     };
 
     const refState = reactive<State>({
@@ -104,10 +116,12 @@ export default defineComponent({
 
     //ユーザー一覧取得（検索パラメータあり）
     const searchPosts = async () => {
-      if (refState.searchValue.allText != null) {
+      if (refState.searchValue.user_name != null && refState.searchValue.post_contents != null) {
         const result = await axios.get("http://localhost:3000/posts", {
           params: {
-            all_text: refState.searchValue.allText,
+            user_name: refState.searchValue.user_name,
+            post_contents: refState.searchValue.post_contents
+
           },
         });
         refState.posts = { ...result.data };
@@ -157,28 +171,37 @@ export default defineComponent({
   border-bottom-left-radius: 0;
 }
 
-.user-name {
-  width: 20%;
-}
-
-.email {
-  width: 35%;
-}
-
-.display-user-id {
-  width: 20%;
-}
-
-.phone-number {
-  width: 10%;
-}
-
-.is-delete {
+.key-value {
   width: 5%;
+}
+
+.user-name {
+  width: 25%;
+}
+
+.post-contents{
+  width: 25%;
+}
+
+.image {
+  width: 15%;
+}
+
+.is_delete {
+ width: 5%
+}
+
+.created_at {
+  width: 10%
 }
 
 .detail-button {
   width: 10%;
+}
+
+.search-parameter-form {
+  width: 250px;
+  margin-left: 20px;
 }
 
 .search-parameter-label {
@@ -190,7 +213,4 @@ export default defineComponent({
   margin-bottom: 30px;
 }
 
-.search-user-name {
-  width: 400px;
-}
 </style>
