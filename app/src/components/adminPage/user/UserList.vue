@@ -112,6 +112,8 @@ export default defineComponent({
         refState.users = { ...result.data };
       }
     };
+
+    //編集画面に遷移
     const transitionDetail = (id: number) => {
       router.push({
         name: "UserDetail",

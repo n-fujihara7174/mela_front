@@ -70,6 +70,70 @@
             </td>
           </tr>
           <tr>
+            <th>パスワード</th>
+            <td>
+              <input
+                type="password"
+                class="form-control"
+                :class="{
+                  'is-valid-textbox':
+                    !isInvalid(refState.error_message.password) &&
+                    refState.isNotInit,
+                  'is-invalid-textbox':
+                    isInvalid(refState.error_message.password) &&
+                    refState.isNotInit,
+                }"
+                v-model="refState.user.password"
+              />
+              <label
+                :class="{
+                  'display-none': judgeDisplay(
+                    refState.error_message.password
+                  ),
+                  'is-valid': !isInvalid(
+                    refState.error_message.password
+                  ),
+                  'is-invalid': isInvalid(
+                    refState.error_message.password
+                  ),
+                }"
+                >{{ refState.error_message.password }}</label
+              >
+            </td>
+          </tr>
+          <tr>
+            <th>パスワード確認</th>
+            <td>
+              <input
+                type="password"
+                class="form-control"
+                :class="{
+                  'is-valid-textbox':
+                    !isInvalid(refState.error_message.password_digest) &&
+                    refState.isNotInit,
+                  'is-invalid-textbox':
+                    isInvalid(refState.error_message.password_digest) &&
+                    refState.isNotInit,
+                }"
+                v-model="refState.user.password_digest"
+              />
+              <label
+                :class="{
+                  'display-none': judgeDisplay(
+                    refState.error_message.password_digest
+                  ),
+                  'is-valid': !isInvalid(
+                    refState.error_message.password_digest
+                  ),
+                  'is-invalid': isInvalid(
+                    refState.error_message.password_digest
+                  ),
+                }"
+                >{{ refState.error_message.password_digest }}</label
+              >
+            </td>
+          </tr>
+          <tr>
             <th>メールアドレス</th>
             <td>
               <input
@@ -272,6 +336,19 @@
             </td>
           </tr>
           <tr>
+            <th>カレンダー通知</th>
+            <td>
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="flexSwitchCheckDefault"
+                  v-model="refState.user.can_calender_notification"
+                />
+              </div>
+            </td>
+          </tr>
+          <tr>
             <th>削除</th>
             <td>
               <div class="form-check form-switch">
@@ -346,6 +423,7 @@ interface UserExtend extends User {
 interface ErrorMessage {
   user_name: string;
   user_id: string;
+  password: string;
   password_digest: string;
   email: string;
   phone_number: string;
@@ -371,8 +449,8 @@ interface State {
 export default defineComponent({
   props: {
     id: {
-      type: String,
-      default: "",
+      type: Number,
+      required: true,
     },
   },
 
@@ -382,6 +460,7 @@ export default defineComponent({
     const initErrorMessage: ErrorMessage = {
       user_name: "",
       user_id: "",
+      password: "",
       password_digest: "",
       email: "",
       phone_number: "",
@@ -400,6 +479,7 @@ export default defineComponent({
         id: 0,
         user_name: "",
         user_id: "",
+        password: "",
         password_digest: "",
         self_introduction: "",
         email: "",
@@ -422,6 +502,7 @@ export default defineComponent({
       error_message: {
         user_name: "",
         user_id: "",
+        password: "",
         password_digest: "",
         email: "",
         phone_number: "",
@@ -435,92 +516,107 @@ export default defineComponent({
 
     //ユーザー情報取得
     onMounted(async () => {
-      const result = await axios.get("http://localhost:3000/users/" + props.id);
-      refState.user = result.data[0];
-      refState.user.created_at = dayjs(refState.user.created_at).format(
-        "YYYY/MM/DD HH:mm:ss"
-      );
-      refState.user.updated_at = dayjs(refState.user.updated_at).format(
-        "YYYY/MM/DD HH:mm:ss"
-      );
-      refState.user.birthday = dayjs(refState.user.birthday).format(
-        "YYYY/MM/DD"
-      );
-      //誕生日を分割する
-      splitBirthday();
-      refState.isUpdate = !!refState.user.id;
+      refState.isUpdate = !!Number(props.id);
+      if (refState.isUpdate) {
+        const result = await axios.get(
+          "http://localhost:3000/users/" + props.id.toString()
+        );
+        refState.user = result.data[0];
+        refState.user.created_at = dayjs(refState.user.created_at).format(
+          "YYYY/MM/DD HH:mm:ss"
+        );
+        refState.user.updated_at = dayjs(refState.user.updated_at).format(
+          "YYYY/MM/DD HH:mm:ss"
+        );
+        refState.user.birthday = dayjs(refState.user.birthday).format(
+          "YYYY/MM/DD"
+        );
+        //誕生日を分割する
+        splitBirthday();
+      }
     });
 
     //ユーザー新規登録
     const createUser = async () => {
-      await axios
-        .post("http://localhost:3000/users/", {
-          user: refState.user,
-        })
-        .then(() => {
-          //一覧画面に遷移
-          transitionList();
-        })
-        .catch((error) => {
-          //エラーメッセージを格納
-          refState.error_message.user_name = hasProperty(
-            error.response.data,
-            "user_name"
-          )
-            ? error.response.data.user_name[0]
-            : "";
+      //エラーメッセージをクリア
+      Object.assign(refState.error_message, reactive(initErrorMessage));
 
-          refState.error_message.user_id = hasProperty(
-            error.response.data,
-            "user_id"
-          )
-            ? error.response.data.user_id[0]
-            : "";
+      //生年月日入力欄の値をマージする
+      mergeBirthday();
 
-          refState.error_message.password_digest = hasProperty(
-            error.response.data,
-            "password_digest"
-          )
-            ? error.response.data.password_digest[0]
-            : "";
+      if (frontValidationCheck()) {
+        console.log("ifの中");
+        await axios
+          .post("http://localhost:3000/users/", {
+            user: refState.user,
+          })
+          .then(() => {
+            //一覧画面に遷移
+            transitionList();
+          })
+          .catch((error) => {
+            //エラーメッセージを格納
+            refState.error_message.user_name = hasProperty(
+              error.response.data,
+              "user_name"
+            )
+              ? error.response.data.user_name[0]
+              : "";
 
-          refState.error_message.email = hasProperty(
-            error.response.data,
-            "email"
-          )
-            ? error.response.data.email[0]
-            : "";
+            refState.error_message.user_id = hasProperty(
+              error.response.data,
+              "user_id"
+            )
+              ? error.response.data.user_id[0]
+              : "";
 
-          refState.error_message.phone_number = hasProperty(
-            error.response.data,
-            "phone_number"
-          )
-            ? error.response.data.phone_number[0]
-            : "";
+            refState.error_message.password_digest = hasProperty(
+              error.response.data,
+              "password_digest"
+            )
+              ? error.response.data.password_digest[0]
+              : "";
 
-          refState.error_message.birthday = hasProperty(
-            error.response.data,
-            "birthday"
-          )
-            ? error.response.data.birthday[0]
-            : "";
+            refState.error_message.email = hasProperty(
+              error.response.data,
+              "email"
+            )
+              ? error.response.data.email[0]
+              : "";
 
-          refState.error_message.image = hasProperty(
-            error.response.data,
-            "image"
-          )
-            ? error.response.data.image[0]
-            : "";
+            refState.error_message.phone_number = hasProperty(
+              error.response.data,
+              "phone_number"
+            )
+              ? error.response.data.phone_number[0]
+              : "";
 
-          refState.error_message.self_introduction = hasProperty(
-            error.response.data,
-            "self_introduction"
-          )
-            ? error.response.data.self_introduction[0]
-            : "";
+            refState.error_message.birthday = hasProperty(
+              error.response.data,
+              "birthday"
+            )
+              ? error.response.data.birthday[0]
+              : "";
 
-          refState.isNotInit = true;
-        });
+            refState.error_message.image = hasProperty(
+              error.response.data,
+              "image"
+            )
+              ? error.response.data.image[0]
+              : "";
+
+            refState.error_message.self_introduction = hasProperty(
+              error.response.data,
+              "self_introduction"
+            )
+              ? error.response.data.self_introduction[0]
+              : "";
+
+            refState.isNotInit = true;
+          });
+      } else {
+        console.log("elseのなか");
+      }
     };
 
     //ユーザー更新
@@ -532,7 +628,6 @@ export default defineComponent({
       mergeBirthday();
 
       if (frontValidationCheck()) {
-        console.log("ifの中");
         //更新処理をapiに投げる
         await axios
           .patch("http://localhost:3000/users/" + props.id, {
@@ -634,7 +729,7 @@ export default defineComponent({
 
     const replaceStringToEmpty = (checkTarget: string) => {
       const regex = new RegExp("[^0-9]");
-      return checkTarget.replace(regex,'');
+      return checkTarget.replace(regex, "");
     };
 
     //一覧画面に遷移
@@ -646,8 +741,6 @@ export default defineComponent({
 
     //フロント側のバリデーション
     const frontValidationCheck = (): boolean => {
-      console.log("frontValidationCheckの中");
-
       const assignValue = (str1: string, str2: string): string => {
         if (str1 == "") {
           return str2;
@@ -664,6 +757,11 @@ export default defineComponent({
       refState.error_message.user_id = assignValue(
         lengthCheck(refState.user.user_id, 45),
         requireCheck(refState.user.user_id)
+      );
+
+      refState.error_message.password = assignValue(
+        lengthCheck(refState.user.password, 45),
+        requireCheck(refState.user.password)
       );
 
       refState.error_message.password_digest = assignValue(
