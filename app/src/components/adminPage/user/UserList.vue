@@ -10,7 +10,7 @@
             <button
               type="button"
               class="btn btn-primary create-user-btn"
-              @click="transitionDetail(0)"
+              @click="transitionUserEdit(0)"
             >
               新規登録
             </button>
@@ -52,9 +52,9 @@
               <button
                 type="button"
                 class="btn btn-primary"
-                @click="transitionDetail(user.id)"
+                @click="transitionUserEdit(user.id)"
               >
-                詳細
+                編集
               </button>
             </td>
           </tr>
@@ -114,9 +114,9 @@ export default defineComponent({
     };
 
     //編集画面に遷移
-    const transitionDetail = (id: number) => {
+    const transitionUserEdit = (id: number) => {
       router.push({
-        name: "UserDetail",
+        name: "UserEdit",
         params: {
           id: id,
         },
@@ -145,7 +145,7 @@ export default defineComponent({
       judgeFlag,
       judgeDelete,
       searchUsers,
-      transitionDetail,
+      transitionUserEdit,
     };
   },
 });

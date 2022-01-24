@@ -10,7 +10,7 @@
             <button
               type="button"
               class="btn btn-primary create-user-btn"
-              @click="transitionPostDetail(0)"
+              @click="transitionPostEdit(0)"
             >
               新規登録
             </button>
@@ -63,7 +63,7 @@
               <button
                 type="button"
                 class="btn btn-primary"
-                @click="transitionPostDetail(user.id)"
+                @click="transitionPostEdit(post.id)"
               >
                 詳細
               </button>
@@ -81,6 +81,10 @@ import { useRouter } from "vue-router";
 import axios from "axios";
 import { Post } from "@/types/Post";
 
+interface ExtendPost extends Post {
+  user_name: string;
+}
+
 //検索
 interface SearchValue {
   user_name: string;
@@ -89,7 +93,7 @@ interface SearchValue {
 
 interface State {
   searchValue: SearchValue;
-  posts: Array<Post>;
+  posts: Array<ExtendPost>;
 }
 
 export default defineComponent({
@@ -116,12 +120,14 @@ export default defineComponent({
 
     //ユーザー一覧取得（検索パラメータあり）
     const searchPosts = async () => {
-      if (refState.searchValue.user_name != null && refState.searchValue.post_contents != null) {
+      if (
+        refState.searchValue.user_name != null &&
+        refState.searchValue.post_contents != null
+      ) {
         const result = await axios.get("http://localhost:3000/posts", {
           params: {
             user_name: refState.searchValue.user_name,
-            post_contents: refState.searchValue.post_contents
-
+            post_contents: refState.searchValue.post_contents,
           },
         });
         refState.posts = { ...result.data };
@@ -129,9 +135,9 @@ export default defineComponent({
     };
 
     //編集画面に遷移
-    const transitionPostDetail = (id: number) => {
+    const transitionPostEdit = (id: number) => {
       router.push({
-        name: "PostDetail",
+        name: "PostEdit",
         params: {
           id: id,
         },
@@ -151,7 +157,7 @@ export default defineComponent({
       fetchPosts,
       judgeDelete,
       searchPosts,
-      transitionPostDetail,
+      transitionPostEdit,
     };
   },
 });
@@ -179,7 +185,7 @@ export default defineComponent({
   width: 25%;
 }
 
-.post-contents{
+.post-contents {
   width: 25%;
 }
 
@@ -188,11 +194,11 @@ export default defineComponent({
 }
 
 .is_delete {
- width: 5%
+  width: 5%;
 }
 
 .created_at {
-  width: 10%
+  width: 10%;
 }
 
 .detail-button {
@@ -212,5 +218,4 @@ export default defineComponent({
   width: 200px;
   margin-bottom: 30px;
 }
-
 </style>

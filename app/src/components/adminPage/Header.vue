@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -47,9 +47,8 @@ export default defineComponent({
       transitionPostList,
     };
   },
-})
+});
 </script>
-
 
 <style>
 div .header {

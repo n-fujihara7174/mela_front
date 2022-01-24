@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import AdminPage from "../views/AdminPage.vue";
-import UserList from "../components/adminPage/user/UserList.vue";
-import UserDetail from "../components/adminPage/user/UserDetail.vue"
-import PostList from "../components/adminPage/post/PostList.vue"
+import AdminPage from "@/views/AdminPage.vue";
+import UserList from "@/components/adminPage/user/UserList.vue";
+import UserEdit from "@/components/adminPage/user/UserEdit.vue";
+import PostList from "@/components/adminPage/post/PostList.vue";
+import PostEdit from "@/components/adminPage/post/PostEdit.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -15,16 +16,21 @@ const routes: Array<RouteRecordRaw> = [
         component: UserList,
       },
       {
-        path: 'UserDetail/:id',
-        name: "UserDetail",
-        component: UserDetail,
-        props: true
+        path: "UserEdit/:id",
+        name: "UserEdit",
+        component: UserEdit,
+        props: true,
       },
       {
-        path: 'PostList',
-        name: 'PostList',
+        path: "PostList",
+        name: "PostList",
         component: PostList,
-      }
+      },
+      {
+        path: "PostEdit/:id",
+        name: "PostEdit",
+        component: PostEdit,
+      },
     ],
   },
 ];
