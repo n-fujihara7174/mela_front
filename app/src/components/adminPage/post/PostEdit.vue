@@ -23,7 +23,6 @@
                 :list="userNameList"
                 :placeholder="'ユーザー名を入力してください'"
               ></SuggestInput>
-              {{ refState.post.user_name }}
               <label
                 :class="{
                   'display-none': judgeDisplay(
