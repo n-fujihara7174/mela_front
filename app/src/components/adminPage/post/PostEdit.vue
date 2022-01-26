@@ -171,7 +171,7 @@ export default defineComponent({
 
   props: {
     id: {
-      type: Number,
+      type: String,
       required: true,
     },
   },
@@ -225,10 +225,11 @@ export default defineComponent({
 
     //ユーザー情報取得
     onMounted(async () => {
+      console.log("onMounted");
       refState.isUpdate = !!Number(props.id);
       if (refState.isUpdate) {
         const result = await axios.get(
-          "http://localhost:3000/post/" + props.id.toString()
+          "http://localhost:3000/posts/" + props.id
         );
         refState.post = result.data[0];
         refState.post.created_at = formatDate(refState.post.created_at);
@@ -241,7 +242,6 @@ export default defineComponent({
       Object.assign(refState.error_message, reactive(initErrorMessage));
 
       if (frontValidationCheck()) {
-        console.log("ifの中");
         await axios
           .post("http://localhost:3000/users/", {
             user: refState.post,
@@ -275,8 +275,6 @@ export default defineComponent({
 
             refState.isNotInit = true;
           });
-      } else {
-        console.log("elseのなか");
       }
     };
 
@@ -285,6 +283,7 @@ export default defineComponent({
       //エラーメッセージをクリア
       Object.assign(refState.error_message, reactive(initErrorMessage));
 
+      //バリデーションチェックが問題なければ更新処理に進む
       if (frontValidationCheck()) {
         //更新処理をapiに投げる
         await axios
@@ -321,7 +320,6 @@ export default defineComponent({
             refState.isNotInit = true;
           });
       }
-      console.log(refState.error_message);
     };
 
     //一覧画面に遷移

@@ -30,6 +30,7 @@ const routes: Array<RouteRecordRaw> = [
         path: "PostEdit/:id",
         name: "PostEdit",
         component: PostEdit,
+        props: true,
       },
     ],
   },

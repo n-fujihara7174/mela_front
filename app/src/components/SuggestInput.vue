@@ -8,14 +8,9 @@
       @focus="onFocus"
       @blur="unFocus"
     />
-    <select
-      v-show="isDisplay"
-      class="form-select"
-      size="4"
-      aria-label="size 4 select example"
-    >
+    <div v-show="isDisplay" class="dropdown-menu" :size="listSize">
       <option
-        class="autocomplete"
+        class="dropdown-item"
         v-for="(element, index) in refState.filteredList"
         :key="index"
         :mouseleave="mouseLeave"
@@ -25,7 +20,7 @@
       >
         {{ element }}
       </option>
-    </select>
+    </div>
   </div>
 </template>
 
@@ -63,8 +58,6 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    console.log("SuggestInputの中");
-
     const refState = reactive<State>({
       filteredList: [],
       inputValue: "",
@@ -73,6 +66,8 @@ export default defineComponent({
     });
 
     onMounted(() => {
+      console.log("props.value : " + props.value);
+      refState.inputValue = props.value;
       listFilter(refState.inputValue);
     });
 
@@ -102,14 +97,23 @@ export default defineComponent({
       refState.isHover = false;
     };
 
+    //サジェストで選択した値をテキストボックスにセット
     const setInputValue = (selectValue: string) => {
       refState.inputValue = selectValue;
+      listFilter(selectValue);
     };
 
     watch(
       () => refState.inputValue,
       () => {
         emit("update:value", refState.inputValue);
+      }
+    );
+
+    watch(
+      () => props.value,
+      () => {
+        refState.inputValue = props.value;
       }
     );
 
@@ -120,20 +124,21 @@ export default defineComponent({
       );
     });
 
-    const pulldownSize = computed(() => {
+    /*
+       pulldownで要素を表示する個数を算出
+       サジェストのリストの要素が1つであれば、2を返却（2にしないとプルダウンの選択肢として表示されない)
+       2から10であれば、要素数そのままの個数を返却
+       10以上であれば、10を返却
+    */
+    const listSize = computed(() => {
       let size = 0;
-      if (refState.filteredList.length > 10) {
-        console.log("10超える");
-        size = 10;
-      } else {
-        console.log("10超えない");
-        size = refState.filteredList.length;
-      }
+      const filterSize = refState.filteredList.length;
+
+      size = filterSize === 1 ? 2 : filterSize;
+      size = filterSize > 10 ? 10 : filterSize;
+
       return size;
     });
-
-    //サジェスト入力処理はできたので、見た目を整える
-    //それが出来次第、登録のテストと、idで投稿のデータが取得できない件を調べる
 
     return {
       refState,
@@ -144,10 +149,15 @@ export default defineComponent({
       mouseLeave,
       setInputValue,
       isDisplay,
-      pulldownSize,
+      listSize,
     };
   },
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.dropdown-menu {
+  display: block;
+  width: 100%;
+}
+</style>
