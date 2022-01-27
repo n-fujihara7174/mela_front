@@ -16,22 +16,26 @@
             <td class="align-middle">{{ refState.post.id }}</td>
           </tr>
           <tr>
-            <th>ユーザー名</th>
+            <th>ユーザーID</th>
             <td>
               <SuggestInput
-                v-model:value="refState.post.user_name"
-                :list="userNameList"
+                v-model:value="refState.post.unique_user_id"
+                :list="userIdList"
                 :placeholder="'ユーザー名を入力してください'"
+                :errorMessage="refState.error_message.unique_user_id"
+                :isNotInit="refState.isNotInit"
               ></SuggestInput>
               <label
                 :class="{
                   'display-none': judgeDisplay(
-                    refState.error_message.user_name
+                    refState.error_message.unique_user_id
                   ),
-                  'is-valid': !isInvalid(refState.error_message.user_name),
-                  'is-invalid': isInvalid(refState.error_message.user_name),
+                  'is-valid': !isInvalid(refState.error_message.unique_user_id),
+                  'is-invalid': isInvalid(
+                    refState.error_message.unique_user_id
+                  ),
                 }"
-                >{{ refState.error_message.user_name }}</label
+                >{{ refState.error_message.unique_user_id }}</label
               >
             </td>
           </tr>
@@ -104,7 +108,7 @@
               </div>
             </td>
           </tr>
-          <tr>
+          <tr v-if="refState.isUpdate">
             <th>登録日</th>
             <td class="align-middle">{{ refState.post.created_at }}</td>
           </tr>
@@ -148,11 +152,11 @@ import { lengthCheck, requireCheck } from "@/composables/validationCheck";
 import SuggestInput from "@/components/SuggestInput.vue";
 
 interface ExtendPost extends Post {
-  user_name: string;
+  unique_user_id: string;
 }
 
 interface ErrorMessage {
-  user_name: string;
+  unique_user_id: string;
   post_image: string;
   post_contents: string;
 }
@@ -180,7 +184,7 @@ export default defineComponent({
     const router = useRouter();
 
     const initErrorMessage: ErrorMessage = {
-      user_name: "",
+      unique_user_id: "",
       post_image: "",
       post_contents: "",
     };
@@ -189,14 +193,14 @@ export default defineComponent({
       post: {
         id: 0,
         user_id: 0,
-        user_name: "",
+        unique_user_id: "",
         post_contents: "",
         post_image: "",
         is_delete: false,
         created_at: "",
       },
       error_message: {
-        user_name: "",
+        unique_user_id: "",
         post_image: "",
         post_contents: "",
       },
@@ -205,9 +209,9 @@ export default defineComponent({
     });
 
     //SuggestInputの引数に渡すユーザー名リストを取得
-    const getUserNameList = () => {
+    const getUserIdList = () => {
       const oReq = new XMLHttpRequest();
-      oReq.open("GET", "http://localhost:3000/userNameList/", false);
+      oReq.open("GET", "http://localhost:3000/userIdList/", false);
       oReq.send();
       return oReq.response;
     };
@@ -220,12 +224,13 @@ export default defineComponent({
       return arrayText.split(",");
     };
 
-    const userNameList = stringToArray(getUserNameList());
+    const userIdList = stringToArray(getUserIdList());
     //レスポンスが文字列になっているので、分割して配列にする必要がある
 
     //ユーザー情報取得
     onMounted(async () => {
       console.log("onMounted");
+      console.log("!!Number(props.id) : " + !!Number(props.id));
       refState.isUpdate = !!Number(props.id);
       if (refState.isUpdate) {
         const result = await axios.get(
@@ -243,8 +248,8 @@ export default defineComponent({
 
       if (frontValidationCheck()) {
         await axios
-          .post("http://localhost:3000/users/", {
-            user: refState.post,
+          .post("http://localhost:3000/posts/", {
+            post: refState.post,
           })
           .then(() => {
             //一覧画面に遷移
@@ -252,11 +257,11 @@ export default defineComponent({
           })
           .catch((error) => {
             //エラーメッセージを格納
-            refState.error_message.user_name = hasProperty(
+            refState.error_message.unique_user_id = hasProperty(
               error.response.data,
-              "user_name"
+              "unique_user_id"
             )
-              ? error.response.data.user_name[0]
+              ? error.response.data.unique_user_id[0]
               : "";
 
             refState.error_message.post_image = hasProperty(
@@ -287,8 +292,8 @@ export default defineComponent({
       if (frontValidationCheck()) {
         //更新処理をapiに投げる
         await axios
-          .patch("http://localhost:3000/users/" + props.id, {
-            user: refState.post,
+          .patch("http://localhost:3000/posts/" + props.id, {
+            post: refState.post,
           })
           .then(() => {
             //一覧画面に遷移
@@ -296,11 +301,11 @@ export default defineComponent({
           })
           .catch((error) => {
             //エラーメッセージを格納
-            refState.error_message.user_name = hasProperty(
+            refState.error_message.unique_user_id = hasProperty(
               error.response.data,
-              "user_name"
+              "unique_user_id"
             )
-              ? error.response.data.user_name[0]
+              ? error.response.data.unique_user_id[0]
               : "";
 
             refState.error_message.post_image = hasProperty(
@@ -339,9 +344,9 @@ export default defineComponent({
         }
       };
 
-      refState.error_message.user_name = assignValue(
-        lengthCheck(refState.post.user_name, 45),
-        requireCheck(refState.post.user_name)
+      refState.error_message.unique_user_id = assignValue(
+        lengthCheck(refState.post.unique_user_id, 45),
+        requireCheck(refState.post.unique_user_id)
       );
       refState.error_message.post_contents = lengthCheck(
         refState.post.post_contents,
@@ -354,7 +359,7 @@ export default defineComponent({
       refState.isNotInit = true;
 
       return !(
-        !!refState.error_message.user_name ||
+        !!refState.error_message.unique_user_id ||
         !!refState.error_message.post_contents ||
         !!refState.error_message.post_image
       );
@@ -393,7 +398,7 @@ export default defineComponent({
       transitionPostList,
       createUser,
       updateUser,
-      userNameList,
+      userIdList,
     };
   },
 });

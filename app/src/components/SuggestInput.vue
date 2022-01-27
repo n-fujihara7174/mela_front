@@ -3,6 +3,12 @@
     <input
       type="text"
       class="form-control dropdown-toggle"
+      :class="{
+        'is-valid-textbox':
+          !isInvalid(refState.errorMessage) && refState.isNotInit,
+        'is-invalid-textbox':
+          isInvalid(refState.errorMessage) && refState.isNotInit,
+      }"
       v-model="refState.inputValue"
       @input="listFilter(refState.inputValue)"
       @focus="onFocus"
@@ -37,8 +43,10 @@ import {
 interface State {
   filteredList: string[];
   inputValue: string;
+  errorMessage: string;
   isFocus: boolean;
   isHover: boolean;
+  isNotInit: boolean;
 }
 
 export default defineComponent({
@@ -51,6 +59,14 @@ export default defineComponent({
       type: Array as PropType<string[]>,
       required: true,
     },
+    errorMessage: {
+      type: String as PropType<string>,
+      required: true,
+    },
+    isNotInit: {
+      type: Boolean as PropType<boolean>,
+      required: true,
+    },
     placeholder: {
       type: String as PropType<string>,
       required: false,
@@ -61,12 +77,13 @@ export default defineComponent({
     const refState = reactive<State>({
       filteredList: [],
       inputValue: "",
+      errorMessage: "",
       isFocus: false,
       isHover: false,
+      isNotInit: false,
     });
 
     onMounted(() => {
-      console.log("props.value : " + props.value);
       refState.inputValue = props.value;
       listFilter(refState.inputValue);
     });
@@ -117,6 +134,20 @@ export default defineComponent({
       }
     );
 
+    watch(
+      () => props.errorMessage,
+      () => {
+        refState.errorMessage = props.value;
+      }
+    );
+
+    watch(
+      () => props.isNotInit,
+      () => {
+        refState.isNotInit = props.isNotInit;
+      }
+    );
+
     const isDisplay = computed(() => {
       return (
         (refState.isFocus || refState.isHover) &&
@@ -140,6 +171,10 @@ export default defineComponent({
       return size;
     });
 
+    const isInvalid = (errorMesssage: string) => {
+      return !!errorMesssage;
+    };
+
     return {
       refState,
       listFilter,
@@ -150,6 +185,7 @@ export default defineComponent({
       setInputValue,
       isDisplay,
       listSize,
+      isInvalid,
     };
   },
 });
