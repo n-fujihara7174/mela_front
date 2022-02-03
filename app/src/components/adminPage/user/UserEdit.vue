@@ -1,4 +1,6 @@
 <template>
+  パスワード、誕生日周りの登録・更新処理を見直す
+
   <div class="input-form mx-xl-5">
     <div class="mt-4">
       <a href="#" @click="transitionList">ユーザー 一覧画面</a>
@@ -69,7 +71,7 @@
               >
             </td>
           </tr>
-          <tr>
+          <tr :class="{ 'display-none': !refState.isUpdate }">
             <th>パスワード</th>
             <td>
               <input
@@ -95,7 +97,7 @@
               >
             </td>
           </tr>
-          <tr>
+          <tr :class="{ 'display-none': !refState.isUpdate }">
             <th>パスワード確認</th>
             <td>
               <input

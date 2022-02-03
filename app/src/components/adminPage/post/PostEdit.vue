@@ -22,20 +22,16 @@
                 v-model:value="refState.post.unique_user_id"
                 :list="userIdList"
                 :placeholder="'ユーザー名を入力してください'"
-                :errorMessage="refState.error_message.unique_user_id"
+                :errorMessage="refState.error_message.user"
                 :isNotInit="refState.isNotInit"
               ></SuggestInput>
               <label
                 :class="{
-                  'display-none': judgeDisplay(
-                    refState.error_message.unique_user_id
-                  ),
-                  'is-valid': !isInvalid(refState.error_message.unique_user_id),
-                  'is-invalid': isInvalid(
-                    refState.error_message.unique_user_id
-                  ),
+                  'display-none': judgeDisplay(refState.error_message.user),
+                  'is-valid': !isInvalid(refState.error_message.user),
+                  'is-invalid': isInvalid(refState.error_message.user),
                 }"
-                >{{ refState.error_message.unique_user_id }}</label
+                >{{ refState.error_message.user }}</label
               >
             </td>
           </tr>
@@ -156,7 +152,7 @@ interface ExtendPost extends Post {
 }
 
 interface ErrorMessage {
-  unique_user_id: string;
+  user: string;
   post_image: string;
   post_contents: string;
 }
@@ -184,7 +180,7 @@ export default defineComponent({
     const router = useRouter();
 
     const initErrorMessage: ErrorMessage = {
-      unique_user_id: "",
+      user: "",
       post_image: "",
       post_contents: "",
     };
@@ -200,7 +196,7 @@ export default defineComponent({
         created_at: "",
       },
       error_message: {
-        unique_user_id: "",
+        user: "",
         post_image: "",
         post_contents: "",
       },
@@ -257,11 +253,11 @@ export default defineComponent({
           })
           .catch((error) => {
             //エラーメッセージを格納
-            refState.error_message.unique_user_id = hasProperty(
+            refState.error_message.user = hasProperty(
               error.response.data,
-              "unique_user_id"
+              "user"
             )
-              ? error.response.data.unique_user_id[0]
+              ? error.response.data.user[0]
               : "";
 
             refState.error_message.post_image = hasProperty(
@@ -301,11 +297,11 @@ export default defineComponent({
           })
           .catch((error) => {
             //エラーメッセージを格納
-            refState.error_message.unique_user_id = hasProperty(
+            refState.error_message.user = hasProperty(
               error.response.data,
-              "unique_user_id"
+              "user"
             )
-              ? error.response.data.unique_user_id[0]
+              ? error.response.data.user[0]
               : "";
 
             refState.error_message.post_image = hasProperty(
@@ -344,7 +340,7 @@ export default defineComponent({
         }
       };
 
-      refState.error_message.unique_user_id = assignValue(
+      refState.error_message.user = assignValue(
         lengthCheck(refState.post.unique_user_id, 45),
         requireCheck(refState.post.unique_user_id)
       );
@@ -359,7 +355,7 @@ export default defineComponent({
       refState.isNotInit = true;
 
       return !(
-        !!refState.error_message.unique_user_id ||
+        !!refState.error_message.user ||
         !!refState.error_message.post_contents ||
         !!refState.error_message.post_image
       );
