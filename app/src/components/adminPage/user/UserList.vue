@@ -10,7 +10,7 @@
             <button
               type="button"
               class="btn btn-primary create-user-btn"
-              @click="transitionUserEdit(0)"
+              @click="transitionEdit(0)"
             >
               新規登録
             </button>
@@ -47,12 +47,12 @@
             <td class="px-3 align-middle">{{ user.user_id }}</td>
             <td class="px-3 align-middle">{{ user.email }}</td>
             <td class="px-3 align-middle">{{ user.phone_number }}</td>
-            <td class="px-3 align-middle">{{ judgeDelete(user.is_delete) }}</td>
+            <td class="px-3 align-middle">{{ is_delete(user.is_delete) }}</td>
             <td class="px=3 align-middle text-center">
               <button
                 type="button"
                 class="btn btn-primary"
-                @click="transitionUserEdit(user.id)"
+                @click="transitionEdit(user.id)"
               >
                 編集
               </button>
@@ -66,15 +66,17 @@
 
 <script lang="ts">
 import { defineComponent, reactive, onMounted } from "vue";
-import { useRouter } from "vue-router";
 import axios from "axios";
 import { User } from "@/types/User";
+import { judgeDelete } from "@/composables/judgValue";
+import { transitionUserEdit } from "@/composables/transitionScreen";
 
-//検索
+//検索値格納用
 interface SearchValue {
   userIdOrEmail: string;
 }
 
+//状態格納用
 interface State {
   searchValue: SearchValue;
   users: Array<User>;
@@ -82,24 +84,25 @@ interface State {
 
 export default defineComponent({
   setup() {
-    const router = useRouter();
+    const is_delete = judgeDelete;
+    const transitionEdit = transitionUserEdit;
 
+    //検索値格納用の変数を初期化
     const searchValueInit: SearchValue = {
       userIdOrEmail: "",
     };
 
+    //状態をリアクティブで定義
     const refState = reactive<State>({
       searchValue: searchValueInit,
       users: [],
     });
 
     //ユーザー一覧取得
-    const fetchUsers = async () => {
+    onMounted(async () => {
       const result = await axios.get("http://localhost:3000/users");
       refState.users = { ...result.data };
-    };
-
-    onMounted(fetchUsers);
+    });
 
     //ユーザー一覧取得（検索パラメータあり）
     const searchUsers = async () => {
@@ -113,39 +116,11 @@ export default defineComponent({
       }
     };
 
-    //編集画面に遷移
-    const transitionUserEdit = (id: number) => {
-      router.push({
-        name: "UserEdit",
-        params: {
-          id: id,
-        },
-      });
-    };
-
-    const judgeFlag = (flag: boolean) => {
-      if (flag) {
-        return "◯";
-      } else {
-        return "";
-      }
-    };
-
-    const judgeDelete = (flag: boolean) => {
-      if (flag) {
-        return "削除";
-      } else {
-        return "";
-      }
-    };
-
     return {
       refState,
-      fetchUsers,
-      judgeFlag,
-      judgeDelete,
+      is_delete,
       searchUsers,
-      transitionUserEdit,
+      transitionEdit,
     };
   },
 });
