@@ -148,6 +148,13 @@ export default defineComponent({
       }
     );
 
+    watch(
+      () => props.isNotInit,
+      () => {
+        refState.isNotInit = props.isNotInit;
+      }
+    );
+
     const isDisplay = computed(() => {
       return (
         (refState.isFocus || refState.isHover) &&

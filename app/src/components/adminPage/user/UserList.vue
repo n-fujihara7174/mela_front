@@ -10,7 +10,7 @@
             <button
               type="button"
               class="btn btn-primary create-user-btn"
-              @click="transitionEdit(0)"
+              @click="transitionUserEdit(0)"
             >
               新規登録
             </button>
@@ -52,7 +52,7 @@
               <button
                 type="button"
                 class="btn btn-primary"
-                @click="transitionEdit(user.id)"
+                @click="transitionUserEdit(user.id)"
               >
                 編集
               </button>
@@ -69,7 +69,7 @@ import { defineComponent, reactive, onMounted } from "vue";
 import axios from "axios";
 import { User } from "@/types/User";
 import { judgeDelete } from "@/composables/judgValue";
-import { transitionUserEdit } from "@/composables/transitionScreen";
+import { useRouter } from "vue-router";
 
 //検索値格納用
 interface SearchValue {
@@ -84,8 +84,8 @@ interface State {
 
 export default defineComponent({
   setup() {
+    const router = useRouter();
     const is_delete = judgeDelete;
-    const transitionEdit = transitionUserEdit;
 
     //検索値格納用の変数を初期化
     const searchValueInit: SearchValue = {
@@ -116,11 +116,20 @@ export default defineComponent({
       }
     };
 
+    const transitionUserEdit = (id: number): void => {
+      router.push({
+        name: "UserEdit",
+        params: {
+          id: id,
+        },
+      });
+    };
+
     return {
       refState,
       is_delete,
       searchUsers,
-      transitionEdit,
+      transitionUserEdit,
     };
   },
 });

@@ -22,7 +22,7 @@
                 v-model:value="refState.post.unique_user_id"
                 :list="userIdList"
                 :placeholder="'ユーザー名を入力してください'"
-                :errorMessage="refState.error_message.user"
+                v-model:errorMessage="refState.error_message.user"
                 :isNotInit="refState.isNotInit"
               ></SuggestInput>
               <label
@@ -141,11 +141,11 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-import { defineComponent, reactive, onMounted } from "vue";
+import { defineComponent, reactive, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { Post } from "@/types/Post";
 import { lengthCheck, requireCheck } from "@/composables/validationCheck";
-import SuggestInput from "@/components/SuggestInput.vue";
+import SuggestInput from "@/components/common/SuggestInput.vue";
 
 interface ExtendPost extends Post {
   unique_user_id: string;
@@ -220,13 +220,11 @@ export default defineComponent({
       return arrayText.split(",");
     };
 
-    const userIdList = stringToArray(getUserIdList());
     //レスポンスが文字列になっているので、分割して配列にする必要がある
+    const userIdList = stringToArray(getUserIdList());
 
     //ユーザー情報取得
     onMounted(async () => {
-      console.log("onMounted");
-      console.log("!!Number(props.id) : " + !!Number(props.id));
       refState.isUpdate = !!Number(props.id);
       if (refState.isUpdate) {
         const result = await axios.get(
@@ -323,42 +321,60 @@ export default defineComponent({
       }
     };
 
-    //一覧画面に遷移
-    const transitionPostList = () => {
-      router.push({
-        name: "PostList",
-      });
+    const frontValidationCheck = (): boolean => {
+      return (
+        !!refState.error_message.user ||
+        !!refState.error_message.post_image ||
+        !!refState.error_message.post_contents
+      );
     };
 
-    //フロント側のバリデーション
-    const frontValidationCheck = (): boolean => {
-      const assignValue = (str1: string, str2: string): string => {
-        if (str1 == "") {
-          return str2;
-        } else {
-          return str1;
+    watch(
+      () => refState.post.unique_user_id,
+      () => {
+        console.log("refState.post.unique_user_idのエラーメッセージ");
+        const lengthCheckResult = lengthCheck(refState.post.unique_user_id, 45);
+        const requireCheckResult = requireCheck(refState.post.unique_user_id);
+        refState.error_message.user = determineAssignValue(
+          lengthCheckResult,
+          requireCheckResult
+        );
+      }
+    );
+
+    watch(
+      () => refState.post.post_contents,
+      () => {
+        refState.error_message.post_contents = lengthCheck(
+          refState.post.post_contents,
+          120
+        );
+      }
+    );
+
+    watch(
+      () => refState.post.post_image,
+      () => {
+        refState.error_message.post_image = lengthCheck(
+          refState.post.post_image,
+          1000
+        );
+      }
+    );
+
+    //エラーメッセージを取得。
+    const determineAssignValue = (...str: string[]): string => {
+      let errorMessage = "";
+      let i = 0;
+
+      while (i > arguments.length) {
+        if (arguments[i] != "") {
+          errorMessage = arguments[i];
         }
-      };
+        i++;
+      }
 
-      refState.error_message.user = assignValue(
-        lengthCheck(refState.post.unique_user_id, 45),
-        requireCheck(refState.post.unique_user_id)
-      );
-      refState.error_message.post_contents = lengthCheck(
-        refState.post.post_contents,
-        120
-      );
-      refState.error_message.post_image = lengthCheck(
-        refState.post.post_image,
-        1000
-      );
-      refState.isNotInit = true;
-
-      return !(
-        !!refState.error_message.user ||
-        !!refState.error_message.post_contents ||
-        !!refState.error_message.post_image
-      );
+      return errorMessage;
     };
 
     const formatDate = (strDate: string) => {
@@ -384,6 +400,13 @@ export default defineComponent({
 
     const hasProperty = (obj: any, key: string) => {
       return Object.prototype.hasOwnProperty.call(obj, key);
+    };
+
+    //一覧画面に遷移
+    const transitionPostList = () => {
+      router.push({
+        name: "PostList",
+      });
     };
 
     return {
@@ -441,5 +464,9 @@ button {
 .input-day {
   width: 25px;
   text-align: right;
+}
+
+.inline {
+  display: inline;
 }
 </style>
