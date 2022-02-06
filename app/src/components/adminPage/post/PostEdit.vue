@@ -22,73 +22,39 @@
                 v-model:value="refState.post.unique_user_id"
                 :list="userIdList"
                 :placeholder="'ユーザー名を入力してください'"
-                v-model:errorMessage="refState.error_message.user"
+                :errorMessage="refState.error_message.user"
                 :isNotInit="refState.isNotInit"
               ></SuggestInput>
-              <label
-                :class="{
-                  'display-none': judgeDisplay(refState.error_message.user),
-                  'is-valid': !isInvalid(refState.error_message.user),
-                  'is-invalid': isInvalid(refState.error_message.user),
-                }"
-                >{{ refState.error_message.user }}</label
-              >
+              <ErrorMessageLabel
+                v-model:errorMessage="refState.error_message.user"
+              ></ErrorMessageLabel>
             </td>
           </tr>
           <tr>
             <th>内容</th>
             <td>
-              <textarea
-                type="text"
-                class="form-control"
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.post_contents) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.post_contents) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.post.post_contents"
-              />
-              <label
-                :class="{
-                  'display-none': judgeDisplay(
-                    refState.error_message.post_contents
-                  ),
-                  'is-valid': !isInvalid(refState.error_message.post_contents),
-                  'is-invalid': isInvalid(refState.error_message.post_contents),
-                }"
-                >{{ refState.error_message.post_contents }}</label
+              <InputColumn
+                v-model:value="refState.post.post_contents"
+                :isError="!!refState.error_message.post_contents"
+                :isTextarea="true"
               >
+              </InputColumn>
+              <ErrorMessageLabel
+                v-model:errorMessage="refState.error_message.post_contents"
+              ></ErrorMessageLabel>
             </td>
           </tr>
           <tr>
             <th>画像</th>
             <td>
-              <input
-                type="text"
-                class="form-control"
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.post_image) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.post_image) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.post.post_image"
-              />
-              <label
-                :class="{
-                  'display-none': judgeDisplay(
-                    refState.error_message.post_image
-                  ),
-                  'is-valid': !isInvalid(refState.error_message.post_image),
-                  'is-invalid': isInvalid(refState.error_message.post_image),
-                }"
-                >{{ refState.error_message.post_image }}</label
-              >
+              <InputColumn
+                v-model:value="refState.post.post_image"
+                :isError="!!refState.error_message.post_image"
+                :isTextarea="true"
+              ></InputColumn>
+              <ErrorMessageLabel
+                v-model:errorMessage="refState.error_message.post_image"
+              ></ErrorMessageLabel>
             </td>
           </tr>
           <tr>
@@ -144,8 +110,14 @@ import dayjs from "dayjs";
 import { defineComponent, reactive, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { Post } from "@/types/Post";
-import { lengthCheck, requireCheck } from "@/composables/validationCheck";
-import SuggestInput from "@/components/common/SuggestInput.vue";
+import {
+  lengthCheck,
+  requireCheck,
+  determineAssignValue,
+} from "@/composables/validationCheck";
+import SuggestInput from "@/components/SuggestInput.vue";
+import ErrorMessageLabel from "@/components/adminPage/common/errorLabel.vue";
+import InputColumn from "@/components/adminPage/common/inputColumn.vue";
 
 interface ExtendPost extends Post {
   unique_user_id: string;
@@ -167,6 +139,8 @@ interface State {
 export default defineComponent({
   components: {
     SuggestInput: SuggestInput,
+    ErrorMessageLabel: ErrorMessageLabel,
+    InputColumn: InputColumn,
   },
 
   props: {
@@ -332,7 +306,6 @@ export default defineComponent({
     watch(
       () => refState.post.unique_user_id,
       () => {
-        console.log("refState.post.unique_user_idのエラーメッセージ");
         const lengthCheckResult = lengthCheck(refState.post.unique_user_id, 45);
         const requireCheckResult = requireCheck(refState.post.unique_user_id);
         refState.error_message.user = determineAssignValue(
@@ -362,31 +335,8 @@ export default defineComponent({
       }
     );
 
-    //エラーメッセージを取得。
-    const determineAssignValue = (...str: string[]): string => {
-      let errorMessage = "";
-      let i = 0;
-
-      while (i > arguments.length) {
-        if (arguments[i] != "") {
-          errorMessage = arguments[i];
-        }
-        i++;
-      }
-
-      return errorMessage;
-    };
-
     const formatDate = (strDate: string) => {
       return dayjs(strDate).format("YYYY/MM/DD hh:mm:ss");
-    };
-
-    const judgeFlag = (flag: boolean) => {
-      if (flag) {
-        return "通知を行う";
-      } else {
-        return "";
-      }
     };
 
     const judgeDisplay = (displayText: string) => {
@@ -411,7 +361,6 @@ export default defineComponent({
 
     return {
       refState,
-      judgeFlag,
       judgeDisplay,
       isInvalid,
       transitionPostList,

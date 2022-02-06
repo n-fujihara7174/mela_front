@@ -44,3 +44,21 @@ export const checkDate = (strDate: string): string => {
   }
   return errorMessage;
 };
+
+//エラーメッセージを取得。
+export const determineAssignValue = (...strArray: string[]): string => {
+  let errorMessage = "";
+  let i = 0;
+
+  while (i < strArray.length) {
+    console.log(
+      `strArray[${i}]の中身 : ${strArray[i]} ${strArray[i].length !== 0}`
+    );
+    if (strArray[i].length !== 0) {
+      errorMessage = strArray[i];
+    }
+    i++;
+  }
+
+  return errorMessage;
+};
