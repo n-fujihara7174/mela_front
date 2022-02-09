@@ -303,6 +303,21 @@ export default defineComponent({
       );
     };
 
+    /* const assignErrorMessage = (
+      errorMessageObj: ErrorMessage,
+      resErrorMessageObj
+    ) => {
+      const errorMessageObjectProperty: string[] = Object.keys(errorMessageObj);
+      let outputErrorMessageObject: ErrorMessage;
+
+      errorMessageObjectProperty.forEach(
+        (element) =>
+          (errorMessageObj[element] = hasProperty(resErrorMessageObj, element)
+            ? resErrorMessageObj[element]
+            : "")
+      );
+    }; */
+
     watch(
       () => refState.post.unique_user_id,
       () => {

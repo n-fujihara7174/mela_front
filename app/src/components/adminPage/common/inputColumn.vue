@@ -5,8 +5,8 @@
       type="text"
       class="form-control"
       :class="{
-        'is-valid-textbox': !isInvalid(refState.isError) && refState.isNotInit,
-        'is-invalid-textbox': isInvalid(refState.isError) && refState.isNotInit,
+        'is-valid-textbox': !refState.isError && refState.isNotInit,
+        'is-invalid-textbox': refState.isError && refState.isNotInit,
       }"
       v-model="refState.value"
     />
@@ -15,8 +15,8 @@
       type="text"
       class="form-control"
       :class="{
-        'is-valid-textbox': !isInvalid(refState.isError) && refState.isNotInit,
-        'is-invalid-textbox': isInvalid(refState.isError) && refState.isNotInit,
+        'is-valid-textbox': !refState.isError && refState.isNotInit,
+        'is-invalid-textbox': refState.isError && refState.isNotInit,
       }"
       v-model="refState.value"
     />
@@ -50,6 +50,8 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
+    console.log("inputColumnのprops.value : " + props.value);
+
     const refState = reactive<State>({
       value: props.value,
       isError: false,
@@ -73,6 +75,13 @@ export default defineComponent({
       () => props.isError,
       () => {
         refState.isError = props.isError;
+      }
+    );
+
+    watch(
+      () => props.value,
+      () => {
+        refState.value = props.value;
       }
     );
 

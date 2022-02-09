@@ -630,6 +630,8 @@ export default defineComponent({
             transitionList();
           })
           .catch((error) => {
+            console.log("error.response.data");
+            console.log(error.response.data);
             refState.error_message.user_name = hasProperty(
               error.response.data,
               "user_name"
@@ -755,10 +757,10 @@ export default defineComponent({
         requireCheck(refState.user.user_id)
       );
 
-      refState.error_message.password = assignValue(
+      /* refState.error_message.password = assignValue(
         lengthCheck(refState.user.password, 45),
         requireCheck(refState.user.password)
-      );
+      ); */
 
       refState.error_message.password_digest = assignValue(
         lengthCheck(refState.user.password_digest, 45),

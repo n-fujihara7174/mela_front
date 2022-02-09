@@ -4,6 +4,7 @@ const dateFormatErrorMessage = "2022/1/11の形式で入力してください";
 const dateValueErrorMessage = "有効な日付を入力してください";
 
 export const lengthCheck = (checkTarget: string, maxNum: number): string => {
+  console.log("typeof(checkTarget) : " + typeof checkTarget);
   if (checkTarget.length > maxNum) {
     return lengthErrorMessage.replace("?", maxNum.toString());
   } else {
