@@ -194,7 +194,7 @@ export default defineComponent({
       return arrayText.split(",");
     };
 
-    //レスポンスが文字列になっているので、分割して配列にする必要がある
+    //ユーザーIDリストのレスポンスが文字列になっているので、分割して配列にする必要がある
     const userIdList = stringToArray(getUserIdList());
 
     //ユーザー情報取得
@@ -225,27 +225,7 @@ export default defineComponent({
           })
           .catch((error) => {
             //エラーメッセージを格納
-            refState.error_message.user = hasProperty(
-              error.response.data,
-              "user"
-            )
-              ? error.response.data.user[0]
-              : "";
-
-            refState.error_message.post_image = hasProperty(
-              error.response.data,
-              "post_image"
-            )
-              ? error.response.data.post_image[0]
-              : "";
-
-            refState.error_message.post_contents = hasProperty(
-              error.response.data,
-              "post_contents"
-            )
-              ? error.response.data.post_contents[0]
-              : "";
-
+            refState.error_message = error.response.data;
             refState.isNotInit = true;
           });
       }
@@ -269,27 +249,7 @@ export default defineComponent({
           })
           .catch((error) => {
             //エラーメッセージを格納
-            refState.error_message.user = hasProperty(
-              error.response.data,
-              "user"
-            )
-              ? error.response.data.user[0]
-              : "";
-
-            refState.error_message.post_image = hasProperty(
-              error.response.data,
-              "post_image"
-            )
-              ? error.response.data.post_image[0]
-              : "";
-
-            refState.error_message.post_contents = hasProperty(
-              error.response.data,
-              "post_contents"
-            )
-              ? error.response.data.post_contents[0]
-              : "";
-
+            refState.error_message = error.response.data;
             refState.isNotInit = true;
           });
       }
@@ -302,21 +262,6 @@ export default defineComponent({
         !!refState.error_message.post_contents
       );
     };
-
-    /* const assignErrorMessage = (
-      errorMessageObj: ErrorMessage,
-      resErrorMessageObj
-    ) => {
-      const errorMessageObjectProperty: string[] = Object.keys(errorMessageObj);
-      let outputErrorMessageObject: ErrorMessage;
-
-      errorMessageObjectProperty.forEach(
-        (element) =>
-          (errorMessageObj[element] = hasProperty(resErrorMessageObj, element)
-            ? resErrorMessageObj[element]
-            : "")
-      );
-    }; */
 
     watch(
       () => refState.post.unique_user_id,

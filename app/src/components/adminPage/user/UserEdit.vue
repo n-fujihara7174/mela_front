@@ -548,62 +548,7 @@ export default defineComponent({
           })
           .catch((error) => {
             //エラーメッセージを格納
-            refState.error_message.user_name = hasProperty(
-              error.response.data,
-              "user_name"
-            )
-              ? error.response.data.user_name[0]
-              : "";
-
-            refState.error_message.user_id = hasProperty(
-              error.response.data,
-              "user_id"
-            )
-              ? error.response.data.user_id[0]
-              : "";
-
-            refState.error_message.password_digest = hasProperty(
-              error.response.data,
-              "password_digest"
-            )
-              ? error.response.data.password_digest[0]
-              : "";
-
-            refState.error_message.email = hasProperty(
-              error.response.data,
-              "email"
-            )
-              ? error.response.data.email[0]
-              : "";
-
-            refState.error_message.phone_number = hasProperty(
-              error.response.data,
-              "phone_number"
-            )
-              ? error.response.data.phone_number[0]
-              : "";
-
-            refState.error_message.birthday = hasProperty(
-              error.response.data,
-              "birthday"
-            )
-              ? error.response.data.birthday[0]
-              : "";
-
-            refState.error_message.image = hasProperty(
-              error.response.data,
-              "image"
-            )
-              ? error.response.data.image[0]
-              : "";
-
-            refState.error_message.self_introduction = hasProperty(
-              error.response.data,
-              "self_introduction"
-            )
-              ? error.response.data.self_introduction[0]
-              : "";
-
+            refState.error_message = error.response.data;
             refState.isNotInit = true;
           });
       } else {
@@ -630,62 +575,10 @@ export default defineComponent({
             transitionList();
           })
           .catch((error) => {
-            console.log("error.response.data");
-            console.log(error.response.data);
-            refState.error_message.user_name = hasProperty(
-              error.response.data,
-              "user_name"
-            )
-              ? error.response.data.user_name[0]
-              : "";
-            refState.error_message.user_id = hasProperty(
-              error.response.data,
-              "user_id"
-            )
-              ? error.response.data.user_id[0]
-              : "";
-
-            refState.error_message.password_digest = hasProperty(
-              error.response.data,
-              "password_digest"
-            )
-              ? error.response.data.password_digest[0]
-              : "";
-
-            refState.error_message.email = hasProperty(
-              error.response.data,
-              "email"
-            )
-              ? error.response.data.email[0]
-              : "";
-
-            refState.error_message.phone_number = hasProperty(
-              error.response.data,
-              "phone_number"
-            )
-              ? error.response.data.phone_number[0]
-              : "";
-
-            refState.error_message.birthday = hasProperty(
-              error.response.data,
-              "birthday"
-            )
-              ? error.response.data.birthday[0]
-              : "";
-
-            refState.error_message.image = hasProperty(
-              error.response.data,
-              "image"
-            )
-              ? error.response.data.image[0]
-              : "";
-
-            refState.error_message.self_introduction = hasProperty(
-              error.response.data,
-              "self_introduction"
-            )
-              ? error.response.data.self_introduction[0]
-              : "";
+            console.log(
+              "typeof(error.response.data) : " + typeof error.response.data
+            );
+            refState.error_message = error.response.data;
             refState.isNotInit = true;
           });
       }
