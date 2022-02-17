@@ -1,6 +1,6 @@
 <template>
   <div class="dropdown">
-    <input
+    <!-- <input
       type="text"
       class="form-control dropdown-toggle"
       :class="{
@@ -13,14 +13,14 @@
       @input="listFilter(refState.inputValue)"
       @focus="onFocus"
       @blur="unFocus"
-    />
+    /> -->
     <div v-show="isDisplay" class="dropdown-menu" :size="listSize">
       <option
         class="dropdown-item"
         v-for="(element, index) in refState.filteredList"
         :key="index"
         :mouseleave="mouseLeave"
-        @click="setInputValue(element)"
+        @click="emitValue(element)"
         @mouseover="mouseover"
         @mouseleave="mouseLeave"
       >
@@ -42,50 +42,26 @@ import {
 
 interface State {
   filteredList: string[];
-  inputValue: string;
-  errorMessage: string;
-  isFocus: boolean;
-  isHover: boolean;
-  isNotInit: boolean;
+  value: string;
 }
 
 export default defineComponent({
   props: {
-    value: {
-      type: String as PropType<string>,
-      required: true,
-    },
     list: {
       type: Array as PropType<string[]>,
       required: true,
-    },
-    errorMessage: {
-      type: String as PropType<string>,
-      required: true,
-    },
-    isNotInit: {
-      type: Boolean as PropType<boolean>,
-      required: true,
-    },
-    placeholder: {
-      type: String as PropType<string>,
-      required: false,
     },
   },
 
   setup(props, { emit }) {
     const refState = reactive<State>({
       filteredList: [],
-      inputValue: "",
-      errorMessage: "",
-      isFocus: false,
-      isHover: false,
-      isNotInit: false,
+      value: "",
     });
 
     onMounted(() => {
-      refState.inputValue = props.value;
-      listFilter(refState.inputValue);
+      refState.value = props.value;
+      listFilter(refState.value);
     });
 
     const listFilter = (filterText: string) => {
@@ -98,62 +74,35 @@ export default defineComponent({
       }
     };
 
-    const onFocus = () => {
-      refState.isFocus = true;
-    };
+    // const onFocus = () => {
+    //   refState.isFocus = true;
+    // };
 
-    const unFocus = () => {
-      refState.isFocus = false;
-    };
+    // const unFocus = () => {
+    //   refState.isFocus = false;
+    // };
 
-    const mouseover = () => {
-      refState.isHover = true;
-    };
+    // const mouseover = () => {
+    //   refState.isHover = true;
+    // };
 
-    const mouseLeave = () => {
-      refState.isHover = false;
-    };
-
-    //サジェストで選択した値をテキストボックスにセット
-    const setInputValue = (selectValue: string) => {
-      refState.inputValue = selectValue;
-      listFilter(selectValue);
-    };
+    // const mouseLeave = () => {
+    //   refState.isHover = false;
+    // };
 
     watch(
-      () => refState.inputValue,
+      () => refState.value,
       () => {
-        emit("update:value", refState.inputValue);
+        emit("update:value", refState.value);
       }
     );
 
     watch(
       () => props.value,
       () => {
-        refState.inputValue = props.value;
+        refState.value = props.value;
       }
     );
-
-    watch(
-      () => props.errorMessage,
-      () => {
-        refState.errorMessage = props.value;
-      }
-    );
-
-    watch(
-      () => props.isNotInit,
-      () => {
-        refState.isNotInit = props.isNotInit;
-      }
-    );
-
-    const isDisplay = computed(() => {
-      return (
-        (refState.isFocus || refState.isHover) &&
-        refState.filteredList.length != 0
-      );
-    });
 
     /*
        pulldownで要素を表示する個数を算出
@@ -171,21 +120,10 @@ export default defineComponent({
       return size;
     });
 
-    const isInvalid = (errorMesssage: string) => {
-      return !!errorMesssage;
-    };
-
     return {
       refState,
       listFilter,
-      onFocus,
-      unFocus,
-      mouseover,
-      mouseLeave,
-      setInputValue,
-      isDisplay,
       listSize,
-      isInvalid,
     };
   },
 });

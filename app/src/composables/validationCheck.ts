@@ -1,6 +1,6 @@
 const lengthErrorMessage = "?文字以下で入力してください";
 const requireErrorMessage = "必ず入力してください";
-const dateFormatErrorMessage = "2022/1/11の形式で入力してください";
+const dateFormatErrorMessage = "2022/01/01の形式で入力してください";
 const dateValueErrorMessage = "有効な日付を入力してください";
 
 export const lengthCheck = (checkTarget: string, maxNum: number): string => {

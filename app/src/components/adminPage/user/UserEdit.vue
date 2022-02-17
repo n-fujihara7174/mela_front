@@ -71,64 +71,6 @@
               >
             </td>
           </tr>
-          <tr :class="{ 'display-none': !refState.isUpdate }">
-            <th>パスワード</th>
-            <td>
-              <input
-                type="password"
-                class="form-control"
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.password) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.password) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.user.password"
-              />
-              <label
-                :class="{
-                  'display-none': judgeDisplay(refState.error_message.password),
-                  'is-valid': !isInvalid(refState.error_message.password),
-                  'is-invalid': isInvalid(refState.error_message.password),
-                }"
-                >{{ refState.error_message.password }}</label
-              >
-            </td>
-          </tr>
-          <tr :class="{ 'display-none': !refState.isUpdate }">
-            <th>パスワード確認</th>
-            <td>
-              <input
-                type="password"
-                class="form-control"
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.password_digest) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.password_digest) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.user.password_digest"
-              />
-              <label
-                :class="{
-                  'display-none': judgeDisplay(
-                    refState.error_message.password_digest
-                  ),
-                  'is-valid': !isInvalid(
-                    refState.error_message.password_digest
-                  ),
-                  'is-invalid': isInvalid(
-                    refState.error_message.password_digest
-                  ),
-                }"
-                >{{ refState.error_message.password_digest }}</label
-              >
-            </td>
-          </tr>
           <tr>
             <th>メールアドレス</th>
             <td>
@@ -603,17 +545,17 @@ export default defineComponent({
       return dayjs(strDate).format("YYYY/MM/DD hh:mm:ss");
     };
 
-    //生年月日入力欄に入力された文字が数字かチェック
+    //生年月日入力は数字のみ許可
     const checkInputYear = () => {
       refState.birthday.year = replaceStringToEmpty(refState.birthday.year);
     };
 
-    //生年月日入力欄に入力された文字が数字かチェック
+    //生年月日入力は数字のみ許可
     const checkInputMonth = () => {
       refState.birthday.month = replaceStringToEmpty(refState.birthday.month);
     };
 
-    //生年月日入力欄に入力された文字が数字かチェック
+    //生年月日入力は数字のみ許可
     const checkInputDay = () => {
       refState.birthday.day = replaceStringToEmpty(refState.birthday.day);
     };
@@ -648,16 +590,6 @@ export default defineComponent({
       refState.error_message.user_id = assignValue(
         lengthCheck(refState.user.user_id, 45),
         requireCheck(refState.user.user_id)
-      );
-
-      /* refState.error_message.password = assignValue(
-        lengthCheck(refState.user.password, 45),
-        requireCheck(refState.user.password)
-      ); */
-
-      refState.error_message.password_digest = assignValue(
-        lengthCheck(refState.user.password_digest, 45),
-        requireCheck(refState.user.password_digest)
       );
 
       refState.error_message.email = assignValue(

@@ -115,9 +115,7 @@ import {
   requireCheck,
   determineAssignValue,
 } from "@/composables/validationCheck";
-import SuggestInput from "@/components/SuggestInput.vue";
-import ErrorMessageLabel from "@/components/adminPage/common/errorLabel.vue";
-import InputColumn from "@/components/adminPage/common/inputColumn.vue";
+import SuggestInput from "@/components/adminPage/common/atom/SuggestList.vue";
 
 interface ExtendPost extends Post {
   unique_user_id: string;
@@ -139,8 +137,6 @@ interface State {
 export default defineComponent({
   components: {
     SuggestInput: SuggestInput,
-    ErrorMessageLabel: ErrorMessageLabel,
-    InputColumn: InputColumn,
   },
 
   props: {

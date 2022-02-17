@@ -38,7 +38,7 @@ export default defineComponent({
       type: String as PropType<string>,
       required: true,
     },
-    isError: {
+    errorMessage: {
       type: Boolean as PropType<boolean>,
       required: true,
     },
