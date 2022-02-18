@@ -8,7 +8,6 @@
     <div class="mt-5">
       <h2 v-if="!refState.isUpdate">投稿 登録画面</h2>
       <h2 v-if="refState.isUpdate">投稿 編集画面</h2>
-
       <table class="table table-sm shadow table-hover mt-5">
         <tbody>
           <tr :class="{ 'display-none': !refState.isUpdate }">
@@ -18,43 +17,29 @@
           <tr>
             <th>ユーザーID</th>
             <td>
-              <SuggestInput
+              <InputField
                 v-model:value="refState.post.unique_user_id"
-                :list="userIdList"
-                :placeholder="'ユーザー名を入力してください'"
                 :errorMessage="refState.error_message.user"
-                :isNotInit="refState.isNotInit"
-              ></SuggestInput>
-              <ErrorMessageLabel
-                v-model:errorMessage="refState.error_message.user"
-              ></ErrorMessageLabel>
+                :list="userIdList"
+              ></InputField>
             </td>
           </tr>
           <tr>
             <th>内容</th>
             <td>
-              <InputColumn
+              <InputField
                 v-model:value="refState.post.post_contents"
-                :isError="!!refState.error_message.post_contents"
-                :isTextarea="true"
-              >
-              </InputColumn>
-              <ErrorMessageLabel
-                v-model:errorMessage="refState.error_message.post_contents"
-              ></ErrorMessageLabel>
+                :errorMessage="refState.error_message.post_contents"
+              ></InputField>
             </td>
           </tr>
           <tr>
             <th>画像</th>
             <td>
-              <InputColumn
+              <InputField
                 v-model:value="refState.post.post_image"
-                :isError="!!refState.error_message.post_image"
-                :isTextarea="true"
-              ></InputColumn>
-              <ErrorMessageLabel
-                v-model:errorMessage="refState.error_message.post_image"
-              ></ErrorMessageLabel>
+                :errorMessage="refState.error_message.post_image"
+              ></InputField>
             </td>
           </tr>
           <tr>
@@ -115,7 +100,7 @@ import {
   requireCheck,
   determineAssignValue,
 } from "@/composables/validationCheck";
-import SuggestInput from "@/components/adminPage/common/atom/SuggestList.vue";
+import InputField from "@/components/adminPage/common/molecules/InputField.vue";
 
 interface ExtendPost extends Post {
   unique_user_id: string;
@@ -136,7 +121,7 @@ interface State {
 
 export default defineComponent({
   components: {
-    SuggestInput: SuggestInput,
+    InputField: InputField,
   },
 
   props: {
@@ -295,17 +280,8 @@ export default defineComponent({
       return dayjs(strDate).format("YYYY/MM/DD hh:mm:ss");
     };
 
-    const judgeDisplay = (displayText: string) => {
-      const isDisplay = !!displayText;
-      return !isDisplay;
-    };
-
     const isInvalid = (errorMesssage: string) => {
       return !!errorMesssage;
-    };
-
-    const hasProperty = (obj: any, key: string) => {
-      return Object.prototype.hasOwnProperty.call(obj, key);
     };
 
     //一覧画面に遷移
@@ -317,7 +293,6 @@ export default defineComponent({
 
     return {
       refState,
-      judgeDisplay,
       isInvalid,
       transitionPostList,
       createUser,

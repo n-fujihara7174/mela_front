@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, watch } from "vue";
+import { defineComponent, PropType, reactive, watch, onMounted } from "vue";
 
 interface State {
   value: string;
@@ -38,7 +38,7 @@ export default defineComponent({
       type: String as PropType<string>,
       required: true,
     },
-    errorMessage: {
+    isError: {
       type: Boolean as PropType<boolean>,
       required: true,
     },
@@ -50,12 +50,14 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    console.log("inputColumnのprops.value : " + props.value);
-
     const refState = reactive<State>({
-      value: props.value,
+      value: "",
       isError: false,
       isNotInit: false,
+    });
+
+    onMounted(() => {
+      refState.value = props.value;
     });
 
     const getPropsIsTextarea = () => {
@@ -85,11 +87,7 @@ export default defineComponent({
       }
     );
 
-    const isInvalid = (errorMesssage: string) => {
-      return !!errorMesssage;
-    };
-
-    return { refState, isTextareaFlag, isInvalid };
+    return { refState, isTextareaFlag };
   },
 });
 </script>

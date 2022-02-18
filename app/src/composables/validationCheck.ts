@@ -4,7 +4,6 @@ const dateFormatErrorMessage = "2022/01/01の形式で入力してください";
 const dateValueErrorMessage = "有効な日付を入力してください";
 
 export const lengthCheck = (checkTarget: string, maxNum: number): string => {
-  console.log("typeof(checkTarget) : " + typeof checkTarget);
   if (checkTarget.length > maxNum) {
     return lengthErrorMessage.replace("?", maxNum.toString());
   } else {
@@ -30,7 +29,6 @@ export const checkDateFormat = (strDate: string): string => {
 
 export const checkDateValue = (strDate: string): string => {
   const date = new Date(strDate);
-  console.log(date);
   if (isNaN(date.getDate())) {
     return dateValueErrorMessage;
   } else {
@@ -52,9 +50,6 @@ export const determineAssignValue = (...strArray: string[]): string => {
   let i = 0;
 
   while (i < strArray.length) {
-    console.log(
-      `strArray[${i}]の中身 : ${strArray[i]} ${strArray[i].length !== 0}`
-    );
     if (strArray[i].length !== 0) {
       errorMessage = strArray[i];
     }

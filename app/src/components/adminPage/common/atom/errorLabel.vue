@@ -34,6 +34,8 @@ export default defineComponent({
     watch(
       () => props.errorMessage,
       () => {
+        console.log("errorLabel.vueのwatchの中");
+        console.log(props.errorMessage);
         refState.errorMessage = props.errorMessage;
       }
     );

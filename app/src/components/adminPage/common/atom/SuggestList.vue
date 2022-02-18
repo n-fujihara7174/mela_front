@@ -1,28 +1,11 @@
 <template>
   <div class="dropdown">
-    <!-- <input
-      type="text"
-      class="form-control dropdown-toggle"
-      :class="{
-        'is-valid-textbox':
-          !isInvalid(refState.errorMessage) && refState.isNotInit,
-        'is-invalid-textbox':
-          isInvalid(refState.errorMessage) && refState.isNotInit,
-      }"
-      v-model="refState.inputValue"
-      @input="listFilter(refState.inputValue)"
-      @focus="onFocus"
-      @blur="unFocus"
-    /> -->
-    <div v-show="isDisplay" class="dropdown-menu" :size="listSize">
+    <div class="dropdown-menu" :size="listSize">
       <option
         class="dropdown-item"
         v-for="(element, index) in refState.filteredList"
         :key="index"
-        :mouseleave="mouseLeave"
         @click="emitValue(element)"
-        @mouseover="mouseover"
-        @mouseleave="mouseLeave"
       >
         {{ element }}
       </option>
@@ -36,17 +19,21 @@ import {
   PropType,
   reactive,
   onMounted,
-  watch,
   computed,
+  watchEffect,
 } from "vue";
 
 interface State {
-  filteredList: string[];
   value: string;
+  filteredList: string[];
 }
 
 export default defineComponent({
   props: {
+    value: {
+      type: String as PropType<string>,
+      required: true,
+    },
     list: {
       type: Array as PropType<string[]>,
       required: true,
@@ -55,8 +42,8 @@ export default defineComponent({
 
   setup(props, { emit }) {
     const refState = reactive<State>({
-      filteredList: [],
       value: "",
+      filteredList: [],
     });
 
     onMounted(() => {
@@ -74,35 +61,13 @@ export default defineComponent({
       }
     };
 
-    // const onFocus = () => {
-    //   refState.isFocus = true;
-    // };
+    const emitValue = (value: string) => {
+      emit("update:value", value);
+    };
 
-    // const unFocus = () => {
-    //   refState.isFocus = false;
-    // };
-
-    // const mouseover = () => {
-    //   refState.isHover = true;
-    // };
-
-    // const mouseLeave = () => {
-    //   refState.isHover = false;
-    // };
-
-    watch(
-      () => refState.value,
-      () => {
-        emit("update:value", refState.value);
-      }
-    );
-
-    watch(
-      () => props.value,
-      () => {
-        refState.value = props.value;
-      }
-    );
+    watchEffect(() => {
+      listFilter(props.value);
+    });
 
     /*
        pulldownで要素を表示する個数を算出
@@ -122,6 +87,7 @@ export default defineComponent({
 
     return {
       refState,
+      emitValue,
       listFilter,
       listSize,
     };
