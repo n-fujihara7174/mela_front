@@ -5,7 +5,9 @@
         class="dropdown-item"
         v-for="(element, index) in refState.filteredList"
         :key="index"
-        @click="emitValue(element)"
+        @click="emitClick(element)"
+        @mouseover="mouseover"
+        @mouseleave="mouseleave"
       >
         {{ element }}
       </option>
@@ -21,11 +23,13 @@ import {
   onMounted,
   computed,
   watchEffect,
+  watch,
 } from "vue";
 
 interface State {
   value: string;
   filteredList: string[];
+  isHover: boolean;
 }
 
 export default defineComponent({
@@ -38,12 +42,21 @@ export default defineComponent({
       type: Array as PropType<string[]>,
       required: true,
     },
+    isHover: {
+      type: Boolean as PropType<boolean>,
+      required: true,
+    },
+    isExistList: {
+      type: Boolean as PropType<boolean>,
+      required: true,
+    },
   },
 
   setup(props, { emit }) {
     const refState = reactive<State>({
       value: "",
       filteredList: [],
+      isHover: false,
     });
 
     onMounted(() => {
@@ -61,13 +74,41 @@ export default defineComponent({
       }
     };
 
-    const emitValue = (value: string) => {
+    const emitClick = (value: string) => {
       emit("update:value", value);
+      emit("update:isHover", false);
+    };
+
+    const filteredListNotEmpty = (list: string[]) => {
+      if (list.length === 0) {
+        emit("update:isExistList", false);
+      } else {
+        emit("update:isExistList", true);
+      }
+    };
+
+    const mouseover = () => {
+      refState.isHover = true;
+    };
+
+    const mouseleave = () => {
+      refState.isHover = false;
     };
 
     watchEffect(() => {
       listFilter(props.value);
     });
+
+    watchEffect(() => {
+      filteredListNotEmpty(refState.filteredList);
+    });
+
+    watch(
+      () => refState.isHover,
+      () => {
+        emit("update:isHover", refState.isHover);
+      }
+    );
 
     /*
        pulldownで要素を表示する個数を算出
@@ -87,7 +128,9 @@ export default defineComponent({
 
     return {
       refState,
-      emitValue,
+      mouseover,
+      mouseleave,
+      emitClick,
       listFilter,
       listSize,
     };

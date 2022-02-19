@@ -9,6 +9,8 @@
         'is-invalid-textbox': refState.isError && refState.isNotInit,
       }"
       v-model="refState.value"
+      @focus="onFocus"
+      @blur="unFocus"
     />
     <input
       v-else
@@ -19,6 +21,8 @@
         'is-invalid-textbox': refState.isError && refState.isNotInit,
       }"
       v-model="refState.value"
+      @focus="onFocus"
+      @blur="unFocus"
     />
   </div>
 </template>
@@ -30,6 +34,7 @@ interface State {
   value: string;
   isError: boolean;
   isNotInit: boolean;
+  isFocus: boolean;
 }
 
 export default defineComponent({
@@ -39,6 +44,10 @@ export default defineComponent({
       required: true,
     },
     isError: {
+      type: Boolean as PropType<boolean>,
+      required: true,
+    },
+    isFocus: {
       type: Boolean as PropType<boolean>,
       required: true,
     },
@@ -54,6 +63,7 @@ export default defineComponent({
       value: "",
       isError: false,
       isNotInit: false,
+      isFocus: false,
     });
 
     onMounted(() => {
@@ -65,9 +75,19 @@ export default defineComponent({
     };
     const isTextareaFlag = getPropsIsTextarea();
 
+    const onFocus = () => {
+      console.log("inputfieldのonfocus");
+      refState.isFocus = true;
+    };
+
+    const unFocus = () => {
+      refState.isFocus = false;
+    };
+
     watch(
       () => refState.value,
       () => {
+        console.log("inputのrefState.valueのwatch");
         emit("update:value", refState.value);
         refState.isNotInit = true;
       }
@@ -87,7 +107,14 @@ export default defineComponent({
       }
     );
 
-    return { refState, isTextareaFlag };
+    watch(
+      () => refState.isFocus,
+      () => {
+        emit("update:isFocus", refState.isFocus);
+      }
+    );
+
+    return { refState, isTextareaFlag, onFocus, unFocus };
   },
 });
 </script>

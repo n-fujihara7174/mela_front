@@ -4,15 +4,14 @@
       v-model:value="refState.value"
       :isError="!!refState.errorMessage"
       :isTextarea="refState.isTextarea"
-      @focus="onFocus"
-      @blur="unFocus"
+      v-model:isFocus="refState.isFocus"
     ></InputColumn>
     <div v-show="judgeDisplay">
       <SuggestList
         v-model:value="refState.value"
         :list="refState.list"
-        @mouseover="mouseover"
-        @mouseleave="mouseleave"
+        v-model:isHover="refState.isHover"
+        v-model:isExistList="refState.isExistList"
       ></SuggestList>
     </div>
     <ErrorMessageLabel
@@ -28,7 +27,6 @@ import {
   reactive,
   onMounted,
   watch,
-  watchEffect,
   computed,
 } from "vue";
 
@@ -44,6 +42,7 @@ interface State {
   isDisplaySuggest: boolean;
   isFocus: boolean;
   isHover: boolean;
+  isExistList: boolean;
 }
 
 export default defineComponent({
@@ -83,6 +82,7 @@ export default defineComponent({
       isDisplaySuggest: false,
       isFocus: false,
       isHover: false,
+      isExistList: false,
     });
 
     onMounted(() => {
@@ -92,49 +92,41 @@ export default defineComponent({
       refState.isDisplaySuggest = !!props.list.length;
     });
 
-    const onFocus = () => {
-      refState.isFocus = true;
-    };
-
-    const unFocus = () => {
-      refState.isFocus = false;
-    };
-
-    const mouseover = () => {
-      refState.isHover = true;
-    };
-
-    const mouseleave = () => {
-      refState.isHover = false;
-    };
-
     const emitValue = (value: string) => {
       emit("update:value", value);
     };
 
     const judgeDisplay = computed(() => {
       return (
-        refState.isDisplaySuggest && (refState.isFocus || refState.isHover)
+        refState.isDisplaySuggest &&
+        refState.isExistList &&
+        (refState.isFocus || refState.isHover)
       );
     });
 
-    watchEffect(() => emitValue(refState.value));
+    watch(
+      () => refState.value,
+      () => {
+        emitValue(refState.value);
+      }
+    );
+
+    watch(
+      () => props.value,
+      () => {
+        refState.errorMessage = props.errorMessage;
+      }
+    );
 
     watch(
       () => props.errorMessage,
       () => {
-        console.log("inputFieldの中");
-        console.log(props.errorMessage);
         refState.errorMessage = props.errorMessage;
       }
     );
 
     return {
       refState,
-      onFocus,
-      unFocus,
-      mouseover,
-      mouseleave,
       judgeDisplay,
       emitValue,
     };

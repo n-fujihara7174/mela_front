@@ -61,10 +61,17 @@
           </tr>
         </tbody>
       </table>
+      refState.error_message.user{{ refState.error_message.user }}<br />
+      refState.error_message.post_image{{ refState.error_message.post_image
+      }}<br />
+      refState.error_message.post_contents{{
+        refState.error_message.post_contents
+      }}<br />
+      {{ frontValidationCheck() }}
       <button
         type="button"
         class="btn btn-primary create-user-btn"
-        @click="createUser"
+        @click="createPost"
         v-if="!refState.isUpdate"
       >
         登録
@@ -72,7 +79,7 @@
       <button
         type="button"
         class="btn btn-primary create-user-btn"
-        @click="updateUser"
+        @click="updatePost"
         v-if="refState.isUpdate"
       >
         更新
@@ -92,7 +99,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-import { defineComponent, reactive, onMounted, watch } from "vue";
+import { defineComponent, reactive, watch } from "vue";
 import { useRouter } from "vue-router";
 import { Post } from "@/types/Post";
 import {
@@ -102,16 +109,25 @@ import {
 } from "@/composables/validationCheck";
 import InputField from "@/components/adminPage/common/molecules/InputField.vue";
 
+/* ***********************************************************************************
+Post型にプロパティを追加する
+*********************************************************************************** */
 interface ExtendPost extends Post {
   unique_user_id: string;
 }
 
+/* ***********************************************************************************
+エラーメッセージを格納するオブジェクトの型を定義
+*********************************************************************************** */
 interface ErrorMessage {
   user: string;
   post_image: string;
   post_contents: string;
 }
 
+/* ***********************************************************************************
+本モジュール全体で使用する変数の定義
+*********************************************************************************** */
 interface State {
   post: ExtendPost;
   error_message: ErrorMessage;
@@ -119,6 +135,9 @@ interface State {
   isNotInit: boolean;
 }
 
+/* ***********************************************************************************
+
+*********************************************************************************** */
 export default defineComponent({
   components: {
     InputField: InputField,
@@ -159,8 +178,12 @@ export default defineComponent({
       isNotInit: false,
     });
 
+    /* ***********************************************************************************
+    サジェスト入力用のリストを取得する
+    *********************************************************************************** */
     //SuggestInputの引数に渡すユーザー名リストを取得
     const getUserIdList = () => {
+      console.log("postEditのユーザー名リスト");
       const oReq = new XMLHttpRequest();
       oReq.open("GET", "http://localhost:3000/userIdList/", false);
       oReq.send();
@@ -178,20 +201,34 @@ export default defineComponent({
     //ユーザーIDリストのレスポンスが文字列になっているので、分割して配列にする必要がある
     const userIdList = stringToArray(getUserIdList());
 
-    //ユーザー情報取得
-    onMounted(async () => {
-      refState.isUpdate = !!Number(props.id);
-      if (refState.isUpdate) {
-        const result = await axios.get(
-          "http://localhost:3000/posts/" + props.id
-        );
-        refState.post = result.data[0];
-        refState.post.created_at = formatDate(refState.post.created_at);
-      }
-    });
+    /* ***********************************************************************************
+    選択したレコードの情報を取得
+    *********************************************************************************** */
+    const formatDate = (strDate: string) => {
+      return dayjs(strDate).format("YYYY/MM/DD hh:mm:ss");
+    };
 
-    //ユーザー新規登録
-    const createUser = async () => {
+    const getPostById = () => {
+      const oReq = new XMLHttpRequest();
+      oReq.open("GET", "http://localhost:3000/posts/" + props.id, false);
+      oReq.send();
+      return JSON.parse(oReq.response);
+    };
+
+    //ユーザー情報取得
+    refState.isUpdate = !!Number(props.id);
+    if (refState.isUpdate) {
+      const postObject = getPostById();
+      refState.post = postObject[0];
+
+      //日付をYYYY/MM/DD ss:mmの形式にフォーマットする
+      refState.post.created_at = formatDate(refState.post.created_at);
+    }
+
+    /* ***********************************************************************************
+      投稿情報 登録処理
+    *********************************************************************************** */
+    const createPost = async () => {
       //エラーメッセージをクリア
       Object.assign(refState.error_message, reactive(initErrorMessage));
 
@@ -212,13 +249,17 @@ export default defineComponent({
       }
     };
 
-    //ユーザー更新
-    const updateUser = async () => {
+    /* ***********************************************************************************
+      投稿情報 更新処理
+    *********************************************************************************** */
+    const updatePost = async () => {
+      console.log("更新処理");
       //エラーメッセージをクリア
       Object.assign(refState.error_message, reactive(initErrorMessage));
 
       //バリデーションチェックが問題なければ更新処理に進む
       if (frontValidationCheck()) {
+        console.log("更新処理if内部");
         //更新処理をapiに投げる
         await axios
           .patch("http://localhost:3000/posts/" + props.id, {
@@ -236,8 +277,11 @@ export default defineComponent({
       }
     };
 
+    /* ***********************************************************************************
+      バリデーション
+    *********************************************************************************** */
     const frontValidationCheck = (): boolean => {
-      return (
+      return !(
         !!refState.error_message.user ||
         !!refState.error_message.post_image ||
         !!refState.error_message.post_contents
@@ -276,10 +320,9 @@ export default defineComponent({
       }
     );
 
-    const formatDate = (strDate: string) => {
-      return dayjs(strDate).format("YYYY/MM/DD hh:mm:ss");
-    };
+    /* ***********************************************************************************
 
+    *********************************************************************************** */
     const isInvalid = (errorMesssage: string) => {
       return !!errorMesssage;
     };
@@ -295,9 +338,10 @@ export default defineComponent({
       refState,
       isInvalid,
       transitionPostList,
-      createUser,
-      updateUser,
+      createPost,
+      updatePost,
       userIdList,
+      frontValidationCheck,
     };
   },
 });
