@@ -18,7 +18,7 @@
             <th>ユーザーID</th>
             <td>
               <InputField
-                v-model:value="refState.post.unique_user_id"
+                v-model:value="refState.post.users_table_user_id"
                 :errorMessage="refState.error_message.user"
                 :list="userIdList"
               ></InputField>
@@ -61,13 +61,6 @@
           </tr>
         </tbody>
       </table>
-      refState.error_message.user{{ refState.error_message.user }}<br />
-      refState.error_message.post_image{{ refState.error_message.post_image
-      }}<br />
-      refState.error_message.post_contents{{
-        refState.error_message.post_contents
-      }}<br />
-      {{ frontValidationCheck() }}
       <button
         type="button"
         class="btn btn-primary create-user-btn"
@@ -113,7 +106,7 @@ import InputField from "@/components/adminPage/common/molecules/InputField.vue";
 Post型にプロパティを追加する
 *********************************************************************************** */
 interface ExtendPost extends Post {
-  unique_user_id: string;
+  users_table_user_id: string;
 }
 
 /* ***********************************************************************************
@@ -136,7 +129,8 @@ interface State {
 }
 
 /* ***********************************************************************************
-
+引数定義
+状態を保持する変数を定義
 *********************************************************************************** */
 export default defineComponent({
   components: {
@@ -163,7 +157,7 @@ export default defineComponent({
       post: {
         id: 0,
         user_id: 0,
-        unique_user_id: "",
+        users_table_user_id: "",
         post_contents: "",
         post_image: "",
         is_delete: false,
@@ -190,6 +184,7 @@ export default defineComponent({
       return oReq.response;
     };
 
+    //getUserIdListの取得結果を文字列から配列に変換
     const stringToArray = (convertTarget: string) => {
       let arrayText = convertTarget.slice(1, convertTarget.length - 1);
       let re = new RegExp('\\"', "g");
@@ -204,10 +199,13 @@ export default defineComponent({
     /* ***********************************************************************************
     選択したレコードの情報を取得
     *********************************************************************************** */
+    //日付をフォーマットする
     const formatDate = (strDate: string) => {
       return dayjs(strDate).format("YYYY/MM/DD hh:mm:ss");
     };
 
+    //投稿データをposts.idで取得する
+    //子コンポーネントに値を渡すために同期処理で取得
     const getPostById = () => {
       const oReq = new XMLHttpRequest();
       oReq.open("GET", "http://localhost:3000/posts/" + props.id, false);
@@ -280,6 +278,7 @@ export default defineComponent({
     /* ***********************************************************************************
       バリデーション
     *********************************************************************************** */
+    //全てのバリデーションが問題ないかチェック
     const frontValidationCheck = (): boolean => {
       return !(
         !!refState.error_message.user ||
@@ -288,11 +287,17 @@ export default defineComponent({
       );
     };
 
+    //ユーザーIDのバリデーション
     watch(
-      () => refState.post.unique_user_id,
+      () => refState.post.users_table_user_id,
       () => {
-        const lengthCheckResult = lengthCheck(refState.post.unique_user_id, 45);
-        const requireCheckResult = requireCheck(refState.post.unique_user_id);
+        const lengthCheckResult = lengthCheck(
+          refState.post.users_table_user_id,
+          45
+        );
+        const requireCheckResult = requireCheck(
+          refState.post.users_table_user_id
+        );
         refState.error_message.user = determineAssignValue(
           lengthCheckResult,
           requireCheckResult
@@ -300,6 +305,7 @@ export default defineComponent({
       }
     );
 
+    //投稿内容のバリデーション
     watch(
       () => refState.post.post_contents,
       () => {
@@ -310,6 +316,7 @@ export default defineComponent({
       }
     );
 
+    //投稿画像のバリデーション
     watch(
       () => refState.post.post_image,
       () => {

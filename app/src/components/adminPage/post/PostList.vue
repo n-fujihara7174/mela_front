@@ -22,7 +22,7 @@
                 id="searchUserName"
                 class="form-control"
                 @keyup.enter="searchPosts"
-                v-model="refState.searchValue.user_name"
+                v-model="refState.searchValue.users_table_user_id"
               />
             </div>
             <div class="search-parameter-form">
@@ -54,7 +54,7 @@
         <tbody>
           <tr v-for="(post, index) in refState.posts" :key="index">
             <td class="px-3 align-middle">{{ post.id }}</td>
-            <td class="px-3 align-middle">{{ post.user_name }}</td>
+            <td class="px-3 align-middle">{{ post.users_table_user_id }}</td>
             <td class="px-3 align-middle">{{ post.post_contents }}</td>
             <td class="px-3 align-middle">{{ post.post_image }}</td>
             <td class="px-3 align-middle">{{ judgeDelete(post.is_delete) }}</td>
@@ -81,19 +81,15 @@ import { useRouter } from "vue-router";
 import axios from "axios";
 import { Post } from "@/types/Post";
 
-interface ExtendPost extends Post {
-  user_name: string;
-}
-
 //検索
 interface SearchValue {
-  user_name: string;
+  users_table_user_id: string;
   post_contents: string;
 }
 
 interface State {
   searchValue: SearchValue;
-  posts: Array<ExtendPost>;
+  posts: Array<Post>;
 }
 
 export default defineComponent({
@@ -101,7 +97,7 @@ export default defineComponent({
     const router = useRouter();
 
     const searchValueInit: SearchValue = {
-      user_name: "",
+      users_table_user_id: "",
       post_contents: "",
     };
 
@@ -121,12 +117,12 @@ export default defineComponent({
     //ユーザー一覧取得（検索パラメータあり）
     const searchPosts = async () => {
       if (
-        refState.searchValue.user_name != null &&
+        refState.searchValue.users_table_user_id != null &&
         refState.searchValue.post_contents != null
       ) {
         const result = await axios.get("http://localhost:3000/posts", {
           params: {
-            user_name: refState.searchValue.user_name,
+            users_table_user_id: refState.searchValue.users_table_user_id,
             post_contents: refState.searchValue.post_contents,
           },
         });
