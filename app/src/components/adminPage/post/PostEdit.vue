@@ -57,7 +57,9 @@
           </tr>
           <tr v-if="refState.isUpdate">
             <th>登録日</th>
-            <td class="align-middle">{{ refState.post.created_at }}</td>
+            <td class="align-middle">
+              {{ formatDate(refState.post.created_at) }}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -218,9 +220,6 @@ export default defineComponent({
     if (refState.isUpdate) {
       const postObject = getPostById();
       refState.post = postObject[0];
-
-      //日付をYYYY/MM/DD ss:mmの形式にフォーマットする
-      refState.post.created_at = formatDate(refState.post.created_at);
     }
 
     /* ***********************************************************************************
@@ -343,6 +342,7 @@ export default defineComponent({
 
     return {
       refState,
+      formatDate,
       isInvalid,
       transitionPostList,
       createPost,

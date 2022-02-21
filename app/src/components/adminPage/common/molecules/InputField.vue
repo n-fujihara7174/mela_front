@@ -30,8 +30,8 @@ import {
   computed,
 } from "vue";
 
-import ErrorMessageLabel from "@/components/adminPage/common/atom/errorLabel.vue";
-import InputColumn from "@/components/adminPage/common/atom/input.vue";
+import ErrorMessageLabel from "@/components/adminPage/common/atom/ErrorLabel.vue";
+import InputColumn from "@/components/adminPage/common/atom/Input.vue";
 import SuggestList from "@/components/adminPage/common/atom/SuggestList.vue";
 
 interface State {

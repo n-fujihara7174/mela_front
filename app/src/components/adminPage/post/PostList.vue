@@ -58,7 +58,7 @@
             <td class="px-3 align-middle">{{ post.post_contents }}</td>
             <td class="px-3 align-middle">{{ post.post_image }}</td>
             <td class="px-3 align-middle">{{ judgeDelete(post.is_delete) }}</td>
-            <td class="px-3 align-middle">{{ post.created_at }}</td>
+            <td class="px-3 align-middle">{{ formatDate(post.created_at) }}</td>
             <td class="px=3 align-middle text-center">
               <button
                 type="button"
@@ -72,6 +72,15 @@
         </tbody>
       </table>
     </div>
+    <div>
+      <PageNation
+        :listLength="refState.posts.length"
+        :NumberOfDisplayOnOnePage="50"
+        :NumberOfDisplayOnOneTimeForPage="5"
+        :startIndex="1"
+        :endIndex="1"
+      ></PageNation>
+    </div>
   </div>
 </template>
 
@@ -79,7 +88,10 @@
 import { defineComponent, reactive, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
+import dayjs from "dayjs";
 import { Post } from "@/types/Post";
+
+import PageNation from "@/components/adminPage/common/molecules/PageNation.vue";
 
 //検索
 interface SearchValue {
@@ -93,6 +105,10 @@ interface State {
 }
 
 export default defineComponent({
+  components: {
+    PageNation: PageNation,
+  },
+
   setup() {
     const router = useRouter();
 
@@ -140,6 +156,10 @@ export default defineComponent({
       });
     };
 
+    const formatDate = (strDate: string) => {
+      return dayjs(strDate).format("YYYY/MM/DD hh:mm:ss");
+    };
+
     const judgeDelete = (flag: boolean) => {
       if (flag) {
         return "削除";
@@ -150,6 +170,7 @@ export default defineComponent({
 
     return {
       refState,
+      formatDate,
       fetchPosts,
       judgeDelete,
       searchPosts,
