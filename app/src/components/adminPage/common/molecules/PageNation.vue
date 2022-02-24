@@ -15,12 +15,33 @@
           <span
             class="page-link"
             :class="{
-              '.select-page-link': (element = refState.NumberOfSelectPage),
+              '.select-page-link': element === refState.NumberOfSelectPage,
             }"
             @click="selectPage(element)"
-            >{{ element }}</span
-          >
+            >{{ element }}
+          </span>
         </li>
+        <!-- <span
+          v-show="
+            pageOfNumber !==
+            refState.pageNumberList[refState.pageNumberList.length - 1]
+          "
+        >
+          <li class="page-item">
+            <span class="page-link">... </span>
+          </li>
+          <li class="page-item">
+            <span
+              class="page-link"
+              @click="
+                selectPage(
+                  refState.pageNumberList[refState.pageNumberList.length - 1]
+                )
+              "
+              >{{ pageOfNumber }}
+            </span>
+          </li>
+        </span> -->
         <li class="page-item">
           <a class="page-link" href="#" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
@@ -32,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, emit } from "vue";
+import { defineComponent, PropType, reactive } from "vue";
 
 interface State {
   pageNumberList: number[];
@@ -46,11 +67,11 @@ export default defineComponent({
       type: Number as PropType<number>,
       required: true,
     },
-    NumberOfDisplayOnOnePage: {
+    numberOfDisplayOnOnePage: {
       type: Number as PropType<number>,
       required: true,
     },
-    NumberOfDisplayOnOneTimeForPage: {
+    numberOfDisplayOnOneTimeForPage: {
       type: Number as PropType<number>,
       required: true,
     },
@@ -64,47 +85,87 @@ export default defineComponent({
     },
   },
 
-  setup(props) {
+  setup(props, { emit }) {
     const refState = reactive<State>({
       pageNumberList: [],
       currentPageNumber: 1,
       NumberOfSelectPage: 1,
     });
 
-    /* **********************************************************************************
-    1ページに表示するレコード数を取得
-    ********************************************************************************** */
-    const getNumberOfDisplayOnOnePage = () => {
-      return props.NumberOfDisplayOnOnePage;
-    };
+    //総ページ数
+    const pageOfNumber = props.listLength / props.numberOfDisplayOnOnePage;
 
-    const ConNumberOfDisplayOnOnePage = getNumberOfDisplayOnOnePage();
+    /* **********************************************************************************
+    最初に表示するページ番号を算出
+    ********************************************************************************** */
+    const calculationStartPageNumber = (selectPage: number): number => {
+      //ページを選択した際に選択したページが中央になるように最初のページ番号を算出
+      const startPageNumber =
+        selectPage - props.numberOfDisplayOnOneTimeForPage / 2;
+
+      //中央になるように引き算した場合、ページ番号がマイナスになるか？
+      if (startPageNumber < 1 || isNaN(startPageNumber)) {
+        //1ページ目を返却
+        return 1;
+      } else {
+        //算出されたページ番号を返却
+        return startPageNumber;
+      }
+    };
 
     /* **********************************************************************************
     要素数 / 一ページに表示するレコードの数 で除算しページ数を算出
     算出したページ数分、配列に要素を追加
     ********************************************************************************** */
-    const calculationPageNumber = () => {
-      const pageOfNumber = props.listLength / ConNumberOfDisplayOnOnePage;
-
+    const calculationPageNumber = (selectPage = 1) => {
       //配列をクリア
       refState.pageNumberList = [];
+
+      let loopCounter = 0;
+      let displayStartPageNumber = 0;
+
+      //ページ数が一度に表示するページ数より小さいか？
+      if (pageOfNumber < props.numberOfDisplayOnOneTimeForPage) {
+        //表示するページの個数を全体のページ数と同じにする
+        loopCounter = pageOfNumber;
+        //最初に表示するページ番号を1にセット
+        displayStartPageNumber = 1;
+      } else {
+        loopCounter = 5;
+        //最初に表示するページ番号をセット
+        displayStartPageNumber = calculationStartPageNumber(selectPage);
+      }
+
+      console.log(calculationStartPageNumber(selectPage));
+      console.log("loopCounter : " + loopCounter);
+      console.log("displayStart.. : " + displayStartPageNumber);
       //ページを追加
-      for (let i = 0; i <= pageOfNumber; i++) {
+      for (let i = displayStartPageNumber; i <= loopCounter; i++) {
         refState.pageNumberList.push(i);
       }
     };
 
     calculationPageNumber();
+    console.log(refState.pageNumberList);
 
-    const selectPage = (element) => {
+    /* **********************************************************************************
+    ページを選択した際の処理
+    ********************************************************************************** */
+    const selectPage = (element: number) => {
       refState.NumberOfSelectPage = element;
-      //選択したページの先頭のインデックスを取得
-      emit("update:startIndex", (element - 1) * 50 + 1);
-      emit("update:startIndex", (element - 1) * 50 + 1);
+      calculationPageNumber();
+
+      //選択したページの要素の先頭のインデックスを親に渡す
+      emit(
+        "update:startIndex",
+        (element - 1) * props.numberOfDisplayOnOnePage + 1
+      );
+
+      //選択したページの要素の最後のインデックスを親に渡す
+      emit("update:endIndex", element * props.numberOfDisplayOnOnePage);
     };
 
-    return { refState, selectPage };
+    return { refState, pageOfNumber, selectPage };
   },
 });
 </script>

@@ -74,8 +74,8 @@
     </div>
     <div>
       <PageNation
-        :listLength="refState.posts.length"
-        :NumberOfDisplayOnOnePage="50"
+        :listLength="1000"
+        :NumberOfDisplayOnOnePage="10"
         :NumberOfDisplayOnOneTimeForPage="5"
         :startIndex="1"
         :endIndex="1"
@@ -93,7 +93,9 @@ import { Post } from "@/types/Post";
 
 import PageNation from "@/components/adminPage/common/molecules/PageNation.vue";
 
-//検索
+/* ******************************************************************************************
+
+****************************************************************************************** */
 interface SearchValue {
   users_table_user_id: string;
   post_contents: string;
@@ -104,6 +106,9 @@ interface State {
   posts: Array<Post>;
 }
 
+/* ******************************************************************************************
+
+****************************************************************************************** */
 export default defineComponent({
   components: {
     PageNation: PageNation,
@@ -122,15 +127,19 @@ export default defineComponent({
       posts: [],
     });
 
-    //ユーザー一覧取得
+    /* *************************************************************************************
+    ユーザー一覧取得
+    ************************************************************************************* */
+    //検索パラメータなし
     const fetchPosts = async () => {
       const result = await axios.get("http://localhost:3000/posts");
       refState.posts = { ...result.data };
     };
 
+    //初期表示検索
     onMounted(fetchPosts);
 
-    //ユーザー一覧取得（検索パラメータあり）
+    //検索パラメータあり
     const searchPosts = async () => {
       if (
         refState.searchValue.users_table_user_id != null &&
@@ -146,7 +155,9 @@ export default defineComponent({
       }
     };
 
-    //編集画面に遷移
+    /* **************************************************************************************
+
+    ************************************************************************************** */
     const transitionPostEdit = (id: number) => {
       router.push({
         name: "PostEdit",
