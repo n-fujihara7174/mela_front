@@ -52,7 +52,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(post, index) in refState.posts" :key="index">
+          <tr
+            v-for="(post, index) in refState.posts.slice(
+              refState.startIndex,
+              refState.endIndex
+            )"
+            :key="index"
+          >
             <td class="px-3 align-middle">{{ post.id }}</td>
             <td class="px-3 align-middle">{{ post.users_table_user_id }}</td>
             <td class="px-3 align-middle">{{ post.post_contents }}</td>
@@ -74,11 +80,9 @@
     </div>
     <div>
       <PageNation
-        :listLength="1000"
-        :NumberOfDisplayOnOnePage="10"
-        :NumberOfDisplayOnOneTimeForPage="5"
-        :startIndex="1"
-        :endIndex="1"
+        :listLength="refState.posts.length"
+        :startIndex="refState.startIndex"
+        :endIndex="refState.endIndex"
       ></PageNation>
     </div>
   </div>
@@ -104,6 +108,9 @@ interface SearchValue {
 interface State {
   searchValue: SearchValue;
   posts: Array<Post>;
+  displayPosts: Array<Post>;
+  startIndex: number;
+  endIndex: number;
 }
 
 /* ******************************************************************************************
@@ -125,6 +132,9 @@ export default defineComponent({
     const refState = reactive<State>({
       searchValue: searchValueInit,
       posts: [],
+      displayPosts: [],
+      startIndex: 1,
+      endIndex: 51,
     });
 
     /* *************************************************************************************
@@ -136,8 +146,19 @@ export default defineComponent({
       refState.posts = { ...result.data };
     };
 
-    //初期表示検索
-    onMounted(fetchPosts);
+    // onMounted(fetchPosts);
+
+    const getPostList = () => {
+      const oReq = new XMLHttpRequest();
+      oReq.open("GET", "http://localhost:3000/posts", false);
+      oReq.send();
+      return JSON.parse(oReq.response);
+    };
+
+    refState.posts = getPostList();
+    console.log(refState.posts);
+    refState.displayPosts = refState.posts.slice(0, 50);
+    console.log(refState.displayPosts);
 
     //検索パラメータあり
     const searchPosts = async () => {
