@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from "vue";
+import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -156,9 +156,7 @@ export default defineComponent({
     };
 
     refState.posts = getPostList();
-    console.log(refState.posts);
     refState.displayPosts = refState.posts.slice(0, 50);
-    console.log(refState.displayPosts);
 
     //検索パラメータあり
     const searchPosts = async () => {

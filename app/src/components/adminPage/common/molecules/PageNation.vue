@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-show="judgeDisplayPageNation">
     <nav aria-label="Page navigation example">
       <ul class="pagination">
         <li class="page-item">
@@ -15,28 +15,16 @@
           <span
             class="page-link"
             :class="{
-              '.select-page-link': element === refState.NumberOfSelectPage,
+              '.select-page-link': element === refState.numberOfSelectPage,
             }"
             @click="selectPage(element)"
             >{{ element }}
           </span>
         </li>
-        <li
-          class="page-item"
-          v-show="
-            pageOfNumber !==
-            refState.pageNumberList[refState.pageNumberList.length - 1]
-          "
-        >
+        <li class="page-item" v-show="judgeDisplayLastPageNumber">
           <span class="ellipsis">...</span>
         </li>
-        <li
-          class="page-item"
-          v-show="
-            pageOfNumber !==
-            refState.pageNumberList[refState.pageNumberList.length - 1]
-          "
-        >
+        <li class="page-item" v-show="judgeDisplayLastPageNumber">
           <span
             class="page-link"
             @click="
@@ -44,7 +32,7 @@
                 refState.pageNumberList[refState.pageNumberList.length - 1]
               )
             "
-            >{{ pageOfNumber }}
+            >{{ refState.pageOfNumber }}
           </span>
         </li>
         <li class="page-item">
@@ -58,12 +46,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive } from "vue";
+import {
+  defineComponent,
+  PropType,
+  reactive,
+  watchEffect,
+  computed,
+} from "vue";
 
 interface State {
   pageNumberList: number[];
   currentPageNumber: number;
-  NumberOfSelectPage: number;
+  numberOfSelectPage: number;
+  pageOfNumber: number;
 }
 
 export default defineComponent({
@@ -86,21 +81,26 @@ export default defineComponent({
     const refState = reactive<State>({
       pageNumberList: [],
       currentPageNumber: 1,
-      NumberOfSelectPage: 1,
+      numberOfSelectPage: 1,
+      pageOfNumber: 0,
     });
 
     const numberOfDisplayOnOnePage = 50;
     const numberOfDisplayOnOneTimeForPage = 5;
 
+    /* **********************************************************************************
+    ページ数を算出
+    ********************************************************************************** */
     //総ページ数
-    const pageOfNumber = props.listLength / numberOfDisplayOnOnePage;
+    refState.pageOfNumber = props.listLength / numberOfDisplayOnOnePage;
 
     /* **********************************************************************************
     最初に表示するページ番号を算出
     ********************************************************************************** */
     const calculationStartPageNumber = (selectPage: number): number => {
       //ページを選択した際に選択したページが中央になるように最初のページ番号を算出
-      const startPageNumber = selectPage - numberOfDisplayOnOneTimeForPage / 2;
+      let startPageNumber = selectPage - numberOfDisplayOnOneTimeForPage / 2;
+      startPageNumber = Math.ceil(startPageNumber);
 
       //中央になるように引き算した場合、ページ番号がマイナスになるか？
       if (startPageNumber < 1 || isNaN(startPageNumber)) {
@@ -115,6 +115,7 @@ export default defineComponent({
     /* **********************************************************************************
     要素数 / 一ページに表示するレコードの数 で除算しページ数を算出
     算出したページ数分、配列に要素を追加
+    最後のページのページ番号を表示するかどうか判定
     ********************************************************************************** */
     const calculationPageNumber = (selectPage = 1) => {
       //配列をクリア
@@ -124,15 +125,22 @@ export default defineComponent({
       let displayStartPageNumber = 0;
 
       //ページ数が一度に表示するページ数より小さいか？
-      if (pageOfNumber < numberOfDisplayOnOneTimeForPage) {
+      if (refState.pageOfNumber < numberOfDisplayOnOneTimeForPage) {
         //表示するページの個数を全体のページ数と同じにする
-        loopCounter = pageOfNumber;
+        loopCounter = refState.pageOfNumber;
+
         //最初に表示するページ番号を1にセット
         displayStartPageNumber = 1;
+      } else if (refState.pageOfNumber - selectPage < 4) {
+        loopCounter = refState.pageOfNumber - selectPage + selectPage;
+        console.log("loopCounter : " + loopCounter);
+        console.log("refState.pageOfNumber : " + refState.pageOfNumber);
+        console.log("selectPage : " + selectPage);
       } else {
-        loopCounter = 5;
         //最初に表示するページ番号をセット
         displayStartPageNumber = calculationStartPageNumber(selectPage);
+
+        loopCounter = displayStartPageNumber + 4;
       }
 
       //ページを追加
@@ -142,14 +150,13 @@ export default defineComponent({
     };
 
     calculationPageNumber();
-    console.log(refState.pageNumberList);
 
     /* **********************************************************************************
     ページを選択した際の処理
     ********************************************************************************** */
     const selectPage = (element: number) => {
-      refState.NumberOfSelectPage = element;
-      calculationPageNumber();
+      refState.numberOfSelectPage = element;
+      calculationPageNumber(element);
 
       //選択したページの要素の先頭のインデックスを親に渡す  ※配列のインデックスは0からスタートなので、+1しなくても問題ない
       emit("update:startIndex", (element - 1) * numberOfDisplayOnOnePage);
@@ -158,7 +165,42 @@ export default defineComponent({
       emit("update:endIndex", element * numberOfDisplayOnOnePage);
     };
 
-    return { refState, pageOfNumber, selectPage };
+    /* **********************************************************************************
+    ページ数を算出
+    ********************************************************************************** */
+    watchEffect(() => {
+      refState.pageOfNumber = props.listLength / numberOfDisplayOnOnePage;
+    });
+
+    /* **********************************************************************************
+    ページネーションを表示するか判定
+    ********************************************************************************** */
+    const judgeDisplayPageNation = computed(() => {
+      return refState.pageOfNumber > 1;
+    });
+
+    /* **********************************************************************************
+    最後のページを表示するか判定
+    ********************************************************************************** */
+    const judgeDisplayLastPageNumber = computed(() => {
+      console.log(
+        refState.pageOfNumber !==
+          refState.pageNumberList[refState.pageNumberList.length - 1]
+      );
+      console.log(refState.pageOfNumber > 5);
+      return (
+        refState.pageOfNumber !==
+          refState.pageNumberList[refState.pageNumberList.length - 1] &&
+        refState.pageOfNumber > 5
+      );
+    });
+
+    return {
+      refState,
+      selectPage,
+      judgeDisplayPageNation,
+      judgeDisplayLastPageNumber,
+    };
   },
 });
 </script>
