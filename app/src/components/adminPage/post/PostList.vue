@@ -81,8 +81,8 @@
     <div>
       <PageNation
         :listLength="refState.posts.length"
-        :startIndex="refState.startIndex"
-        :endIndex="refState.endIndex"
+        v-model:startIndex="refState.startIndex"
+        v-model:endIndex="refState.endIndex"
       ></PageNation>
     </div>
   </div>
@@ -140,14 +140,6 @@ export default defineComponent({
     /* *************************************************************************************
     ユーザー一覧取得
     ************************************************************************************* */
-    //検索パラメータなし
-    const fetchPosts = async () => {
-      const result = await axios.get("http://localhost:3000/posts");
-      refState.posts = { ...result.data };
-    };
-
-    // onMounted(fetchPosts);
-
     const getPostList = () => {
       const oReq = new XMLHttpRequest();
       oReq.open("GET", "http://localhost:3000/posts", false);
@@ -201,7 +193,6 @@ export default defineComponent({
     return {
       refState,
       formatDate,
-      fetchPosts,
       judgeDelete,
       searchPosts,
       transitionPostEdit,

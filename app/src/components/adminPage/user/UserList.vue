@@ -61,6 +61,13 @@
         </tbody>
       </table>
     </div>
+    <div>
+      <PageNation
+        :listLength="refState.users.length"
+        v-model:startIndex="refState.startIndex"
+        v-model:endIndex="refState.endIndex"
+      ></PageNation>
+    </div>
   </div>
 </template>
 
@@ -80,6 +87,8 @@ interface SearchValue {
 interface State {
   searchValue: SearchValue;
   users: Array<User>;
+  startIndex: number;
+  endIndex: number;
 }
 
 export default defineComponent({
@@ -96,6 +105,8 @@ export default defineComponent({
     const refState = reactive<State>({
       searchValue: searchValueInit,
       users: [],
+      startIndex: 1,
+      endIndex: 51,
     });
 
     //ユーザー一覧取得

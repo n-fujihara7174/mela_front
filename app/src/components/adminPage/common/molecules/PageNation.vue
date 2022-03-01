@@ -15,7 +15,7 @@
           <span
             class="page-link"
             :class="{
-              '.select-page-link': element === refState.numberOfSelectPage,
+              'select-page-link': element === refState.numberOfSelectPage,
             }"
             @click="selectPage(element)"
             >{{ element }}
@@ -131,16 +131,35 @@ export default defineComponent({
 
         //最初に表示するページ番号を1にセット
         displayStartPageNumber = 1;
-      } else if (refState.pageOfNumber - selectPage < 4) {
-        loopCounter = refState.pageOfNumber - selectPage + selectPage;
-        console.log("loopCounter : " + loopCounter);
-        console.log("refState.pageOfNumber : " + refState.pageOfNumber);
-        console.log("selectPage : " + selectPage);
       } else {
         //最初に表示するページ番号をセット
         displayStartPageNumber = calculationStartPageNumber(selectPage);
 
-        loopCounter = displayStartPageNumber + 4;
+        /*
+        最後のページもしくは最後のページの1つ前か2つ前のページが選択されたか？
+        上記のページは表示するページ番号が変わらないので、別途判定が必要
+        */
+        if (refState.pageOfNumber - selectPage < 3) {
+          loopCounter = refState.pageOfNumber;
+          console.log("refState.pageOfNumber : " + refState.pageOfNumber);
+          console.log("displayStartPageNumber : " + displayStartPageNumber);
+          /*
+          表示するページ番号の範囲は「選択したページの2つ前のページ 〜 選択したページの2つ後のページを表示する
+          しかし、1ページ目と2ページ目、最後のページと最後のページから一つ前のページは、前後二つのページが存在しない
+          そのため、それらのページの場合は現在表示しているページを変更しない
+          以下式の解説
+          表示を開始するページ番号 + (最後のページの番号 - 表示を開始するページ - 最後もしくは最初のページを除く表示するページ数)
+          1.「最後のページの番号 - 表示を開始するページ」をすることによって表示するページ数が5つを超えているか、少ないかがわかる
+          2. 1.の値から「最後もしくは最初のページを除く表示するページ数」で引くことによって
+             「表示するページ数より多い又は、少ないページの数」がわかる
+          3. 2.で出した「多い又は、少ないページの数」を現在の「表示を開始するページ番号」に足すことによって、表示ページ数を5つに調整できる
+          */
+          displayStartPageNumber =
+            displayStartPageNumber +
+            (refState.pageOfNumber - displayStartPageNumber - 4);
+        } else {
+          loopCounter = displayStartPageNumber + 4;
+        }
       }
 
       //ページを追加
@@ -183,11 +202,6 @@ export default defineComponent({
     最後のページを表示するか判定
     ********************************************************************************** */
     const judgeDisplayLastPageNumber = computed(() => {
-      console.log(
-        refState.pageOfNumber !==
-          refState.pageNumberList[refState.pageNumberList.length - 1]
-      );
-      console.log(refState.pageOfNumber > 5);
       return (
         refState.pageOfNumber !==
           refState.pageNumberList[refState.pageNumberList.length - 1] &&
