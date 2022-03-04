@@ -1,7 +1,7 @@
 <template>
   <div>
     <textarea
-      v-if="isTextarea"
+      v-if="inputType === 'textarea'"
       type="text"
       class="form-control"
       :class="{
@@ -51,10 +51,10 @@ export default defineComponent({
       type: Boolean as PropType<boolean>,
       required: true,
     },
-    isTextarea: {
-      type: Boolean as PropType<boolean>,
+    type: {
+      type: String as PropType<string>,
       required: false,
-      default: false,
+      default: "",
     },
   },
 
@@ -70,13 +70,13 @@ export default defineComponent({
       refState.value = props.value;
     });
 
-    const getPropsIsTextarea = () => {
-      return props.isTextarea;
+    const getPropsType = () => {
+      console.log("props : " + props.type);
+      return props.type;
     };
-    const isTextareaFlag = getPropsIsTextarea();
+    const inputType = getPropsType();
 
     const onFocus = () => {
-      console.log("inputfieldのonfocus");
       refState.isFocus = true;
     };
 
@@ -87,7 +87,6 @@ export default defineComponent({
     watch(
       () => refState.value,
       () => {
-        console.log("inputのrefState.valueのwatch");
         emit("update:value", refState.value);
         refState.isNotInit = true;
       }
@@ -114,7 +113,7 @@ export default defineComponent({
       }
     );
 
-    return { refState, isTextareaFlag, onFocus, unFocus };
+    return { refState, inputType, onFocus, unFocus };
   },
 });
 </script>

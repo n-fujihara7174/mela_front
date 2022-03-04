@@ -21,7 +21,7 @@
               <input
                 id="searchUserName"
                 class="form-control"
-                @keyup.enter="searchPosts"
+                @keyup.enter="setPosts"
                 v-model="refState.searchValue.users_table_user_id"
               />
             </div>
@@ -30,7 +30,7 @@
               <input
                 id="searchUserName"
                 class="form-control"
-                @keyup.enter="searchPosts"
+                @keyup.enter="setPosts"
                 v-model="refState.searchValue.post_contents"
               />
             </div>
@@ -43,7 +43,7 @@
         <thead>
           <tr>
             <th class="key-value px-3">No</th>
-            <th class="user-name px-3">ユーザー名</th>
+            <th class="user-name px-3">ユーザーID</th>
             <th class="post-contents px-3">投稿内容</th>
             <th class="image px-3">画像</th>
             <th class="is-delete px-3">削除</th>
@@ -91,7 +91,6 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
 import dayjs from "dayjs";
 import { Post } from "@/types/Post";
 
@@ -108,7 +107,6 @@ interface SearchValue {
 interface State {
   searchValue: SearchValue;
   posts: Array<Post>;
-  displayPosts: Array<Post>;
   startIndex: number;
   endIndex: number;
 }
@@ -132,7 +130,6 @@ export default defineComponent({
     const refState = reactive<State>({
       searchValue: searchValueInit,
       posts: [],
-      displayPosts: [],
       startIndex: 1,
       endIndex: 51,
     });
@@ -141,30 +138,44 @@ export default defineComponent({
     ユーザー一覧取得
     ************************************************************************************* */
     const getPostList = () => {
+      //urlを設定
+      let url = new URL("http://localhost:3000/posts");
+      url.searchParams.set(
+        "users_table_user_id",
+        refState.searchValue.users_table_user_id
+      );
+      url.searchParams.set("post_contents", refState.searchValue.post_contents);
+
+      //リクエストを送信
       const oReq = new XMLHttpRequest();
-      oReq.open("GET", "http://localhost:3000/posts", false);
+      oReq.open("GET", url.toString(), false);
       oReq.send();
       return JSON.parse(oReq.response);
     };
 
-    refState.posts = getPostList();
-    refState.displayPosts = refState.posts.slice(0, 50);
-
-    //検索パラメータあり
-    const searchPosts = async () => {
-      if (
-        refState.searchValue.users_table_user_id != null &&
-        refState.searchValue.post_contents != null
-      ) {
-        const result = await axios.get("http://localhost:3000/posts", {
-          params: {
-            users_table_user_id: refState.searchValue.users_table_user_id,
-            post_contents: refState.searchValue.post_contents,
-          },
-        });
-        refState.posts = { ...result.data };
-      }
+    const setPosts = () => {
+      refState.posts = getPostList();
+      console.log(refState.posts);
     };
+
+    setPosts();
+
+    // //検索パラメータあり
+    // const searchPosts = async () => {
+    //   console.log("searchPosts");
+    //   if (
+    //     refState.searchValue.users_table_user_id != null &&
+    //     refState.searchValue.post_contents != null
+    //   ) {
+    //     const result = await axios.get("http://localhost:3000/posts", {
+    //       params: {
+    //         users_table_user_id: refState.searchValue.users_table_user_id,
+    //         post_contents: refState.searchValue.post_contents,
+    //       },
+    //     });
+    //     refState.posts = { ...result.data };
+    //   }
+    // };
 
     /* **************************************************************************************
 
@@ -194,7 +205,8 @@ export default defineComponent({
       refState,
       formatDate,
       judgeDelete,
-      searchPosts,
+      setPosts,
+      //searchPosts,
       transitionPostEdit,
     };
   },

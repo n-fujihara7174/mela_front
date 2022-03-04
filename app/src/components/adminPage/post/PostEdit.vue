@@ -105,7 +105,7 @@ import {
 import InputField from "@/components/adminPage/common/molecules/InputField.vue";
 
 /* ***********************************************************************************
-Post型にプロパティを追加する
+Post型にusers.user_idを格納するプロパティを追加
 *********************************************************************************** */
 interface ExtendPost extends Post {
   users_table_user_id: string;

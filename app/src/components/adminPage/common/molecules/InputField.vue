@@ -3,7 +3,7 @@
     <InputColumn
       v-model:value="refState.value"
       :isError="!!refState.errorMessage"
-      :isTextarea="refState.isTextarea"
+      :type="refState.type"
       v-model:isFocus="refState.isFocus"
     ></InputColumn>
     <div v-show="judgeDisplay">
@@ -38,7 +38,7 @@ interface State {
   value: string;
   errorMessage: string;
   list: string[];
-  isTextarea: boolean;
+  type: string;
   isDisplaySuggest: boolean;
   isFocus: boolean;
   isHover: boolean;
@@ -60,10 +60,10 @@ export default defineComponent({
       required: false,
       default: () => [],
     },
-    isTextarea: {
-      type: Boolean as PropType<boolean>,
+    type: {
+      type: String as PropType<string>,
       required: false,
-      default: false,
+      default: "",
     },
   },
 
@@ -78,19 +78,21 @@ export default defineComponent({
       value: "",
       errorMessage: "",
       list: [],
-      isTextarea: false,
+      type: "",
       isDisplaySuggest: false,
       isFocus: false,
       isHover: false,
       isExistList: false,
     });
 
-    onMounted(() => {
+    const setPropsToState = () => {
       refState.value = props.value;
       refState.list = props.list;
-      refState.isTextarea = props.isTextarea;
+      refState.type = props.type;
       refState.isDisplaySuggest = !!props.list.length;
-    });
+    };
+
+    setPropsToState();
 
     const emitValue = (value: string) => {
       emit("update:value", value);

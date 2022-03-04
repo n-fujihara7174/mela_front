@@ -1,6 +1,4 @@
 <template>
-  パスワード、誕生日周りの登録・更新処理を見直す
-
   <div class="input-form mx-xl-5">
     <div class="mt-4">
       <a href="#" @click="transitionList">ユーザー 一覧画面</a>
@@ -10,7 +8,6 @@
     <div class="mt-5">
       <h2 v-if="!refState.isUpdate">ユーザー 登録画面</h2>
       <h2 v-if="refState.isUpdate">ユーザー 編集画面</h2>
-
       <table class="table table-sm shadow table-hover mt-5">
         <tbody>
           <tr :class="{ 'display-none': !refState.isUpdate }">
@@ -20,111 +17,37 @@
           <tr>
             <th>ユーザー名</th>
             <td>
-              <input
-                type="text"
-                class="form-control"
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.user_name) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.user_name) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.user.user_name"
-              />
-              <label
-                :class="{
-                  'display-none': judgeDisplay(
-                    refState.error_message.user_name
-                  ),
-                  'is-valid': !isInvalid(refState.error_message.user_name),
-                  'is-invalid': isInvalid(refState.error_message.user_name),
-                }"
-                >{{ refState.error_message.user_name }}</label
-              >
+              <InputField
+                v-model:value="refState.user.user_name"
+                :errorMessage="refState.error_message.user_name"
+              ></InputField>
             </td>
           </tr>
           <tr>
             <th>ユーザーID</th>
             <td>
-              <input
-                type="text"
-                class="form-control"
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.user_id) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.user_id) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.user.user_id"
-              />
-              <label
-                :class="{
-                  'display-none': judgeDisplay(refState.error_message.user_id),
-                  'is-valid': !isInvalid(refState.error_message.user_id),
-                  'is-invalid': isInvalid(refState.error_message.user_id),
-                }"
-                >{{ refState.error_message.user_id }}</label
-              >
+              <InputField
+                v-model:value="refState.user.user_id"
+                :errorMessage="refState.error_message.user_id"
+              ></InputField>
             </td>
           </tr>
           <tr>
             <th>メールアドレス</th>
             <td>
-              <input
-                type="text"
-                class="form-control"
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.email) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.email) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.user.email"
-              />
-              <label
-                :class="{
-                  'display-none': judgeDisplay(
-                    refState.error_message.phone_number
-                  ),
-                  'is-valid': !isInvalid(refState.error_message.email),
-                  'is-invalid': isInvalid(refState.error_message.email),
-                }"
-                >{{ refState.error_message.email }}</label
-              >
+              <InputField
+                v-model:value="refState.user.email"
+                :errorMessage="refState.error_message.email"
+              ></InputField>
             </td>
           </tr>
           <tr>
             <th>電話番号</th>
             <td>
-              <input
-                type="text"
-                class="form-control"
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.phone_number) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.phone_number) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.user.phone_number"
-              />
-              <label
-                :class="{
-                  'display-none': judgeDisplay(
-                    refState.error_message.phone_number
-                  ),
-                  'is-valid': !isInvalid(refState.error_message.phone_number),
-                  'is-invalid': isInvalid(refState.error_message.phone_number),
-                }"
-                >{{ refState.error_message.phone_number }}</label
-              >
+              <InputField
+                v-model:value="refState.user.phone_number"
+                :errorMessage="refState.error_message.phone_number"
+              ></InputField>
             </td>
           </tr>
           <tr>
@@ -179,59 +102,20 @@
           <tr>
             <th>画像</th>
             <td>
-              <input
-                type="text"
-                class="form-control"
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.image) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.image) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.user.image"
-              />
-              <label
-                :class="{
-                  'display-none': judgeDisplay(refState.error_message.image),
-                  'is-valid': !isInvalid(refState.error_message.image),
-                  'is-invalid': isInvalid(refState.error_message.image),
-                }"
-                >{{ refState.error_message.image }}</label
-              >
+              <InputField
+                v-model:value="refState.user.image"
+                :errorMessage="refState.error_message.image"
+              ></InputField>
             </td>
           </tr>
           <tr>
             <th>自己紹介</th>
             <td>
-              <textarea
-                type="text"
-                class="form-control"
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.self_introduction) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.self_introduction) &&
-                    refState.isNotInit,
-                }"
-                v-model="refState.user.self_introduction"
-              />
-              <label
-                :class="{
-                  'display-none': judgeDisplay(
-                    refState.error_message.self_introduction
-                  ),
-                  'is-valid': !isInvalid(
-                    refState.error_message.self_introduction
-                  ),
-                  'is-invalid': isInvalid(
-                    refState.error_message.self_introduction
-                  ),
-                }"
-                >{{ refState.error_message.self_introduction }}</label
-              >
+              <InputField
+                v-model:value="refState.user.self_introduction"
+                :errorMessage="refState.error_message.self_introduction"
+                :type="'textarea'"
+              ></InputField>
             </td>
           </tr>
           <tr>
@@ -340,7 +224,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-import { defineComponent, reactive, onMounted } from "vue";
+import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { User } from "@/types/User";
 import {
@@ -349,20 +233,14 @@ import {
   checkDateFormat,
   checkDateValue,
 } from "@/composables/validationCheck";
+import InputField from "@/components/adminPage/common/molecules/InputField.vue";
 
-interface UserExtend extends User {
-  post_count: number;
-  like_count: number;
-  follow_count: number;
-  follower_count: number;
-  message_user_count: number;
-}
-
+/* ***********************************************************************************
+エラーメッセージを格納するオブジェクトの型を定義
+*********************************************************************************** */
 interface ErrorMessage {
   user_name: string;
   user_id: string;
-  password: string;
-  password_digest: string;
   email: string;
   phone_number: string;
   birthday: string;
@@ -370,14 +248,20 @@ interface ErrorMessage {
   self_introduction: string;
 }
 
+/* ***********************************************************************************
+生年月日を入力するテキストボックス用のオブジェクトを定義
+*********************************************************************************** */
 interface Birthday {
   year: string;
   month: string;
   day: string;
 }
 
+/* ***********************************************************************************
+モジュール全体で使うオブジェクトの定義
+*********************************************************************************** */
 interface State {
-  user: UserExtend;
+  user: User;
   birthday: Birthday;
   error_message: ErrorMessage;
   isUpdate: boolean;
@@ -385,21 +269,32 @@ interface State {
 }
 
 export default defineComponent({
+  /* ***********************************************************************************
+  コンポーネント読み込み
+  *********************************************************************************** */
+  components: {
+    InputField: InputField,
+  },
+
+  /* ***********************************************************************************
+  コンポーネントの引数を設定
+  *********************************************************************************** */
   props: {
     id: {
-      type: Number,
+      type: String,
       required: true,
     },
   },
 
   setup(props) {
+    /* ***********************************************************************************
+    コンポーネント全体で使用する変数の定義
+    *********************************************************************************** */
     const router = useRouter();
 
     const initErrorMessage: ErrorMessage = {
       user_name: "",
       user_id: "",
-      password: "",
-      password_digest: "",
       email: "",
       phone_number: "",
       birthday: "",
@@ -409,16 +304,9 @@ export default defineComponent({
 
     const refState = reactive<State>({
       user: {
-        post_count: 0,
-        like_count: 0,
-        follow_count: 0,
-        follower_count: 0,
-        message_user_count: 0,
         id: 0,
         user_name: "",
         user_id: "",
-        password: "",
-        password_digest: "",
         self_introduction: "",
         email: "",
         phone_number: 0,
@@ -440,8 +328,6 @@ export default defineComponent({
       error_message: {
         user_name: "",
         user_id: "",
-        password: "",
-        password_digest: "",
         email: "",
         phone_number: "",
         birthday: "",
@@ -452,24 +338,50 @@ export default defineComponent({
       isNotInit: false,
     });
 
-    //ユーザー情報取得
-    onMounted(async () => {
-      refState.isUpdate = !!Number(props.id);
-      if (refState.isUpdate) {
-        const result = await axios.get(
-          "http://localhost:3000/users/" + props.id.toString()
-        );
-        refState.user = result.data[0];
-        refState.user.created_at = formatDate(refState.user.created_at);
-        refState.user.updated_at = formatDate(refState.user.updated_at);
-        refState.user.birthday = dayjs(refState.user.birthday).format(
-          "YYYY/MM/DD"
-        );
-        //誕生日を分割する
-        splitBirthday();
-      }
-    });
+    /* ***********************************************************************************
+    一覧画面で選択されたユーザー情報を取得
+    *********************************************************************************** */
+    const getUserById = () => {
+      const oReq = new XMLHttpRequest();
+      oReq.open(
+        "GET",
+        "http://localhost:3000/users/" + props.id.toString(),
+        false
+      );
+      oReq.send();
+      return JSON.parse(oReq.response);
+    };
 
+    //登録日付、更新日付をフォーマット
+    const formatDate = (strDate: string) => {
+      return dayjs(strDate).format("YYYY/MM/DD hh:mm:ss");
+    };
+
+    //テキストを年、月、日を分割する
+    const splitBirthday = () => {
+      const aryBirthday = refState.user.birthday.split("/");
+      refState.birthday.year = aryBirthday[0];
+      refState.birthday.month = aryBirthday[1];
+      refState.birthday.day = aryBirthday[2];
+    };
+
+    const setUser = () => {
+      const user = getUserById();
+      refState.user = user[0];
+      refState.user.created_at = formatDate(refState.user.created_at);
+      refState.user.updated_at = formatDate(refState.user.updated_at);
+      refState.user.birthday = dayjs(refState.user.birthday).format(
+        "YYYY/MM/DD"
+      );
+      //誕生日を分割する
+      splitBirthday();
+    };
+
+    setUser();
+
+    /* ***********************************************************************************
+    ユーザー情報の登録・更新処理
+    *********************************************************************************** */
     //ユーザー新規登録
     const createUser = async () => {
       //エラーメッセージをクリア
@@ -479,7 +391,6 @@ export default defineComponent({
       mergeBirthday();
 
       if (frontValidationCheck()) {
-        console.log("ifの中");
         await axios
           .post("http://localhost:3000/users/", {
             user: refState.user,
@@ -493,8 +404,6 @@ export default defineComponent({
             refState.error_message = error.response.data;
             refState.isNotInit = true;
           });
-      } else {
-        console.log("elseのなか");
       }
     };
 
@@ -517,16 +426,16 @@ export default defineComponent({
             transitionList();
           })
           .catch((error) => {
-            console.log(
-              "typeof(error.response.data) : " + typeof error.response.data
-            );
             refState.error_message = error.response.data;
             refState.isNotInit = true;
           });
       }
-      console.log(refState.error_message);
     };
 
+    /* ***********************************************************************************
+    生年月日情報を操作
+    *********************************************************************************** */
+    //テキストボックスに入力された年、月、日をマージする
     const mergeBirthday = () => {
       const year = escape(refState.birthday.year);
       const month = escape(refState.birthday.month);
@@ -534,28 +443,21 @@ export default defineComponent({
       refState.user.birthday = year + "/" + month + "/" + day;
     };
 
-    const splitBirthday = () => {
-      const aryBirthday = refState.user.birthday.split("/");
-      refState.birthday.year = aryBirthday[0];
-      refState.birthday.month = aryBirthday[1];
-      refState.birthday.day = aryBirthday[2];
-    };
+    /* ***********************************************************************************
+    登録日、更新日をフォーマット
+    *********************************************************************************** */
 
-    const formatDate = (strDate: string) => {
-      return dayjs(strDate).format("YYYY/MM/DD hh:mm:ss");
-    };
-
-    //生年月日入力は数字のみ許可
+    /* ***********************************************************************************
+    生年月日に入力された文字が数字かどうかチェックし、数字以外であれば入力できないようにする
+    *********************************************************************************** */
     const checkInputYear = () => {
       refState.birthday.year = replaceStringToEmpty(refState.birthday.year);
     };
 
-    //生年月日入力は数字のみ許可
     const checkInputMonth = () => {
       refState.birthday.month = replaceStringToEmpty(refState.birthday.month);
     };
 
-    //生年月日入力は数字のみ許可
     const checkInputDay = () => {
       refState.birthday.day = replaceStringToEmpty(refState.birthday.day);
     };
@@ -565,14 +467,18 @@ export default defineComponent({
       return checkTarget.replace(regex, "");
     };
 
-    //一覧画面に遷移
+    /* ***********************************************************************************
+    一覧画面に遷移
+    *********************************************************************************** */
     const transitionList = () => {
       router.push({
         name: "UserList",
       });
     };
 
-    //フロント側のバリデーション
+    /* ***********************************************************************************
+    フロント側のバリデーションチェック
+    *********************************************************************************** */
     const frontValidationCheck = (): boolean => {
       const assignValue = (str1: string, str2: string): string => {
         if (str1 == "") {
@@ -624,7 +530,6 @@ export default defineComponent({
       return !(
         !!refState.error_message.user_name ||
         !!refState.error_message.user_id ||
-        !!refState.error_message.password_digest ||
         !!refState.error_message.email ||
         !!refState.error_message.phone_number ||
         !!refState.error_message.birthday ||
@@ -633,30 +538,23 @@ export default defineComponent({
       );
     };
 
-    const judgeFlag = (flag: boolean) => {
-      if (flag) {
-        return "通知を行う";
-      } else {
-        return "";
-      }
-    };
-
+    /* ***********************************************************************************
+    画面に表示するかどうか判定
+    *********************************************************************************** */
     const judgeDisplay = (displayText: string) => {
       const isDisplay = !!displayText;
       return !isDisplay;
     };
 
+    /* ***********************************************************************************
+    入力値がエラーかどうか判定
+    *********************************************************************************** */
     const isInvalid = (errorMesssage: string) => {
       return !!errorMesssage;
     };
 
-    const hasProperty = (obj: any, key: string) => {
-      return Object.prototype.hasOwnProperty.call(obj, key);
-    };
-
     return {
       refState,
-      judgeFlag,
       judgeDisplay,
       isInvalid,
       transitionList,
