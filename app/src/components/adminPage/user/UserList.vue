@@ -21,7 +21,7 @@
                 id="userNameAndUserId"
                 class="form-control"
                 placeholder="ユーザー名、ユーザーID"
-                @keyup.enter="searchUsers"
+                @keyup.enter="setUsers"
                 v-model="refState.searchValue.userIdOrEmail"
               />
             </div>
@@ -42,7 +42,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(user, index) in refState.users" :key="index">
+          <tr
+            v-for="(user, index) in refState.users.slice(
+              refState.startIndex,
+              refState.endIndex
+            )"
+            :key="index"
+          >
             <td class="px-3 align-middle">{{ user.user_name }}</td>
             <td class="px-3 align-middle">{{ user.user_id }}</td>
             <td class="px-3 align-middle">{{ user.email }}</td>
@@ -72,12 +78,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, onMounted } from "vue";
-import axios from "axios";
+import { defineComponent, reactive } from "vue";
 import { User } from "@/types/User";
 import { judgeDelete } from "@/composables/judgValue";
 import { useRouter } from "vue-router";
 
+/* ******************************************************************************************
+型定義
+****************************************************************************************** */
 //検索値格納用
 interface SearchValue {
   userIdOrEmail: string;
@@ -93,6 +101,9 @@ interface State {
 
 export default defineComponent({
   setup() {
+    /* ******************************************************************************************
+    モジュール全体で使用する変数の定義
+    ****************************************************************************************** */
     const router = useRouter();
     const is_delete = judgeDelete;
 
@@ -109,24 +120,33 @@ export default defineComponent({
       endIndex: 51,
     });
 
-    //ユーザー一覧取得
-    onMounted(async () => {
-      const result = await axios.get("http://localhost:3000/users");
-      refState.users = { ...result.data };
-    });
+    /* ******************************************************************************************
+    モジュール全体で使用する変数の定義
+    ****************************************************************************************** */
+    const getUserList = () => {
+      //urlを設定
+      let url = new URL("http://localhost:3000/users");
+      url.searchParams.set(
+        "user_id_or_email",
+        refState.searchValue.userIdOrEmail
+      );
 
-    //ユーザー一覧取得（検索パラメータあり）
-    const searchUsers = async () => {
-      if (refState.searchValue.userIdOrEmail != null) {
-        const result = await axios.get("http://localhost:3000/users", {
-          params: {
-            user_id_or_email: refState.searchValue.userIdOrEmail,
-          },
-        });
-        refState.users = { ...result.data };
-      }
+      //リクエストを送信
+      const oReq = new XMLHttpRequest();
+      oReq.open("GET", url.toString(), false);
+      oReq.send();
+      return JSON.parse(oReq.response);
     };
 
+    const setUsers = () => {
+      refState.users = getUserList();
+    };
+
+    setUsers();
+
+    /* ******************************************************************************************
+    モジュール全体で使用する変数の定義
+    ****************************************************************************************** */
     const transitionUserEdit = (id: number): void => {
       router.push({
         name: "UserEdit",
@@ -139,7 +159,7 @@ export default defineComponent({
     return {
       refState,
       is_delete,
-      searchUsers,
+      setUsers,
       transitionUserEdit,
     };
   },

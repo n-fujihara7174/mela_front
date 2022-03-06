@@ -97,7 +97,7 @@ import { Post } from "@/types/Post";
 import PageNation from "@/components/adminPage/common/molecules/PageNation.vue";
 
 /* ******************************************************************************************
-
+型定義
 ****************************************************************************************** */
 interface SearchValue {
   users_table_user_id: string;
@@ -112,7 +112,7 @@ interface State {
 }
 
 /* ******************************************************************************************
-
+変数定義
 ****************************************************************************************** */
 export default defineComponent({
   components: {
@@ -155,27 +155,9 @@ export default defineComponent({
 
     const setPosts = () => {
       refState.posts = getPostList();
-      console.log(refState.posts);
     };
 
     setPosts();
-
-    // //検索パラメータあり
-    // const searchPosts = async () => {
-    //   console.log("searchPosts");
-    //   if (
-    //     refState.searchValue.users_table_user_id != null &&
-    //     refState.searchValue.post_contents != null
-    //   ) {
-    //     const result = await axios.get("http://localhost:3000/posts", {
-    //       params: {
-    //         users_table_user_id: refState.searchValue.users_table_user_id,
-    //         post_contents: refState.searchValue.post_contents,
-    //       },
-    //     });
-    //     refState.posts = { ...result.data };
-    //   }
-    // };
 
     /* **************************************************************************************
 

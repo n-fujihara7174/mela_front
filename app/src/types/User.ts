@@ -4,7 +4,7 @@ export interface User {
   user_id: string;
   self_introduction: string;
   email: string;
-  phone_number: number;
+  phone_number: string;
   birthday: string;
   image: string;
   can_like_notification: boolean;

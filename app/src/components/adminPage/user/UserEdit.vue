@@ -53,50 +53,11 @@
           <tr>
             <th>生年月日</th>
             <td>
-              <div
-                :class="{
-                  'is-valid-textbox':
-                    !isInvalid(refState.error_message.birthday) &&
-                    refState.isNotInit,
-                  'is-invalid-textbox':
-                    isInvalid(refState.error_message.birthday) &&
-                    refState.isNotInit,
-                }"
-                class="birthday-form form-control"
-              >
-                <input
-                  type="tel"
-                  maxlength="4"
-                  class="input-year"
-                  placeholder="1990"
-                  @input="checkInputYear"
-                  v-model="refState.birthday.year"
-                />/
-                <input
-                  type="tel"
-                  maxlength="2"
-                  class="input-month"
-                  placeholder="01"
-                  @input="checkInputMonth"
-                  v-model="refState.birthday.month"
-                />/
-                <input
-                  type="tel"
-                  maxlength="2"
-                  class="input-day"
-                  placeholder="01"
-                  @input="checkInputDay"
-                  v-model="refState.birthday.day"
-                />
-              </div>
-              <label
-                :class="{
-                  'display-none': judgeDisplay(refState.error_message.birthday),
-                  'is-valid': !isInvalid(refState.error_message.birthday),
-                  'is-invalid': isInvalid(refState.error_message.birthday),
-                }"
-                >{{ refState.error_message.birthday }}</label
-              >
+              <InputField
+                v-model:value="refState.user.birthday"
+                :errorMessage="refState.error_message.birthday"
+                :type="'date'"
+              ></InputField>
             </td>
           </tr>
           <tr>
@@ -224,7 +185,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, watch } from "vue";
 import { useRouter } from "vue-router";
 import { User } from "@/types/User";
 import {
@@ -232,6 +193,7 @@ import {
   requireCheck,
   checkDateFormat,
   checkDateValue,
+  determineAssignValue,
 } from "@/composables/validationCheck";
 import InputField from "@/components/adminPage/common/molecules/InputField.vue";
 
@@ -249,20 +211,10 @@ interface ErrorMessage {
 }
 
 /* ***********************************************************************************
-生年月日を入力するテキストボックス用のオブジェクトを定義
-*********************************************************************************** */
-interface Birthday {
-  year: string;
-  month: string;
-  day: string;
-}
-
-/* ***********************************************************************************
 モジュール全体で使うオブジェクトの定義
 *********************************************************************************** */
 interface State {
   user: User;
-  birthday: Birthday;
   error_message: ErrorMessage;
   isUpdate: boolean;
   isNotInit: boolean;
@@ -309,7 +261,7 @@ export default defineComponent({
         user_id: "",
         self_introduction: "",
         email: "",
-        phone_number: 0,
+        phone_number: "",
         birthday: "",
         image: "",
         can_like_notification: false,
@@ -357,14 +309,6 @@ export default defineComponent({
       return dayjs(strDate).format("YYYY/MM/DD hh:mm:ss");
     };
 
-    //テキストを年、月、日を分割する
-    const splitBirthday = () => {
-      const aryBirthday = refState.user.birthday.split("/");
-      refState.birthday.year = aryBirthday[0];
-      refState.birthday.month = aryBirthday[1];
-      refState.birthday.day = aryBirthday[2];
-    };
-
     const setUser = () => {
       const user = getUserById();
       refState.user = user[0];
@@ -373,8 +317,6 @@ export default defineComponent({
       refState.user.birthday = dayjs(refState.user.birthday).format(
         "YYYY/MM/DD"
       );
-      //誕生日を分割する
-      splitBirthday();
     };
 
     setUser();
@@ -386,9 +328,6 @@ export default defineComponent({
     const createUser = async () => {
       //エラーメッセージをクリア
       Object.assign(refState.error_message, reactive(initErrorMessage));
-
-      //生年月日入力欄の値をマージする
-      mergeBirthday();
 
       if (frontValidationCheck()) {
         await axios
@@ -412,9 +351,6 @@ export default defineComponent({
       //エラーメッセージをクリア
       Object.assign(refState.error_message, reactive(initErrorMessage));
 
-      //生年月日入力欄の値をマージする
-      mergeBirthday();
-
       if (frontValidationCheck()) {
         //更新処理をapiに投げる
         await axios
@@ -431,21 +367,6 @@ export default defineComponent({
           });
       }
     };
-
-    /* ***********************************************************************************
-    生年月日情報を操作
-    *********************************************************************************** */
-    //テキストボックスに入力された年、月、日をマージする
-    const mergeBirthday = () => {
-      const year = escape(refState.birthday.year);
-      const month = escape(refState.birthday.month);
-      const day = escape(refState.birthday.day);
-      refState.user.birthday = year + "/" + month + "/" + day;
-    };
-
-    /* ***********************************************************************************
-    登録日、更新日をフォーマット
-    *********************************************************************************** */
 
     /* ***********************************************************************************
     生年月日に入力された文字が数字かどうかチェックし、数字以外であれば入力できないようにする
@@ -480,53 +401,6 @@ export default defineComponent({
     フロント側のバリデーションチェック
     *********************************************************************************** */
     const frontValidationCheck = (): boolean => {
-      const assignValue = (str1: string, str2: string): string => {
-        if (str1 == "") {
-          return str2;
-        } else {
-          return str1;
-        }
-      };
-
-      refState.error_message.user_name = assignValue(
-        lengthCheck(refState.user.user_name, 45),
-        requireCheck(refState.user.user_name)
-      );
-
-      refState.error_message.user_id = assignValue(
-        lengthCheck(refState.user.user_id, 45),
-        requireCheck(refState.user.user_id)
-      );
-
-      refState.error_message.email = assignValue(
-        lengthCheck(refState.user.email, 45),
-        requireCheck(refState.user.email)
-      );
-
-      refState.error_message.phone_number = assignValue(
-        lengthCheck(refState.user.phone_number.toString(), 45),
-        requireCheck(refState.user.phone_number.toString())
-      );
-
-      refState.error_message.birthday = checkDateFormat(refState.user.birthday);
-      if (!refState.error_message.birthday) {
-        refState.error_message.birthday = checkDateValue(
-          refState.user.birthday
-        );
-      }
-      refState.error_message.birthday = assignValue(
-        refState.error_message.birthday,
-        requireCheck(refState.user.birthday.toString())
-      );
-
-      refState.error_message.image = lengthCheck(refState.user.email, 1000);
-      refState.error_message.self_introduction = lengthCheck(
-        refState.user.self_introduction,
-        120
-      );
-
-      refState.isNotInit = true;
-
       return !(
         !!refState.error_message.user_name ||
         !!refState.error_message.user_id ||
@@ -537,6 +411,84 @@ export default defineComponent({
         !!refState.error_message.self_introduction
       );
     };
+
+    watch(
+      () => refState.user.user_name,
+      () => {
+        const lengthCheckResult = lengthCheck(refState.user.user_name, 45);
+        const requireCheckResult = requireCheck(refState.user.user_name);
+        refState.error_message.user_name = determineAssignValue(
+          lengthCheckResult,
+          requireCheckResult
+        );
+      }
+    );
+
+    watch(
+      () => refState.user.user_id,
+      () => {
+        const lengthCheckResult = lengthCheck(refState.user.user_id, 45);
+        const requireCheckResult = requireCheck(refState.user.user_id);
+        refState.error_message.user_id = determineAssignValue(
+          lengthCheckResult,
+          requireCheckResult
+        );
+      }
+    );
+
+    watch(
+      () => refState.user.email,
+      () => {
+        const lengthCheckResult = lengthCheck(refState.user.email, 256);
+        const requireCheckResult = requireCheck(refState.user.email);
+        refState.error_message.email = determineAssignValue(
+          lengthCheckResult,
+          requireCheckResult
+        );
+      }
+    );
+
+    watch(
+      () => refState.user.phone_number,
+      () => {
+        const lengthCheckResult = lengthCheck(
+          refState.user.phone_number.toString(),
+          11
+        );
+        refState.error_message.phone_number = lengthCheckResult;
+      }
+    );
+
+    watch(
+      () => refState.user.birthday,
+      () => {
+        const lengthCheckResult = checkDateFormat(refState.user.birthday);
+        const validCheckResult = checkDateValue(refState.user.birthday);
+        const requireCheckResult = requireCheck(refState.user.birthday);
+        refState.error_message.birthday = determineAssignValue(
+          lengthCheckResult,
+          requireCheckResult,
+          validCheckResult
+        );
+      }
+    );
+
+    watch(
+      () => refState.user.image,
+      () => {
+        refState.error_message.image = lengthCheck(refState.user.image, 1000);
+      }
+    );
+
+    watch(
+      () => refState.user.self_introduction,
+      () => {
+        refState.error_message.self_introduction = lengthCheck(
+          refState.user.self_introduction,
+          120
+        );
+      }
+    );
 
     /* ***********************************************************************************
     画面に表示するかどうか判定
@@ -584,30 +536,5 @@ button {
 
 .table td {
   border-style: none;
-}
-
-.birthday-form {
-  width: 160px;
-  padding: 6px 12px;
-}
-
-.birthday-form input {
-  border: none;
-  text-align: right;
-}
-
-.input-year {
-  width: 50px;
-  text-align: right;
-}
-
-.input-month {
-  width: 25px;
-  text-align: right;
-}
-
-.input-day {
-  width: 25px;
-  text-align: right;
 }
 </style>

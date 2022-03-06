@@ -21,14 +21,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  PropType,
-  reactive,
-  onMounted,
-  watch,
-  computed,
-} from "vue";
+import { defineComponent, PropType, reactive, watch, computed } from "vue";
 
 import ErrorMessageLabel from "@/components/adminPage/common/atom/ErrorLabel.vue";
 import InputColumn from "@/components/adminPage/common/atom/Input.vue";

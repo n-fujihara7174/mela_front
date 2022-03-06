@@ -179,7 +179,6 @@ export default defineComponent({
     *********************************************************************************** */
     //SuggestInputの引数に渡すユーザー名リストを取得
     const getUserIdList = () => {
-      console.log("postEditのユーザー名リスト");
       const oReq = new XMLHttpRequest();
       oReq.open("GET", "http://localhost:3000/userIdList/", false);
       oReq.send();
@@ -250,13 +249,11 @@ export default defineComponent({
       投稿情報 更新処理
     *********************************************************************************** */
     const updatePost = async () => {
-      console.log("更新処理");
       //エラーメッセージをクリア
       Object.assign(refState.error_message, reactive(initErrorMessage));
 
       //バリデーションチェックが問題なければ更新処理に進む
       if (frontValidationCheck()) {
-        console.log("更新処理if内部");
         //更新処理をapiに投げる
         await axios
           .patch("http://localhost:3000/posts/" + props.id, {
