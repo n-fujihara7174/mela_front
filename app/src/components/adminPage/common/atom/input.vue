@@ -144,6 +144,26 @@ export default defineComponent({
     };
 
     /* ***********************************************************************************
+    生年月日に入力された文字が数字かどうかチェックし、数字以外であれば入力できないようにする
+    *********************************************************************************** */
+    const checkInputYear = () => {
+      refState.date.year = replaceStringToEmpty(refState.date.year);
+    };
+
+    const checkInputMonth = () => {
+      refState.date.month = replaceStringToEmpty(refState.date.month);
+    };
+
+    const checkInputDay = () => {
+      refState.date.day = replaceStringToEmpty(refState.date.day);
+    };
+
+    const replaceStringToEmpty = (checkTarget: string) => {
+      const regex = new RegExp("[^0-9]");
+      return checkTarget.replace(regex, "");
+    };
+
+    /* ***********************************************************************************
     テキストボックスの値に引数をセット
     *********************************************************************************** */
     const setValue = () => {
@@ -223,7 +243,15 @@ export default defineComponent({
       }
     );
 
-    return { refState, inputType, onFocus, unFocus };
+    return {
+      refState,
+      inputType,
+      onFocus,
+      unFocus,
+      checkInputYear,
+      checkInputMonth,
+      checkInputDay,
+    };
   },
 });
 </script>

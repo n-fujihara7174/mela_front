@@ -272,11 +272,6 @@ export default defineComponent({
         created_at: "",
         updated_at: "",
       },
-      birthday: {
-        year: "",
-        month: "",
-        day: "",
-      },
       error_message: {
         user_name: "",
         user_id: "",
@@ -320,6 +315,15 @@ export default defineComponent({
     };
 
     setUser();
+
+    /* ***********************************************************************************
+    更新かどうかのフラグをrefStateにセット
+    *********************************************************************************** */
+    const setUpdate = () => {
+      refState.isUpdate = !!props.id;
+    };
+
+    setUpdate();
 
     /* ***********************************************************************************
     ユーザー情報の登録・更新処理
@@ -366,26 +370,6 @@ export default defineComponent({
             refState.isNotInit = true;
           });
       }
-    };
-
-    /* ***********************************************************************************
-    生年月日に入力された文字が数字かどうかチェックし、数字以外であれば入力できないようにする
-    *********************************************************************************** */
-    const checkInputYear = () => {
-      refState.birthday.year = replaceStringToEmpty(refState.birthday.year);
-    };
-
-    const checkInputMonth = () => {
-      refState.birthday.month = replaceStringToEmpty(refState.birthday.month);
-    };
-
-    const checkInputDay = () => {
-      refState.birthday.day = replaceStringToEmpty(refState.birthday.day);
-    };
-
-    const replaceStringToEmpty = (checkTarget: string) => {
-      const regex = new RegExp("[^0-9]");
-      return checkTarget.replace(regex, "");
     };
 
     /* ***********************************************************************************
@@ -512,9 +496,6 @@ export default defineComponent({
       transitionList,
       createUser,
       updateUser,
-      checkInputYear,
-      checkInputMonth,
-      checkInputDay,
     };
   },
 });
