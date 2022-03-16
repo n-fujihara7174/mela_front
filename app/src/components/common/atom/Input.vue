@@ -51,6 +51,20 @@
 
     <!-- デフォルト入力 -->
     <input
+      v-else-if="inputType === 'password'"
+      type="password"
+      class="form-control"
+      :class="{
+        'is-valid-textbox': !refState.isError && refState.isNotInit,
+        'is-invalid-textbox': refState.isError && refState.isNotInit,
+      }"
+      v-model="refState.value"
+      @focus="onFocus"
+      @blur="unFocus"
+    />
+
+    <!-- デフォルト入力 -->
+    <input
       v-else
       type="text"
       class="form-control"

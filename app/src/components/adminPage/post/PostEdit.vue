@@ -102,7 +102,7 @@ import {
   requireCheck,
   determineAssignValue,
 } from "@/composables/validationCheck";
-import InputField from "@/components/adminPage/common/molecules/InputField.vue";
+import InputField from "@/components/common/molecules/InputField.vue";
 
 /* ***********************************************************************************
 Post型にusers.user_idを格納するプロパティを追加

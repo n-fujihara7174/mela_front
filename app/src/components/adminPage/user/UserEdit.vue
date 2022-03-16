@@ -195,7 +195,7 @@ import {
   checkDateValue,
   determineAssignValue,
 } from "@/composables/validationCheck";
-import InputField from "@/components/adminPage/common/molecules/InputField.vue";
+import InputField from "@/components/common/molecules/InputField.vue";
 
 /* ***********************************************************************************
 エラーメッセージを格納するオブジェクトの型を定義

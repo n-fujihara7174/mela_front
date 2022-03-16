@@ -23,9 +23,9 @@
 <script lang="ts">
 import { defineComponent, PropType, reactive, watch, computed } from "vue";
 
-import ErrorMessageLabel from "@/components/adminPage/common/atom/ErrorLabel.vue";
-import InputColumn from "@/components/adminPage/common/atom/Input.vue";
-import SuggestList from "@/components/adminPage/common/atom/SuggestList.vue";
+import ErrorMessageLabel from "@/components/common/atom/ErrorLabel.vue";
+import InputColumn from "@/components/common/atom/Input.vue";
+import SuggestList from "@/components/common/atom/SuggestList.vue";
 
 interface State {
   value: string;

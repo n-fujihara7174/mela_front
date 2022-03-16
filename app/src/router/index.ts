@@ -4,6 +4,7 @@ import UserList from "@/components/adminPage/user/UserList.vue";
 import UserEdit from "@/components/adminPage/user/UserEdit.vue";
 import PostList from "@/components/adminPage/post/PostList.vue";
 import PostEdit from "@/components/adminPage/post/PostEdit.vue";
+import Login from "@/components/login/Login.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -33,6 +34,10 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
       },
     ],
+  },
+  {
+    path: "/Login",
+    component: Login,
   },
 ];
 

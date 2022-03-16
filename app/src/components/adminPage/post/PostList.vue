@@ -94,7 +94,7 @@ import { useRouter } from "vue-router";
 import dayjs from "dayjs";
 import { Post } from "@/types/Post";
 
-import PageNation from "@/components/adminPage/common/molecules/PageNation.vue";
+import PageNation from "@/components/common/molecules/PageNation.vue";
 
 /* ******************************************************************************************
 型定義
