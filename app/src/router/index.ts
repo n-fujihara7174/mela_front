@@ -4,7 +4,9 @@ import UserList from "@/components/adminPage/user/UserList.vue";
 import UserEdit from "@/components/adminPage/user/UserEdit.vue";
 import PostList from "@/components/adminPage/post/PostList.vue";
 import PostEdit from "@/components/adminPage/post/PostEdit.vue";
-import Login from "@/components/login/Login.vue";
+import SignIn from "@/views/SignIn.vue";
+import SignUp from "@/views/SignUp.vue";
+import List from "@/components/List.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -36,8 +38,19 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
   {
-    path: "/Login",
-    component: Login,
+    path: "/SignIn",
+    name: "SignIn",
+    component: SignIn,
+  },
+  {
+    path: "/SignUp",
+    name: "SignUp",
+    component: SignUp,
+  },
+  {
+    path: "/List",
+    name: "List",
+    component: List,
   },
 ];
 

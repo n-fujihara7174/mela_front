@@ -3,6 +3,7 @@
     <!-- テキストエリア -->
     <textarea
       v-if="inputType === 'textarea'"
+      id="input"
       type="text"
       class="form-control"
       :class="{
@@ -24,6 +25,7 @@
       class="date-form form-control"
     >
       <input
+        id="input"
         type="tel"
         maxlength="4"
         class="input-year"
@@ -32,6 +34,7 @@
         v-model="refState.date.year"
       />/
       <input
+        id="input"
         type="tel"
         maxlength="2"
         class="input-month"
@@ -40,6 +43,7 @@
         v-model="refState.date.month"
       />/
       <input
+        id="input"
         type="tel"
         maxlength="2"
         class="input-day"
@@ -52,6 +56,7 @@
     <!-- デフォルト入力 -->
     <input
       v-else-if="inputType === 'password'"
+      id="input"
       type="password"
       class="form-control"
       :class="{
@@ -66,6 +71,7 @@
     <!-- デフォルト入力 -->
     <input
       v-else
+      id="input"
       type="text"
       class="form-control"
       :class="{
@@ -80,7 +86,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, reactive, watch } from "vue";
+import { computed, defineComponent, PropType, reactive, watch } from "vue";
 
 /* ***********************************************************************************
 型定義
@@ -162,14 +168,17 @@ export default defineComponent({
     *********************************************************************************** */
     const checkInputYear = () => {
       refState.date.year = replaceStringToEmpty(refState.date.year);
+      refState.value = mergeDate();
     };
 
     const checkInputMonth = () => {
       refState.date.month = replaceStringToEmpty(refState.date.month);
+      refState.value = mergeDate();
     };
 
     const checkInputDay = () => {
       refState.date.day = replaceStringToEmpty(refState.date.day);
+      refState.value = mergeDate();
     };
 
     const replaceStringToEmpty = (checkTarget: string) => {
@@ -190,7 +199,7 @@ export default defineComponent({
     setValue();
 
     /* ***********************************************************************************
-    年、月、日をマージする
+    年、月、日をマージしてrefState.valueに代入
     *********************************************************************************** */
     const mergeDate = () => {
       const year = escape(refState.date.year);
@@ -225,6 +234,7 @@ export default defineComponent({
           "update:value",
           inputType === "date" ? mergeDate() : refState.value
         );
+        console.log(refState.value);
         refState.isNotInit = true;
       }
     );
@@ -294,5 +304,39 @@ export default defineComponent({
 .input-day {
   width: 25px;
   text-align: right;
+}
+</style>
+
+<style scoped>
+.label {
+  transform-origin: 0px 0px;
+  pointer-events: none;
+  position: absolute;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: left;
+  left: 12px;
+  right: auto;
+  bottom: 20px;
+  font-size: 1rem;
+  line-height: 1.15rem;
+  letter-spacing: 0.00937em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  will-change: transform;
+  overflow: hidden;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.line {
+  background-color: #6200ee;
+  opacity: 0;
+  height: 2px;
+  width: 100%;
+  position: absolute;
+  transform: scaleX(0);
+  bottom: 0;
 }
 </style>

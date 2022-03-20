@@ -1,0 +1,47 @@
+version: '3.9'
+services:
+    db:
+        container_name: db
+        image: postgres:14.0-alpine3.14
+        volumes:
+            - type: bind                        #ロングシンタックスを使用しているのでdbに
+              source: ./api/tmp/db              #接続する際にapi/temp/dbディレクトリを作成する必要がある
+              target: /var/lib/postgresql/data
+        environment:
+            - POSTGRES_PASSWORD=postgres
+            - TZ=Asia/Tokyo
+        ports:
+            - "5432:5432"
+    api:
+        container_name: api
+        build: ./api
+        image: nard_api
+        command: ash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+        volumes:
+            - type: bind
+              source: ./api
+              target: /api
+            - type: volume                 #rails new 時はコメントアウトする
+              source: gem_data
+              target: /usr/local/bundle
+        ports:
+            - "3000:3000"
+        depends_on:
+            - db
+    front:
+        container_name: front
+        build: ./front
+        image: nard_front
+        ports:
+            - "8080:8080"
+        volumes:
+            - type: bind
+              source: ./front
+              target: /app/
+        tty: true
+        stdin_open: true
+        command: /bin/ash
+        depends_on:
+            - db
+volumes:
+    gem_data:
