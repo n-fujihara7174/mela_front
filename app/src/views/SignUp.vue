@@ -58,10 +58,11 @@
         ></InputField>
       </div>
 
-      {{ refState.loginInfo.birthday }}
-
-      <div>
-        <div class="mt-30px">
+      <div class="mt-60px d-flex justify-content-between">
+        <div>
+          <a href="#" @click="transitionSignIn">サインイン</a>
+        </div>
+        <div>
           <button
             type="button"
             class="btn btn-primary create-user-btn"
@@ -133,20 +134,38 @@ export default defineComponent({
           password: refState.loginInfo.password,
           password_confirmation: refState.loginInfo.password_confirmation,
           birthday: refState.loginInfo.birthday,
-          confirm_success_url: "http://localhost:8080/PostList",
+          confirm_success_url: "http://localhost:8080/List",
         })
         .then(() => {
           transitionList();
         })
         .catch((error) => {
           //エラーメッセージを格納
-          refState.errorMessage = error.response.data;
+          const errorList = Object.keys(error.response.data.errors);
+          if (errorList.indexOf("name") !== -1) {
+            refState.errorMessage.name = error.response.data.errors.name[0];
+          }
+          if (errorList.indexOf("email") !== -1) {
+            refState.errorMessage.email = error.response.data.errors.email[0];
+          }
+          if (errorList.indexOf("password") !== -1) {
+            refState.errorMessage.password =
+              error.response.data.errors.password[0];
+          }
+          if (errorList.indexOf("password_confirmation") !== -1) {
+            refState.errorMessage.password_confirmation =
+              error.response.data.errors.password_confirmation[0];
+          }
+          if (errorList.indexOf("birthday") !== -1) {
+            refState.errorMessage.birthday =
+              error.response.data.errors.birthday[0];
+          }
         });
     };
 
-    const transitionSignUp = () => {
+    const transitionSignIn = () => {
       router.push({
-        name: "SignUp",
+        name: "SignIn",
       });
     };
 
@@ -159,7 +178,7 @@ export default defineComponent({
     return {
       refState,
       signUp,
-      transitionSignUp,
+      transitionSignIn,
     };
   },
 });

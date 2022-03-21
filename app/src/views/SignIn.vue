@@ -89,15 +89,35 @@ export default defineComponent({
           email: refState.loginInfo.email,
           password: refState.loginInfo.password,
         })
+        .then(() => {
+          transitionList();
+        })
         .catch((error) => {
           //エラーメッセージを格納
-          refState.errorMessage = error.response.data;
+          const errorList = Object.keys(error.response.data.errors);
+          if (errorList.indexOf("email") !== -1) {
+            refState.errorMessage.email = error.response.data.errors.email[0];
+          }
+          if (errorList.indexOf("password") !== -1) {
+            refState.errorMessage.password =
+              error.response.data.errors.password[0];
+          }
+          if (errorList.indexOf("0") !== -1) {
+            refState.errorMessage.email = error.response.data.errors[0];
+            refState.errorMessage.password = error.response.data.errors[0];
+          }
         });
     };
 
     const transitionSignUp = () => {
       router.push({
         name: "SignUp",
+      });
+    };
+
+    const transitionList = () => {
+      router.push({
+        name: "List",
       });
     };
 

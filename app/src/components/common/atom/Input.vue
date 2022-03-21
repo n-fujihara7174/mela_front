@@ -7,7 +7,6 @@
       type="text"
       class="form-control"
       :class="{
-        'is-valid-textbox': !refState.isError && refState.isNotInit,
         'is-invalid-textbox': refState.isError && refState.isNotInit,
       }"
       v-model="refState.value"
@@ -19,7 +18,6 @@
     <div
       v-else-if="inputType === 'date'"
       :class="{
-        'is-valid-textbox': !refState.isError && refState.isNotInit,
         'is-invalid-textbox': refState.isError && refState.isNotInit,
       }"
       class="date-form form-control"
@@ -60,7 +58,6 @@
       type="password"
       class="form-control"
       :class="{
-        'is-valid-textbox': !refState.isError && refState.isNotInit,
         'is-invalid-textbox': refState.isError && refState.isNotInit,
       }"
       v-model="refState.value"
@@ -75,7 +72,6 @@
       type="text"
       class="form-control"
       :class="{
-        'is-valid-textbox': !refState.isError && refState.isNotInit,
         'is-invalid-textbox': refState.isError && refState.isNotInit,
       }"
       v-model="refState.value"
@@ -86,7 +82,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, reactive, watch } from "vue";
+import { defineComponent, PropType, reactive, watch } from "vue";
 
 /* ***********************************************************************************
 型定義
@@ -205,7 +201,11 @@ export default defineComponent({
       const year = escape(refState.date.year);
       const month = escape(refState.date.month);
       const day = escape(refState.date.day);
-      return year + "/" + month + "/" + day;
+
+      const date = year + "/" + month + "/" + day;
+      const regex = new RegExp("undefined", "g");
+
+      return date.replaceAll(regex, "");
     };
 
     /* ***********************************************************************************
@@ -234,7 +234,6 @@ export default defineComponent({
           "update:value",
           inputType === "date" ? mergeDate() : refState.value
         );
-        console.log(refState.value);
         refState.isNotInit = true;
       }
     );
