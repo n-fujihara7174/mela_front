@@ -51,7 +51,7 @@
       />
     </div>
 
-    <!-- デフォルト入力 -->
+    <!-- パスワード入力 -->
     <input
       v-else-if="inputType === 'password'"
       id="input"

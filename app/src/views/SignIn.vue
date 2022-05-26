@@ -9,22 +9,36 @@
       <!-- メールアドレス -->
       <div class="mt-30px">
         <label>メールアドレス</label>
-        <InputField
-          v-model:value="refState.loginInfo.email"
-          :errorMessage="refState.errorMessage.email"
-        >
-        </InputField>
+        <input
+          id="input"
+          type="text"
+          class="form-control"
+          :class="{
+            'is-invalid-textbox': isInvalid(refState.errorMessage),
+          }"
+          v-model="refState.loginInfo.email"
+        />
       </div>
 
       <!-- パスワード -->
       <div class="mt-30px">
         <label>パスワード</label>
-        <InputField
-          v-model:value="refState.loginInfo.password"
-          :errorMessage="refState.errorMessage.password"
-          :type="'password'"
-        >
-        </InputField>
+        <input
+          id="input"
+          type="text"
+          class="form-control"
+          :class="{
+            'is-invalid-textbox': isInvalid(refState.errorMessage),
+          }"
+          v-model="refState.loginInfo.password"
+        />
+      </div>
+
+      <div>
+        <label v-if="judgeDisplay(refState.errorMessage)" class="is-invalid">{{
+          refState.errorMessage
+        }}</label>
+        <div v-else class="empty-error-message"></div>
       </div>
 
       <div class="mt-60px d-flex justify-content-between">
@@ -35,7 +49,7 @@
           <button
             type="button"
             class="btn btn-primary create-user-btn"
-            @click="login"
+            @click="handleLogin"
           >
             ログイン
           </button>
@@ -46,10 +60,9 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import InputField from "@/components/common/molecules/InputField.vue";
+import { login } from "@/api/Auth";
 
 interface LoginInfo {
   email: string;
@@ -58,13 +71,10 @@ interface LoginInfo {
 
 interface State {
   loginInfo: LoginInfo;
-  errorMessage: LoginInfo;
+  errorMessage: string;
 }
 
 export default defineComponent({
-  components: {
-    InputField: InputField,
-  },
   setup() {
     const router = useRouter();
 
@@ -73,39 +83,24 @@ export default defineComponent({
       password: "",
     };
 
-    const errorMessageInit: LoginInfo = {
-      email: "",
-      password: "",
-    };
-
     const refState = reactive<State>({
       loginInfo: loginInfoInit,
-      errorMessage: errorMessageInit,
+      errorMessage: "",
     });
 
-    const login = async () => {
-      await axios
-        .post("http://localhost:3000/auth/sign_in", {
-          email: refState.loginInfo.email,
-          password: refState.loginInfo.password,
+    const handleLogin = async () => {
+      await login(refState.loginInfo.email, refState.loginInfo.password)
+        .then((res) => {
+          if (res?.status === 200) {
+            console.log("成功！");
+            console.log(res);
+          } else {
+            refState.errorMessage =
+              "メールアドレスかパスワードが間違っています。";
+          }
         })
-        .then(() => {
-          transitionList();
-        })
-        .catch((error) => {
-          //エラーメッセージを格納
-          const errorList = Object.keys(error.response.data.errors);
-          if (errorList.indexOf("email") !== -1) {
-            refState.errorMessage.email = error.response.data.errors.email[0];
-          }
-          if (errorList.indexOf("password") !== -1) {
-            refState.errorMessage.password =
-              error.response.data.errors.password[0];
-          }
-          if (errorList.indexOf("0") !== -1) {
-            refState.errorMessage.email = error.response.data.errors[0];
-            refState.errorMessage.password = error.response.data.errors[0];
-          }
+        .catch(() => {
+          alert("ログインに失敗しました。");
         });
     };
 
@@ -121,10 +116,22 @@ export default defineComponent({
       });
     };
 
+    const judgeDisplay = (displayText: string) => {
+      const isDisplay = !!displayText;
+      console.log(isDisplay);
+      return isDisplay;
+    };
+
+    const isInvalid = (errorMesssage: string) => {
+      return !!errorMesssage;
+    };
+
     return {
       refState,
-      login,
+      handleLogin,
       transitionSignUp,
+      judgeDisplay,
+      isInvalid,
     };
   },
 });
@@ -150,7 +157,7 @@ export default defineComponent({
 }
 
 .h-320px {
-  height: 320px;
+  height: 340px;
 }
 
 .mt-30px {
@@ -167,5 +174,9 @@ export default defineComponent({
 
 .p-20px {
   padding: 20px;
+}
+
+.empty-error-message {
+  height: 19.2px;
 }
 </style>
