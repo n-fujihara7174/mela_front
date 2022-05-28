@@ -8,10 +8,11 @@ import {
   removeAuthDataFromStorage,
   setAuthDataFromResponse,
 } from "@/utils/AuthToken";
+import config from "@/const";
 
 import { AxiosResponse, AxiosError } from "axios";
 
-export const login = async (email: string, password: string) => {
+export const sign_in = async (email: string, password: string) => {
   return await Client.post<User>("/auth/sign_in", { email, password })
     .then((res: AxiosResponse<User>) => {
       const header: AuthHeaders = {
@@ -34,10 +35,37 @@ export const login = async (email: string, password: string) => {
     });
 };
 
-export const logout = async () => {
+export const sign_out = async () => {
   return await Client.delete("/auth/sign_out", {
     headers: getAuthTokenFromStorage(),
   }).then(() => {
     removeAuthDataFromStorage();
   });
+};
+
+export const sign_up = async (
+  name: string,
+  password: string,
+  password_confirmation: string,
+  email: string
+) => {
+  console.log(
+    `name: ${name}, password: ${password}, password_confirm: ${password_confirmation}, email: ${email}`
+  );
+  return await Client.post<User>("/auth", {
+    name: name,
+    password: password,
+    password_confirmation: password_confirmation,
+    email: email,
+    confirm_success_url: config.CONFIRM_SUCCESS_URL,
+    headers: getAuthTokenFromStorage(),
+  })
+    .then((res: AxiosResponse<User>) => {
+      console.log("sign_upメソッド→成功");
+      return res;
+    })
+    .catch((err: AxiosError) => {
+      console.log("sign_upメソッド→失敗");
+      throw err;
+    });
 };

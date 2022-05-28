@@ -48,16 +48,6 @@
         </InputField>
       </div>
 
-      <!-- 生年月日 -->
-      <div class="mt-30px">
-        <label>生年月日</label>
-        <InputField
-          v-model:value="refState.loginInfo.birthday"
-          :errorMessage="refState.errorMessage.birthday"
-          :type="'date'"
-        ></InputField>
-      </div>
-
       <div class="mt-60px d-flex justify-content-between">
         <div>
           <a href="#" @click="transitionSignIn">サインイン</a>
@@ -66,7 +56,7 @@
           <button
             type="button"
             class="btn btn-primary create-user-btn"
-            @click="signUp"
+            @click="handleSignUp"
           >
             新規登録
           </button>
@@ -77,17 +67,17 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 import InputField from "@/components/common/molecules/InputField.vue";
+import { sign_up } from "@/api/Auth";
+import { AxiosError } from "axios";
 
 interface SignUpInfo {
   name: string;
   email: string;
   password: string;
   password_confirmation: string;
-  birthday: string;
   confirm_success_url: string;
 }
 
@@ -108,7 +98,6 @@ export default defineComponent({
       email: "",
       password: "",
       password_confirmation: "",
-      birthday: "",
       confirm_success_url: "",
     };
 
@@ -117,7 +106,6 @@ export default defineComponent({
       email: "",
       password: "",
       password_confirmation: "",
-      birthday: "",
       confirm_success_url: "",
     };
 
@@ -126,41 +114,49 @@ export default defineComponent({
       errorMessage: errorMessageInit,
     });
 
-    const signUp = async () => {
-      await axios
-        .post("http://localhost:3000/auth", {
-          name: refState.loginInfo.name,
-          email: refState.loginInfo.email,
-          password: refState.loginInfo.password,
-          password_confirmation: refState.loginInfo.password_confirmation,
-          birthday: refState.loginInfo.birthday,
-          confirm_success_url: "http://localhost:8080/List",
-        })
-        .then(() => {
-          transitionList();
+    const handleSignUp = async () => {
+      await sign_up(
+        refState.loginInfo.name,
+        refState.loginInfo.email,
+        refState.loginInfo.password,
+        refState.loginInfo.password_confirmation
+      )
+        .then((res) => {
+          if (res?.status === 200) {
+            console.log("成功");
+          } else {
+            console.log("失敗");
+          }
+
+          console.log(res);
         })
         .catch((error) => {
-          //エラーメッセージを格納
-          const errorList = Object.keys(error.response.data.errors);
-          if (errorList.indexOf("name") !== -1) {
-            refState.errorMessage.name = error.response.data.errors.name[0];
-          }
-          if (errorList.indexOf("email") !== -1) {
-            refState.errorMessage.email = error.response.data.errors.email[0];
-          }
-          if (errorList.indexOf("password") !== -1) {
-            refState.errorMessage.password =
-              error.response.data.errors.password[0];
-          }
-          if (errorList.indexOf("password_confirmation") !== -1) {
-            refState.errorMessage.password_confirmation =
-              error.response.data.errors.password_confirmation[0];
-          }
-          if (errorList.indexOf("birthday") !== -1) {
-            refState.errorMessage.birthday =
-              error.response.data.errors.birthday[0];
-          }
+          console.log("catch");
+          setErrorMessage(error);
         });
+    };
+
+    const setErrorMessage = (error: AxiosError) => {
+      const errorList = Object.keys(error.response?.data?.errors);
+      if (errorList.indexOf("name") !== -1) {
+        console.log("error.response?.data.errors.name[0]");
+        console.log(error.response?.data.errors.name[0]);
+        refState.errorMessage.name = error.response?.data.errors.name[0];
+      }
+      if (errorList.indexOf("email") !== -1) {
+        refState.errorMessage.email = error.response?.data.errors.email[0];
+      }
+      if (errorList.indexOf("password") !== -1) {
+        refState.errorMessage.password =
+          error.response?.data.errors.password[0];
+      }
+      if (errorList.indexOf("password_confirmation") !== -1) {
+        refState.errorMessage.password_confirmation =
+          error.response?.data.errors.password_confirmation[0];
+      }
+      console.log("エラー時");
+      console.log("refState.errorMessage");
+      console.log(refState.errorMessage);
     };
 
     const transitionSignIn = () => {
@@ -177,7 +173,7 @@ export default defineComponent({
 
     return {
       refState,
-      signUp,
+      handleSignUp,
       transitionSignIn,
     };
   },

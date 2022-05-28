@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import AdminPage from "@/views/AdminPage.vue";
 import UserList from "@/components/adminPage/user/UserList.vue";
 import UserEdit from "@/components/adminPage/user/UserEdit.vue";
-import PostList from "@/components/adminPage/post/PostList.vue";
+import Top from "@/components/adminPage/post/PostList.vue";
 import PostEdit from "@/components/adminPage/post/PostEdit.vue";
 import SignIn from "@/views/SignIn.vue";
 import SignUp from "@/views/SignUp.vue";
@@ -25,9 +25,9 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
       },
       {
-        path: "PostList",
-        name: "PostList",
-        component: PostList,
+        path: "Top",
+        name: "Top",
+        component: Top,
       },
       {
         path: "PostEdit/:id",

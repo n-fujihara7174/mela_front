@@ -49,7 +49,7 @@
           <button
             type="button"
             class="btn btn-primary create-user-btn"
-            @click="handleLogin"
+            @click="handleSignIn"
           >
             ログイン
           </button>
@@ -62,7 +62,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { login } from "@/api/Auth";
+import { sign_in } from "@/api/Auth";
 
 interface LoginInfo {
   email: string;
@@ -88,8 +88,8 @@ export default defineComponent({
       errorMessage: "",
     });
 
-    const handleLogin = async () => {
-      await login(refState.loginInfo.email, refState.loginInfo.password)
+    const handleSignIn = async () => {
+      await sign_in(refState.loginInfo.email, refState.loginInfo.password)
         .then((res) => {
           if (res?.status === 200) {
             console.log("成功！");
@@ -128,7 +128,7 @@ export default defineComponent({
 
     return {
       refState,
-      handleLogin,
+      handleSignIn,
       transitionSignUp,
       judgeDisplay,
       isInvalid,
