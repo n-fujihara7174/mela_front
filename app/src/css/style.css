@@ -1,22 +1,26 @@
 body {
-  background-color: #ECECEC;
-  font-family: "明朝体","ヒラギノ明朝";
+  background-color: #f4f5f7;
+  font-family: "明朝体", "ヒラギノ明朝";
   color: #636363;
 }
 
 textarea {
   resize: none;
-  height: 100px;
 }
 
+:focus textarea {
+  border: none;
+}
+
+/* 
 .table {
   border-radius: 6px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   color: #636363;
 }
 
 .table td {
-  border-top: 1px #E0E0E0 solid;
+  border-top: 1px #e0e0e0 solid;
   border-bottom: 0;
 }
 
@@ -64,5 +68,4 @@ textarea {
 
 .w-49 {
   width: 49%;
-}
-
+} */

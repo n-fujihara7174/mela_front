@@ -1,4 +1,5 @@
-import { createStore } from "vuex";
+import { InjectionKey } from "vue";
+import { createStore, Store } from "vuex";
 
 export default createStore({
   state: {},

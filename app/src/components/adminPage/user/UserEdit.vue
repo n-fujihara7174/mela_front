@@ -42,25 +42,6 @@
             </td>
           </tr>
           <tr>
-            <th>電話番号</th>
-            <td>
-              <InputField
-                v-model:value="refState.user.phone_number"
-                :errorMessage="refState.error_message.phone_number"
-              ></InputField>
-            </td>
-          </tr>
-          <tr>
-            <th>生年月日</th>
-            <td>
-              <InputField
-                v-model:value="refState.user.birthday"
-                :errorMessage="refState.error_message.birthday"
-                :type="'date'"
-              ></InputField>
-            </td>
-          </tr>
-          <tr>
             <th>画像</th>
             <td>
               <InputField
@@ -77,58 +58,6 @@
                 :errorMessage="refState.error_message.self_introduction"
                 :type="'textarea'"
               ></InputField>
-            </td>
-          </tr>
-          <tr>
-            <th>いいね通知</th>
-            <td>
-              <div class="form-check form-switch">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="flexSwitchCheckDefault"
-                  v-model="refState.user.can_like_notification"
-                />
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th>コメント通知</th>
-            <td>
-              <div class="form-check form-switch">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="flexSwitchCheckDefault"
-                  v-model="refState.user.can_comment_notification"
-                />
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th>メッセージ通知</th>
-            <td>
-              <div class="form-check form-switch">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="flexSwitchCheckDefault"
-                  v-model="refState.user.can_message_notification"
-                />
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th>カレンダー通知</th>
-            <td>
-              <div class="form-check form-switch">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="flexSwitchCheckDefault"
-                  v-model="refState.user.can_calender_notification"
-                />
-              </div>
             </td>
           </tr>
           <tr>
@@ -261,13 +190,7 @@ export default defineComponent({
         user_id: "",
         self_introduction: "",
         email: "",
-        phone_number: "",
-        birthday: "",
         image: "",
-        can_like_notification: false,
-        can_comment_notification: false,
-        can_message_notification: false,
-        can_calender_notification: false,
         is_delete: false,
         created_at: "",
         updated_at: "",
@@ -309,9 +232,6 @@ export default defineComponent({
       refState.user = user[0];
       refState.user.created_at = formatDate(refState.user.created_at);
       refState.user.updated_at = formatDate(refState.user.updated_at);
-      refState.user.birthday = dayjs(refState.user.birthday).format(
-        "YYYY/MM/DD"
-      );
     };
 
     setUser();
@@ -428,31 +348,6 @@ export default defineComponent({
         refState.error_message.email = determineAssignValue(
           lengthCheckResult,
           requireCheckResult
-        );
-      }
-    );
-
-    watch(
-      () => refState.user.phone_number,
-      () => {
-        const lengthCheckResult = lengthCheck(
-          refState.user.phone_number.toString(),
-          11
-        );
-        refState.error_message.phone_number = lengthCheckResult;
-      }
-    );
-
-    watch(
-      () => refState.user.birthday,
-      () => {
-        const lengthCheckResult = checkDateFormat(refState.user.birthday);
-        const validCheckResult = checkDateValue(refState.user.birthday);
-        const requireCheckResult = requireCheck(refState.user.birthday);
-        refState.error_message.birthday = determineAssignValue(
-          lengthCheckResult,
-          requireCheckResult,
-          validCheckResult
         );
       }
     );

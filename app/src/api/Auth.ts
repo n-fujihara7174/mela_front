@@ -49,14 +49,11 @@ export const sign_up = async (
   password_confirmation: string,
   email: string
 ) => {
-  console.log(
-    `name: ${name}, password: ${password}, password_confirm: ${password_confirmation}, email: ${email}`
-  );
   return await Client.post<User>("/auth", {
-    name: name,
-    password: password,
-    password_confirmation: password_confirmation,
-    email: email,
+    name,
+    password,
+    password_confirmation,
+    email,
     confirm_success_url: config.CONFIRM_SUCCESS_URL,
     headers: getAuthTokenFromStorage(),
   })

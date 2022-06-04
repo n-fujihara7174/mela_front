@@ -2,11 +2,10 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import AdminPage from "@/views/AdminPage.vue";
 import UserList from "@/components/adminPage/user/UserList.vue";
 import UserEdit from "@/components/adminPage/user/UserEdit.vue";
-import Top from "@/components/adminPage/post/PostList.vue";
 import PostEdit from "@/components/adminPage/post/PostEdit.vue";
 import SignIn from "@/views/SignIn.vue";
 import SignUp from "@/views/SignUp.vue";
-import List from "@/components/List.vue";
+import Top from "@/views/Basic.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -48,9 +47,20 @@ const routes: Array<RouteRecordRaw> = [
     component: SignUp,
   },
   {
-    path: "/List",
-    name: "List",
-    component: List,
+    path: "",
+    component: () => import("@/views/Basic.vue"),
+    children: [
+      {
+        path: "/Top",
+        name: "Top",
+        component: () => import("@/components/template/main/Main.vue"),
+      },
+      {
+        path: "/Post",
+        name: "Post",
+        component: () => import("@/components/template/main/WorkPost.vue"),
+      },
+    ],
   },
 ];
 
