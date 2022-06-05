@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="fixed w-full">
     <nav
       class="flex items-center justify-between flex-wrap bg-teal-500 p-6 bg-green-600"
     >

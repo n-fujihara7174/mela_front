@@ -12,6 +12,11 @@ textarea {
   border: none;
 }
 
+img {
+  border-style: none;
+  border-radius: none;
+}
+
 /* 
 .table {
   border-radius: 6px;

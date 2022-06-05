@@ -50,7 +50,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 div .header {
   background-color: #ffffff;
   max-width: none;
