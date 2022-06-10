@@ -1,7 +1,7 @@
 <template>
   <div class="fixed w-full">
     <nav
-      class="flex items-center justify-between flex-wrap bg-teal-500 p-6 bg-green-600"
+      class="flex items-center justify-between flex-wrap bg-teal-500 p-3 bg-green-600"
     >
       <div class="flex items-center flex-shrink-0 text-white mr-6">
         <span class="font-semibold text-xl tracking-tight">Mela</span>

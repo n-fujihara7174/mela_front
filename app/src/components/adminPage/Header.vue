@@ -8,11 +8,7 @@
       <a href="#" @click="transitionPostList">投稿一覧</a>
     </div>
     <div>
-      <img
-        src="../../image/人物のアイコン素材.jpeg"
-        alt="ユーザーアイコン"
-        class="image-fluid"
-      />
+      <img src="" alt="ユーザーアイコン" class="image-fluid" />
     </div>
     <div class="user-name">
       <label>ユーザー名</label>

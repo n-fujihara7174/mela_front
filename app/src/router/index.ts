@@ -60,6 +60,11 @@ const routes: Array<RouteRecordRaw> = [
         name: "Post",
         component: () => import("@/components/template/main/WorkPost.vue"),
       },
+      {
+        path: "/Detail",
+        name: "Detail",
+        component: () => import("@/components/template/main/Test.vue"),
+      },
     ],
   },
 ];
