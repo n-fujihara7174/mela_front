@@ -1,40 +1,40 @@
 <template>
   <div class="photos">
     <img
-      src="@/image/1BCD5A44-7493-40F9-810C-5D702DF37948.jpeg"
+      src="@/assets/1BCD5A44-7493-40F9-810C-5D702DF37948.jpeg"
       alt=""
       class="w-1/5 mb-4 mb-4"
     />
-    <img src="@/image/22652726_l.jpg" alt="" class="w-1/5 mb-4" />
+    <img src="@/assets/22652726_l.jpg" alt="" class="w-1/5 mb-4" />
     <img
-      src="@/image/459412C0-F0CA-4B3C-AEC7-292375082F5E.jpeg"
+      src="@/assets/459412C0-F0CA-4B3C-AEC7-292375082F5E.jpeg"
       alt=""
       class="w-1/5 mb-4"
     />
     <img
-      src="@/image/70530182-F7B7-4017-8E91-82891357514D.jpeg"
+      src="@/assets/70530182-F7B7-4017-8E91-82891357514D.jpeg"
       alt=""
       class="w-1/5 mb-4"
     />
-    <img src="@/image/background_00024.jpeg" alt="" class="w-1/5 mb-4" />
+    <img src="@/assets/background_00024.jpeg" alt="" class="w-1/5 mb-4" />
     <img
-      src="@/image/D85E77DD-3A38-4238-B2F2-4A685BF44E75.jpeg"
-      alt=""
-      class="w-1/5 mb-4"
-    />
-    <img
-      src="@/image/EE4BB711-17D7-4FFE-B974-E10B34840B8C.jpeg"
+      src="@/assets/D85E77DD-3A38-4238-B2F2-4A685BF44E75.jpeg"
       alt=""
       class="w-1/5 mb-4"
     />
     <img
-      src="@/image/EE5C82CE-3669-479A-9639-243211AE6430.jpeg"
+      src="@/assets/EE4BB711-17D7-4FFE-B974-E10B34840B8C.jpeg"
       alt=""
       class="w-1/5 mb-4"
     />
-    <img src="@/image/IMG_0629.jpeg" alt="" class="w-1/5 mb-4" />
-    <img src="@/image/IMG_0695.jpeg" alt="" class="w-1/5 mb-4" />
-    <img src="@/image/メロンちゃん.png" alt="" class="w-1/5 mb-4" />
+    <img
+      src="@/assets/EE5C82CE-3669-479A-9639-243211AE6430.jpeg"
+      alt=""
+      class="w-1/5 mb-4"
+    />
+    <img src="@/assets/IMG_0629.jpeg" alt="" class="w-1/5 mb-4" />
+    <img src="@/assets/IMG_0695.jpeg" alt="" class="w-1/5 mb-4" />
+    <img src="@/assets/メロンちゃん.png" alt="" class="w-1/5 mb-4" />
   </div>
 </template>
 

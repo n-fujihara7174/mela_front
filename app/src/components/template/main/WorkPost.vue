@@ -53,18 +53,20 @@
         </div>
       </div>
       <div class="flex justify-center mt-3 mb-12">
+        <!-- forでinputを指定することでラベルをクリックすればinputが作動するようになっている -->
         <label
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
           for="file_select"
         >
           画像選択
         </label>
+        <!-- typeをfileにするとファイル選択ダイアログが出てくる -->
+        <!-- 画像選択時にpreviewImageメソッドを実行 -->
         <input
           type="file"
           id="file_select"
           class="hidden"
           name="image"
-          ref="file"
           accept="image/png,image/jpeg, image/heic"
           @change="previewImage"
         />
@@ -111,8 +113,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
-import useStore from "@/store";
+import { defineComponent, reactive } from "vue";
 import Separater from "@/components/common/atom/SeparaterLine.vue";
 
 export interface PostData {
@@ -129,11 +130,6 @@ export default defineComponent({
   },
 
   setup() {
-    //定義
-    const imgRef = ref<HTMLImageElement>();
-
-    console.log(imgRef.value); //undefinedが出る
-
     const postData = reactive<PostData>({
       post_contents: "",
       main_image: "",
@@ -142,20 +138,18 @@ export default defineComponent({
       sub_image_3: "",
     });
 
+    // イベントハンドルする関数なので、イベントの変更を検知できる
+    // このイベントにてファイル情報を取得している
     const previewImage = (e: Event) => {
       e.preventDefault();
       if (e.target instanceof HTMLInputElement && e.target.files) {
         if (!postData.main_image) {
-          console.log("main_imageの中");
           postData.main_image = URL.createObjectURL(e.target.files[0]);
         } else if (!postData.sub_image_1) {
-          console.log("sub_image_1の中");
           postData.sub_image_1 = URL.createObjectURL(e.target.files[0]);
         } else if (!postData.sub_image_2) {
-          console.log("sub_image_2の中");
           postData.sub_image_2 = URL.createObjectURL(e.target.files[0]);
         } else if (!postData.sub_image_3) {
-          console.log("sub_image_3の中");
           postData.sub_image_3 = URL.createObjectURL(e.target.files[0]);
         }
       }
