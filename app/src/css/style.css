@@ -17,6 +17,21 @@ img {
   border-radius: none;
 }
 
+.h-112 {
+  height: 28rem;
+}
+
+.h-128 {
+  height: 32rem;
+}
+
+.h-144 {
+  height: 36rem;
+}
+
+.h-160 {
+  height: 40rem;
+}
 /* 
 .table {
   border-radius: 6px;
