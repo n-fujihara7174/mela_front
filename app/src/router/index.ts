@@ -65,6 +65,11 @@ const routes: Array<RouteRecordRaw> = [
         name: "Detail",
         component: () => import("@/components/template/main/WorkDetail.vue"),
       },
+      {
+        path: "/Profile",
+        name: "Profile",
+        component: () => import("@/components/template/main/UserProfile.vue"),
+      },
     ],
   },
 ];
