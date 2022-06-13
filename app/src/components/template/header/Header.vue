@@ -1,47 +1,42 @@
 <template>
-  <div class="fixed w-full">
-    <nav
-      class="flex items-center justify-between flex-wrap bg-teal-500 p-3 bg-green-600"
+  <div
+    class="fixed w-full flex flex-row items-center p-2 justify-between bg-white shadow-xs bg-indigo-500"
+  >
+    <div class="ml-8 text-lg text-white hidden md:flex">Mela</div>
+    <span
+      class="w-full md:w-1/3 h-10 cursor-pointer border border-gray-300 text-sm rounded-full flex"
     >
-      <div class="flex items-center flex-shrink-0 text-white mr-6">
-        <span class="font-semibold text-xl tracking-tight">Mela</span>
-      </div>
-      <div class="block lg:hidden">
-        <button
-          class="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white"
+      <input
+        type="search"
+        name="serch"
+        placeholder="Search"
+        class="flex-grow px-4 rounded-l-full rounded-r-full text-sm focus:outline-none"
+      />
+    </span>
+    <div class="flex flex-row-reverse text-white mr-4 ml-4 md:hidden">
+      <button>
+        <svg
+          width="20"
+          height="20"
+          fill="currentColor"
+          class="h-8 w-8"
+          viewBox="0 0 1792 1792"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          mela
-        </button>
-      </div>
-      <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-        <div class="text-sm lg:flex-grow">
-          <a
-            href="#responsive-header"
-            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-          >
-            Docs
-          </a>
-          <a
-            href="#responsive-header"
-            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-          >
-            Examples
-          </a>
-          <a
-            href="#responsive-header"
-            class="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
-          >
-            Blog
-          </a>
-        </div>
-        <div>
-          <a
-            href="#"
-            class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-            >新規登録</a
-          >
-        </div>
-      </div>
-    </nav>
+          <path
+            d="M1664 1344v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45zm0-512v128q0 26-19 45t-45 19h-1408q-26 0-45-19t-19-45v-128q0-26 19-45t45-19h1408q26 0 45 19t19 45z"
+          ></path>
+        </svg>
+      </button>
+    </div>
+    <div class="flex-shrink-0">
+      <a href="#" class="block relative">
+        <img
+          alt="profil"
+          src="@/assets/459412C0-F0CA-4B3C-AEC7-292375082F5E.jpeg"
+          class="mx-auto object-cover rounded-full h-16 w-16"
+        />
+      </a>
+    </div>
   </div>
 </template>
