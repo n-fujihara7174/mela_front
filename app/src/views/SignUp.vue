@@ -44,7 +44,7 @@
           </div>
           <div class="flex justify-center">
             <div
-              class="rounded-l-lg relative z-0 w-full mb-6 group px-3 border border-gray-300"
+              class="rounded-l-lg relative z-0 w-full mb-10 group px-3 border border-gray-300"
             >
               <input
                 :type="refState.isPasswordMasking ? 'password' : 'text'"
@@ -60,7 +60,7 @@
               >
             </div>
             <div
-              class="flex content-center border-t border-r border-b border-gray-300 rounded-r-lg px-3 mb-6"
+              class="flex content-center border-t border-r border-b border-gray-300 rounded-r-lg px-3 mb-10"
             >
               <button type="button" @click="inversionPasswordMasking">
                 <img
@@ -76,16 +76,6 @@
                   class="w-8"
                 />
               </button>
-            </div>
-          </div>
-          <div class="flex items-center mb-6 -mt-4">
-            <div class="flex ml-auto">
-              <a
-                href="#"
-                class="inline-flex text-xs font-thin text-gray-500 sm:text-sm dark:text-gray-100 hover:text-gray-700 dark:hover:text-white"
-              >
-                パスワードを忘れた場合
-              </a>
             </div>
           </div>
           <div class="flex w-full">
@@ -104,7 +94,7 @@
           target="_blank"
           class="inline-flex items-center text-xs font-thin text-center text-gray-500 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
         >
-          <span class="ml-2"> アカウントをお持ちでない場合</span>
+          <span class="ml-2"> アカウントをお持ちの場合</span>
         </a>
       </div>
     </div>
