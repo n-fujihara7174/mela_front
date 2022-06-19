@@ -1,6 +1,5 @@
 <template>
-  <div class="root-div font-body">
+  <div>
     <router-view />
   </div>
 </template>
-

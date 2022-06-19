@@ -6,7 +6,24 @@ module.exports = {
     "./node_modules/flowbite/**/*.js",
   ],
   theme: {
-    extend: {},
+    screens: {},
+    fontFamily: {
+      sans: ["Graphik", "sans-serif"],
+      serif: ["Merriweather", "serif"],
+    },
+    extend: {
+      spacing: {
+        "128": "32rem",
+        "144": "36rem",
+      },
+      borderRadius: {
+        "4xl": "2rem",
+      },
+      colors: {
+        "darkseagreen": "#8fbc8f",
+        "mediumseagreen": "#3cb371",
+      },
+    },
   },
   plugins: [require("flowbite/plugin")],
 };

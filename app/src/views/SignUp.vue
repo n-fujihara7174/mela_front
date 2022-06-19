@@ -1,88 +1,104 @@
 <template>
-  <div
-    class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
-  >
-    <div class="max-w-md w-full space-y-8">
-      <div>
-        <img class="mx-auto h-12 w-auto" src="" alt="Workflow" />
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Sign in to your account
-        </h2>
-        <p class="mt-2 text-center text-sm text-gray-600">
-          Or
-          <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">
-            start your 14-day free trial
-          </a>
-        </p>
+  <main class="mx-auto flex h-screen w-full items-center justify-center">
+    <div
+      class="flex flex-col w-full max-w-md px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10"
+    >
+      <div
+        class="self-center mb-6 text-xl font-light text-gray-600 sm:text-2xl dark:text-white"
+      >
+        新規登録
       </div>
-      <form class="mt-8 space-y-6" action="#" method="POST">
-        <input type="hidden" name="remember" value="true" />
-        <div class="rounded-md shadow-sm -space-y-px">
-          <div class="relative z-0 w-full mb-6 group">
+      <div class="mt-8">
+        <form action="#" autoComplete="off">
+          <div
+            class="rounded-lg relative z-0 w-full mb-10 group px-3 border border-gray-300"
+          >
+            <input
+              type="text"
+              name="floating_user_name"
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              placeholder=" "
+            />
+            <label
+              for="floating_user_name"
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-100 top-3 -z-10 origin-[0] peer-focus:left-3 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-100 peer-focus:-translate-y-8"
+            >
+              ユーザー名</label
+            >
+          </div>
+          <div
+            class="rounded-lg relative z-0 w-full mb-10 group px-3 border border-gray-300"
+          >
             <input
               type="email"
               name="floating_email"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
-              required
             />
             <label
               for="floating_email"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-              >Email address</label
+              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-100 top-3 -z-10 origin-[0] peer-focus:left-3 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-100 peer-focus:-translate-y-8"
+            >
+              Eメール</label
             >
           </div>
-          <div>
-            <label for="password" class="sr-only">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autocomplete="current-password"
-              required
-              class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-              placeholder="Password"
-            />
-          </div>
-        </div>
-
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <input
-              id="remember-me"
-              name="remember-me"
-              type="checkbox"
-              class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-            />
-            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-              Remember me
-            </label>
-          </div>
-
-          <div class="text-sm">
-            <a
-              href="#"
-              class="font-medium text-indigo-600 hover:text-indigo-500"
+          <div class="flex justify-center">
+            <div
+              class="rounded-l-lg relative z-0 w-full mb-10 group px-3 border border-gray-300"
             >
-              Forgot your password?
-            </a>
+              <input
+                :type="refState.isPasswordMasking ? 'password' : 'text'"
+                name="floating_password"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=" "
+              />
+              <label
+                for="floating_password"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-100 top-3 -z-10 origin-[0] peer-focus:left-3 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-100 peer-focus:-translate-y-8"
+              >
+                パスワード</label
+              >
+            </div>
+            <div
+              class="flex content-center border-t border-r border-b border-gray-300 rounded-r-lg px-3 mb-10"
+            >
+              <button type="button" @click="inversionPasswordMasking">
+                <img
+                  v-if="refState.isPasswordMasking"
+                  src="@/assets/eye_off.svg"
+                  alt=""
+                  class="w-8"
+                />
+                <img
+                  v-if="!refState.isPasswordMasking"
+                  src="@/assets/eye.svg"
+                  alt=""
+                  class="w-8"
+                />
+              </button>
+            </div>
           </div>
-        </div>
-
-        <div>
-          <button
-            type="submit"
-            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-              <!-- Heroicon name: solid/lock-closed -->
-            </span>
-            Sign in
-          </button>
-        </div>
-      </form>
+          <div class="flex w-full">
+            <button
+              type="submit"
+              class="py-2 px-4 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+            >
+              新規登録
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="flex items-center justify-center mt-6">
+        <a
+          href="#"
+          target="_blank"
+          class="inline-flex items-center text-xs font-thin text-center text-gray-500 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
+        >
+          <span class="ml-2"> アカウントをお持ちの場合</span>
+        </a>
+      </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script lang="ts">
@@ -101,6 +117,7 @@ interface SignUpInfo {
 interface State {
   loginInfo: SignUpInfo;
   errorMessage: SignUpInfo;
+  isPasswordMasking: boolean;
 }
 
 export default defineComponent({
@@ -126,6 +143,7 @@ export default defineComponent({
     const refState = reactive<State>({
       loginInfo: signUpInfoInit,
       errorMessage: errorMessageInit,
+      isPasswordMasking: true,
     });
 
     const handleSignUp = async () => {
@@ -165,6 +183,10 @@ export default defineComponent({
         });
     };
 
+    const inversionPasswordMasking = () => {
+      refState.isPasswordMasking = !refState.isPasswordMasking;
+    };
+
     const transitionSignIn = () => {
       router.push({
         name: "SignIn",
@@ -175,47 +197,8 @@ export default defineComponent({
       refState,
       handleSignUp,
       transitionSignIn,
+      inversionPasswordMasking,
     };
   },
 });
 </script>
-
-<style scoped>
-.signin-page {
-  width: 100vw;
-  height: 100vh;
-}
-
-.signin-form {
-  background-color: white;
-  border-radius: 6px;
-}
-
-.w-100 {
-  width: 100%;
-}
-
-.w-472px {
-  width: 472px;
-}
-
-.h-320px {
-  height: 320px;
-}
-
-.mt-30px {
-  margin-top: 30px;
-}
-
-.mt-60px {
-  margin-top: 60px;
-}
-
-.mt-30 {
-  margin-top: 20vh;
-}
-
-.p-20px {
-  padding: 20px;
-}
-</style>
