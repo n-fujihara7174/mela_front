@@ -10,75 +10,94 @@
       </div>
       <div class="mt-8">
         <form action="#" autoComplete="off">
-          <div
-            class="rounded-lg relative z-0 w-full mb-10 group px-3 border border-gray-300"
-          >
-            <input
-              type="text"
-              name="floating_user_name"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              v-model="refState.loginInfo.name"
-            />
-            <label
-              for="floating_user_name"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-100 top-3 -z-10 origin-[0] peer-focus:left-3 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-100 peer-focus:-translate-y-8"
-            >
-              ユーザー名</label
-            >
-          </div>
-          <div
-            class="rounded-lg relative z-0 w-full mb-10 group px-3 border border-gray-300"
-          >
-            <input
-              type="email"
-              name="floating_email"
-              class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder=" "
-              v-model="refState.loginInfo.email"
-            />
-            <label
-              for="floating_email"
-              class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-100 top-3 -z-10 origin-[0] peer-focus:left-3 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-100 peer-focus:-translate-y-8"
-            >
-              Eメール</label
-            >
-          </div>
-          <div class="flex justify-center">
+          <div class="mb-10">
             <div
-              class="rounded-l-lg relative z-0 w-full mb-10 group px-3 border border-gray-300"
+              class="rounded-lg relative z-0 w-full group px-3 border"
+              :class="setInvalidClass(refState.errorMessage.name)"
             >
               <input
-                :type="refState.isPasswordMasking ? 'password' : 'text'"
-                name="floating_password"
+                type="text"
+                name="floating_user_name"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
-                v-model="refState.loginInfo.password"
+                v-model="refState.loginInfo.name"
               />
               <label
-                for="floating_password"
+                for="floating_user_name"
                 class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-100 top-3 -z-10 origin-[0] peer-focus:left-3 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-100 peer-focus:-translate-y-8"
               >
-                パスワード</label
+                ユーザー名</label
               >
             </div>
+            <div class="text-xs text-red-600">
+              {{ refState.errorMessage.name }}
+            </div>
+          </div>
+          <div class="mb-10">
             <div
-              class="flex content-center border-t border-r border-b border-gray-300 rounded-r-lg px-3 mb-10"
+              class="rounded-lg relative z-0 w-full group px-3 border border-gray-300"
+              :class="setInvalidClass(refState.errorMessage.email)"
             >
-              <button type="button" @click="inversionPasswordMasking">
-                <img
-                  v-if="refState.isPasswordMasking"
-                  src="@/assets/eye_off.svg"
-                  alt=""
-                  class="w-8"
+              <input
+                type="email"
+                name="floating_email"
+                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                placeholder=" "
+                v-model="refState.loginInfo.email"
+              />
+              <label
+                for="floating_email"
+                class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-100 top-3 -z-10 origin-[0] peer-focus:left-3 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-100 peer-focus:-translate-y-8"
+              >
+                Eメール</label
+              >
+            </div>
+            <div class="text-xs text-red-600">
+              {{ refState.errorMessage.email }}
+            </div>
+          </div>
+          <div class="mb-10">
+            <div class="flex justify-center">
+              <div
+                class="rounded-l-lg relative z-0 w-full group px-3 border border-gray-300"
+                :class="setInvalidClass(refState.errorMessage.password)"
+              >
+                <input
+                  :type="refState.isPasswordMasking ? 'password' : 'text'"
+                  name="floating_password"
+                  class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                  placeholder=" "
+                  v-model="refState.loginInfo.password"
                 />
-                <img
-                  v-if="!refState.isPasswordMasking"
-                  src="@/assets/eye.svg"
-                  alt=""
-                  class="w-8"
-                />
-              </button>
+                <label
+                  for="floating_password"
+                  class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-8 scale-100 top-3 -z-10 origin-[0] peer-focus:left-3 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-100 peer-focus:-translate-y-8"
+                >
+                  パスワード</label
+                >
+              </div>
+              <div
+                class="flex content-center border-t border-r border-b rounded-r-lg px-3"
+                :class="setInvalidClass(refState.errorMessage.password)"
+              >
+                <button type="button" @click="inversionPasswordMasking">
+                  <img
+                    v-if="refState.isPasswordMasking"
+                    src="@/assets/eye_off.svg"
+                    alt=""
+                    class="w-8"
+                  />
+                  <img
+                    v-if="!refState.isPasswordMasking"
+                    src="@/assets/eye.svg"
+                    alt=""
+                    class="w-8"
+                  />
+                </button>
+              </div>
+            </div>
+            <div class="text-xs text-red-600">
+              {{ refState.errorMessage.email }}
             </div>
           </div>
           <div class="flex w-full">
@@ -113,13 +132,20 @@ import { screenTransition } from "@/composables/ScreenTransition";
 
 export default defineComponent({
   setup() {
-    const { refState, handleSignUp, inversionPasswordMasking } = useSignUp();
+    const {
+      refState,
+      handleSignUp,
+      inversionPasswordMasking,
+      setInvalidClass,
+    } = useSignUp();
+
     const { toSignIn } = screenTransition();
 
     return {
       refState,
       handleSignUp,
       inversionPasswordMasking,
+      setInvalidClass,
       toSignIn,
     };
   },

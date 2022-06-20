@@ -41,6 +41,8 @@ export const useSignUp = () => {
   });
 
   const handleSignUp = async () => {
+    refState.loginInfo.password_confirmation = refState.loginInfo.password;
+
     await sign_up(
       refState.loginInfo.name,
       refState.loginInfo.password,
@@ -49,13 +51,15 @@ export const useSignUp = () => {
     )
       .then((res) => {
         if (res?.status === 200) {
-          console.log("");
+          console.log("成功");
           //ここに遷移処理を記載
         } else {
           console.log("失敗");
         }
       })
       .catch((error) => {
+        console.log(".catch(error)");
+        console.log(error);
         const errorList = Object.keys(error.response?.data?.errors);
         if (errorList.indexOf("name") !== -1) {
           refState.errorMessage.name = error.response?.data.errors.name[0];
@@ -67,10 +71,7 @@ export const useSignUp = () => {
           refState.errorMessage.password =
             error.response?.data.errors.password[0];
         }
-        if (errorList.indexOf("password_confirmation") !== -1) {
-          refState.errorMessage.password_confirmation =
-            error.response?.data.errors.password_confirmation[0];
-        }
+        console.log(".catchの一番下");
       });
   };
 
@@ -78,9 +79,18 @@ export const useSignUp = () => {
     refState.isPasswordMasking = !refState.isPasswordMasking;
   };
 
+  const setInvalidClass = (errorMessage: string) => {
+    if (errorMessage === "") {
+      return "border-gray-300";
+    } else {
+      return "border-red-600";
+    }
+  };
+
   return {
     refState,
     handleSignUp,
     inversionPasswordMasking,
+    setInvalidClass,
   };
 };
