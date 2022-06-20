@@ -18,6 +18,7 @@
               name="floating_user_name"
               class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
+              v-model="refState.loginInfo.name"
             />
             <label
               for="floating_user_name"
@@ -34,6 +35,7 @@
               name="floating_email"
               class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
               placeholder=" "
+              v-model="refState.loginInfo.email"
             />
             <label
               for="floating_email"
@@ -51,6 +53,7 @@
                 name="floating_password"
                 class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
+                v-model="refState.loginInfo.password"
               />
               <label
                 for="floating_password"
@@ -82,6 +85,7 @@
             <button
               type="submit"
               class="py-2 px-4 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+              @click="handleSignUp"
             >
               新規登録
             </button>
@@ -93,6 +97,7 @@
           href="#"
           target="_blank"
           class="inline-flex items-center text-xs font-thin text-center text-gray-500 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
+          @click="toSignIn"
         >
           <span class="ml-2"> アカウントをお持ちの場合</span>
         </a>
@@ -102,102 +107,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
-import { useRouter } from "vue-router";
-import { sign_up } from "@/api/Auth";
-
-interface SignUpInfo {
-  name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-  confirm_success_url: string;
-}
-
-interface State {
-  loginInfo: SignUpInfo;
-  errorMessage: SignUpInfo;
-  isPasswordMasking: boolean;
-}
+import { defineComponent } from "vue";
+import { useSignUp } from "@/composables/signUp/SignUp";
+import { screenTransition } from "@/composables/ScreenTransition";
 
 export default defineComponent({
   setup() {
-    const router = useRouter();
-
-    const signUpInfoInit: SignUpInfo = {
-      name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
-      confirm_success_url: "",
-    };
-
-    const errorMessageInit: SignUpInfo = {
-      name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
-      confirm_success_url: "",
-    };
-
-    const refState = reactive<State>({
-      loginInfo: signUpInfoInit,
-      errorMessage: errorMessageInit,
-      isPasswordMasking: true,
-    });
-
-    const handleSignUp = async () => {
-      console.log(refState.loginInfo);
-      await sign_up(
-        refState.loginInfo.name,
-        refState.loginInfo.password,
-        refState.loginInfo.password_confirmation,
-        refState.loginInfo.email
-      )
-        .then((res) => {
-          if (res?.status === 200) {
-            //トップ画面に遷移
-            router.push({
-              name: "List",
-            });
-          } else {
-            console.log("失敗");
-          }
-        })
-        .catch((error) => {
-          const errorList = Object.keys(error.response?.data?.errors);
-          if (errorList.indexOf("name") !== -1) {
-            refState.errorMessage.name = error.response?.data.errors.name[0];
-          }
-          if (errorList.indexOf("email") !== -1) {
-            refState.errorMessage.email = error.response?.data.errors.email[0];
-          }
-          if (errorList.indexOf("password") !== -1) {
-            refState.errorMessage.password =
-              error.response?.data.errors.password[0];
-          }
-          if (errorList.indexOf("password_confirmation") !== -1) {
-            refState.errorMessage.password_confirmation =
-              error.response?.data.errors.password_confirmation[0];
-          }
-        });
-    };
-
-    const inversionPasswordMasking = () => {
-      refState.isPasswordMasking = !refState.isPasswordMasking;
-    };
-
-    const transitionSignIn = () => {
-      router.push({
-        name: "SignIn",
-      });
-    };
+    const { refState, handleSignUp, inversionPasswordMasking } = useSignUp();
+    const { toSignIn } = screenTransition();
 
     return {
       refState,
       handleSignUp,
-      transitionSignIn,
       inversionPasswordMasking,
+      toSignIn,
     };
   },
 });

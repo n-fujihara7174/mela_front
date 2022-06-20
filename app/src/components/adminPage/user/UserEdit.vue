@@ -123,7 +123,7 @@ import {
   checkDateFormat,
   checkDateValue,
   determineAssignValue,
-} from "@/composables/validationCheck";
+} from "@/composables/ValidationCheck";
 import InputField from "@/components/common/molecules/InputField.vue";
 
 /* ***********************************************************************************

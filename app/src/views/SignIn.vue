@@ -25,6 +25,7 @@
                   name="floating_email"
                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
                   placeholder=" "
+                  v-model="refState.loginInfo.email"
                 />
                 <label
                   for="floating_email"
@@ -51,6 +52,7 @@
                     name="floating_password"
                     class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-none appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 sfocus:outline-none focus:ring-0 focus:border-blue-600 peer"
                     placeholder=" "
+                    v-model="refState.loginInfo.password"
                   />
                   <label
                     for="floating_password"
@@ -94,6 +96,7 @@
             <button
               type="submit"
               class="py-2 px-4 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
+              @click="handleSignIn"
             >
               ログイン
             </button>
@@ -116,7 +119,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { sign_in } from "@/api/Auth";
+import { sign_in } from "@/composables/api/Auth";
 
 interface LoginInfo {
   email: string;

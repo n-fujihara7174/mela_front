@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import Client from "@/api/Client";
+import Client from "@/composables/api/Client";
 import { User } from "@/types/User";
 import { AuthHeaders } from "@/types/Auth";
 import {
@@ -9,9 +9,9 @@ import {
   setAuthDataFromResponse,
 } from "@/utils/AuthToken";
 import config from "@/const";
-
 import { AxiosResponse, AxiosError } from "axios";
 
+//サインイン
 export const sign_in = async (email: string, password: string) => {
   return await Client.post<User>("/auth/sign_in", { email, password })
     .then((res: AxiosResponse<User>) => {
@@ -35,6 +35,7 @@ export const sign_in = async (email: string, password: string) => {
     });
 };
 
+//サインアウト
 export const sign_out = async () => {
   return await Client.delete("/auth/sign_out", {
     headers: getAuthTokenFromStorage(),
@@ -43,6 +44,7 @@ export const sign_out = async () => {
   });
 };
 
+//新規登録
 export const sign_up = async (
   name: string,
   password: string,

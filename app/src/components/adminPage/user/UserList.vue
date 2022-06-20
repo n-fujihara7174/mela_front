@@ -52,8 +52,7 @@
             <td class="px-3 align-middle">{{ user.user_name }}</td>
             <td class="px-3 align-middle">{{ user.user_id }}</td>
             <td class="px-3 align-middle">{{ user.email }}</td>
-            <td class="px-3 align-middle">{{ user.phone_number }}</td>
-            <td class="px-3 align-middle">{{ is_delete(user.is_delete) }}</td>
+            <!-- <td class="px-3 align-middle">{{ is_delete(user.is_delete) }}</td> -->
             <td class="px=3 align-middle text-center">
               <button
                 type="button"
@@ -80,7 +79,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import { User } from "@/types/User";
-import { judgeDelete } from "@/composables/judgValue";
+//import { judgeDelete } from "@/composables/JudgValue";
 import { useRouter } from "vue-router";
 
 /* ******************************************************************************************
@@ -105,7 +104,7 @@ export default defineComponent({
     モジュール全体で使用する変数の定義
     ****************************************************************************************** */
     const router = useRouter();
-    const is_delete = judgeDelete;
+    //const is_delete = judgeDelete;
 
     //検索値格納用の変数を初期化
     const searchValueInit: SearchValue = {
@@ -158,7 +157,7 @@ export default defineComponent({
 
     return {
       refState,
-      is_delete,
+      //is_delete,
       setUsers,
       transitionUserEdit,
     };
