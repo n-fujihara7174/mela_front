@@ -1,8 +1,12 @@
+<!-- アカウント新規登録画面 -->
+
 <template>
   <main class="mx-auto flex h-screen w-full items-center justify-center">
+    <!-- 新規登録フォーム -->
     <div
       class="flex flex-col w-full max-w-md px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10"
     >
+      <!-- 新規登録タイトル -->
       <div
         class="self-center mb-6 text-xl font-light text-gray-600 sm:text-2xl dark:text-white"
       >
@@ -102,7 +106,7 @@
           </div>
           <div class="flex w-full">
             <button
-              type="submit"
+              type="button"
               class="py-2 px-4 bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg"
               @click="handleSignUp"
             >
@@ -114,7 +118,6 @@
       <div class="flex items-center justify-center mt-6">
         <a
           href="#"
-          target="_blank"
           class="inline-flex items-center text-xs font-thin text-center text-gray-500 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
           @click="toSignIn"
         >
@@ -127,26 +130,22 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useSignUp } from "@/composables/signUp/SignUp";
-import { screenTransition } from "@/composables/ScreenTransition";
+import { useSignUp } from "@/composables/SignUp";
+import { screenTransition } from "@/composables/common/ScreenTransition";
+import { classAssignment } from "@/composables/common/ClassAssignment";
 
 export default defineComponent({
   setup() {
-    const {
-      refState,
-      handleSignUp,
-      inversionPasswordMasking,
-      setInvalidClass,
-    } = useSignUp();
-
+    const { refState, handleSignUp, inversionPasswordMasking } = useSignUp();
     const { toSignIn } = screenTransition();
+    const { setInvalidClass } = classAssignment();
 
     return {
       refState,
       handleSignUp,
       inversionPasswordMasking,
-      setInvalidClass,
       toSignIn,
+      setInvalidClass,
     };
   },
 });

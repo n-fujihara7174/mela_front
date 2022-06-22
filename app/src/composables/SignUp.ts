@@ -43,6 +43,8 @@ export const useSignUp = () => {
   const handleSignUp = async () => {
     refState.loginInfo.password_confirmation = refState.loginInfo.password;
 
+    console.log("handleSignUpを通った");
+
     await sign_up(
       refState.loginInfo.name,
       refState.loginInfo.password,
@@ -79,18 +81,9 @@ export const useSignUp = () => {
     refState.isPasswordMasking = !refState.isPasswordMasking;
   };
 
-  const setInvalidClass = (errorMessage: string) => {
-    if (errorMessage === "") {
-      return "border-gray-300";
-    } else {
-      return "border-red-600";
-    }
-  };
-
   return {
     refState,
     handleSignUp,
     inversionPasswordMasking,
-    setInvalidClass,
   };
 };

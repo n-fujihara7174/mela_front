@@ -4,22 +4,31 @@ import { useRouter } from "vue-router";
 
 export const screenTransition = () => {
   //新規登録画面
+
+  const router = useRouter();
+
   const toSignUp = (): void => {
-    useRouter().push({
+    router.push({
       name: "SignUp",
     });
   };
 
   const toSignIn = (): void => {
-    useRouter().push({
+    router.push({
       name: "SignIn",
     });
   };
 
   //
   const toList = (): void => {
-    useRouter().push({
+    router.push({
       name: "List",
+    });
+  };
+
+  const toDetail = (): void => {
+    router.push({
+      name: "Detail",
     });
   };
 
@@ -27,5 +36,6 @@ export const screenTransition = () => {
     toSignIn,
     toSignUp,
     toList,
+    toDetail,
   };
 };
