@@ -101,7 +101,7 @@ import {
   lengthCheck,
   requireCheck,
   determineAssignValue,
-} from "@/composables/validationCheck";
+} from "@/composables/common/ValidationCheck";
 import InputField from "@/components/common/molecules/InputField.vue";
 
 /* ***********************************************************************************

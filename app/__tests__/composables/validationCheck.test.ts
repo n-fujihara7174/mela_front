@@ -3,7 +3,7 @@ import {
   requireCheck,
   checkDateFormat,
   checkDateValue,
-} from "../../src/composables/validationCheck";
+} from "../../src/composables/ValidationCheck";
 
 describe("validationCheck.tsのテスト", () => {
   test("lengthCheckメソッド（境界値 - 1）", () => {
