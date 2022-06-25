@@ -1,5 +1,16 @@
 <template>
-  <div class="rounded-lg bg-white shadow-lg p-16">
+  <div
+    class="rounded-lg bg-white shadow-lg p-16 animate-slide-in-top"
+    :class="refState.slideIn ? 'animate-slide-in-top' : 'animate-slide-up-top'"
+  >
+    <div class="">
+      <button
+        class="fixed rop-2 right-2 w-6 h-6 bg-red-600 rounded-full"
+        @click="closeModal"
+      >
+        <img src="@/assets/cancel.svg" alt="" />
+      </button>
+    </div>
     <div class="flex justify-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, PropType, watch } from "vue";
 
 export interface PostData {
   post_contents: string;
@@ -54,15 +65,34 @@ export interface PostData {
   sub_image_3: string;
 }
 
+export interface State {
+  postData: PostData;
+  slideIn: boolean;
+}
+
 export default defineComponent({
-  setup() {
-    const postData = reactive<PostData>({
+  props: {
+    isShowModal: {
+      type: Boolean as PropType<boolean>,
+    },
+  },
+  setup(props, { emit }) {
+    const postData: PostData = {
       post_contents: "",
       main_image: "",
       sub_image_1: "",
       sub_image_2: "",
       sub_image_3: "",
+    };
+
+    const refState = reactive<State>({
+      postData: postData,
+      slideIn: false,
     });
+
+    console.log("refState.slide : " + refState.slideIn);
+
+    //const setInOutAnimation = () => {};
 
     // イベントハンドルする関数なので、イベントの変更を検知できる
     // このイベントにてファイル情報を取得している
@@ -80,8 +110,22 @@ export default defineComponent({
         }
       }
     };
+
+    const closeModal = () => {
+      refState.slideIn = false;
+      emit("update:isShowModal", refState.slideIn);
+    };
+
+    watch(
+      () => props.isShowModal,
+      () => {
+        refState.slideIn = props.isShowModal || false;
+      }
+    );
+
     return {
-      postData,
+      refState,
+      closeModal,
       previewImage,
     };
   },
