@@ -193,7 +193,11 @@
     </div>
 
     <!-- 投稿ボタン -->
-    <div></div>
+    <div class="fixed bottom-4 right-4">
+      <button class="rounded-full bg-pink-600 w-20 h-20">
+        <img src="@/assets/plus.svg" alt="" />
+      </button>
+    </div>
     <!-- 投稿モーダル -->
     <div>
       <workPost></workPost>

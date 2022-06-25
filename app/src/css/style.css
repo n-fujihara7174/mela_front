@@ -1,9 +1,8 @@
-body {
-  background-color: #f4f5f7;
-  font-family: "明朝体", "ヒラギノ明朝";
-  color: #636363;
-}
-
 textarea {
   resize: none;
+  border: none;
+}
+
+input {
+  border: none;
 }

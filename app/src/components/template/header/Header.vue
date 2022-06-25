@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full flex flex-row items-center p-2 justify-between bg-white shadow-xs bg-indigo-500"
+    class="fixed w-full flex flex-row items-center p-2 justify-between bg-white shadow-xs bg-darkseagreen"
   >
     <div class="ml-8 text-lg text-white hidden md:flex">Tail-kit</div>
     <span
