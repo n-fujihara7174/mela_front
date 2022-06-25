@@ -1,120 +1,50 @@
 <template>
-  <div class="grid grid-cols-12">
-    <div class="col-start-4 col-span-6 mt-12">
-      <p class="text-center text-2xl">投稿画面</p>
-      <separater></separater>
-    </div>
-
-    <!-- 画像選択 -->
-    <div class="col-start-4 col-span-6 mt-12">
-      <p class="text-center text-2xl">画像選択</p>
-      <div class="flex justify-center">
-        <div
-          class="w-72 h-72 border-t-2 border-l-2 border-b border-r border-solid border-green-500 rounded-tl-lg bg-white"
-        >
-          <img
-            v-if="Boolean(postData.main_image)"
-            :src="postData.main_image"
-            class="w-full h-full border-none rounded-r-none rounded-b-none rounded-tl-lg"
-          />
-          <label v-else for="">メイン画像</label>
-        </div>
-        <div
-          class="w-72 h-72 border-t-2 border-l border-b border-r-2 border-solid border-green-500 rounded-tr-lg bg-white"
-        >
-          <img
-            v-if="Boolean(postData.sub_image_1)"
-            :src="postData.sub_image_1"
-            class="w-full h-full border-none rounded-l-none rounded-b-none rounded-tr-lg"
-          />
-          <label v-else for="">サブ画像1</label>
-        </div>
-      </div>
-      <div class="flex justify-center">
-        <div
-          class="w-72 h-72 border-t border-l-2 border-b-2 border-r border-solid border-green-500 rounded-bl-lg bg-white"
-        >
-          <img
-            v-if="Boolean(postData.sub_image_2)"
-            :src="postData.sub_image_2"
-            class="w-full h-full border-none rounded-r-none rounded-t-none rounded-bl-lg"
-          />
-          <label v-else for="">サブ画像2</label>
-        </div>
-        <div
-          class="w-72 h-72 border-t border-l border-b-2 border-r-2 border-solid border-green-500 rounded-br-lg bg-white"
-        >
-          <img
-            v-if="Boolean(postData.sub_image_3)"
-            :src="postData.sub_image_3"
-            class="w-full h-full border-none rounded-l-none rounded-t-none rounded-br-lg"
-          />
-          <label v-else for="">サブ画像3</label>
-        </div>
-      </div>
-      <div class="flex justify-center mt-3 mb-12">
-        <!-- forでinputを指定することでラベルをクリックすればinputが作動するようになっている -->
-        <label
-          class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-          for="file_select"
-        >
-          画像選択
-        </label>
-        <!-- typeをfileにするとファイル選択ダイアログが出てくる -->
-        <!-- 画像選択時にpreviewImageメソッドを実行 -->
-        <input
-          type="file"
-          id="file_select"
-          class="hidden"
-          name="image"
-          accept="image/png,image/jpeg, image/heic"
-          @change="previewImage"
+  <div class="rounded-lg bg-white shadow-lg p-16">
+    <div class="flex justify-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-10 w-10 text-indigo-800"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
         />
+      </svg>
+    </div>
+    <div class="text-center mt-2">
+      <h1 class="text-purple-900 font-bold text-2xl">Modal Card Example</h1>
+      <p class="text-gray-500 mt-3">
+        You could also insert centered tabs to make this modal even more
+        versatile.
+      </p>
+      <div class="mt-6">
+        <ul
+          class="flex justify-center space-x-6 text-indigo-800 border-b border-purple-50"
+        >
+          <li class="border-b-2 pb-3 border-indigo-600">One</li>
+          <li>Two</li>
+          <li>Forty Six</li>
+        </ul>
       </div>
-      <separater></separater>
-
-      <!-- 投稿内容 -->
-      <div class="mt-12 mb-12">
-        <p class="text-center text-2xl">投稿内容</p>
-        <div class="flex justify-center">
-          <div
-            class="border-2 border-green-500 rounded-full bg-white px-14 py-1 h-32"
-          >
-            <textarea
-              name=""
-              id=""
-              cols="60"
-              class="resize-none h-28 outline-none"
-              v-model="postData.post_contents"
-            ></textarea>
-          </div>
-        </div>
-      </div>
-      <separater></separater>
-
-      <div class="flex justify-center">
-        <div class="p-6">
-          <button
-            class="bg-gray-300 hover:bg-gray-500 text-gray-800 font-bold py-2 px-4 rounded-full w-48 h-12"
-          >
-            戻る
-          </button>
-        </div>
-        <div class="p-6">
-          <button
-            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-48 h-12"
-          >
-            投稿
-          </button>
-        </div>
-      </div>
+      <div class="py-8 border-b border-indigo-50">Content</div>
+    </div>
+    <div class="flex justify-center mt-8">
+      <button
+        class="text-white py-2 px-4 rounded-lg bg-purple-700 hover:bg-purple-600 shadow-md font-medium transition-colors"
+      >
+        Save
+      </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
-import Separater from "@/components/common/atom/SeparaterLine.vue";
 
 export interface PostData {
   post_contents: string;
@@ -125,10 +55,6 @@ export interface PostData {
 }
 
 export default defineComponent({
-  components: {
-    Separater: Separater,
-  },
-
   setup() {
     const postData = reactive<PostData>({
       post_contents: "",

@@ -10,6 +10,7 @@
       </div>
       <div class="mt-8">
         <form action="#" autoComplete="off">
+          <!-- ユーザー名入力欄 -->
           <div class="flex flex-col mb-10">
             <div class="flex relative">
               <span
@@ -41,6 +42,8 @@
               {{ refState.errorMessage }}
             </div>
           </div>
+
+          <!-- パスワード入力欄 -->
           <div class="flex flex-col mb-6">
             <div class="flex relative">
               <span

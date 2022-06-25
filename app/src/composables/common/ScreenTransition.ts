@@ -20,9 +20,9 @@ export const screenTransition = () => {
   };
 
   //
-  const toList = (): void => {
+  const toTop = (): void => {
     router.push({
-      name: "List",
+      name: "Top",
     });
   };
 
@@ -35,7 +35,7 @@ export const screenTransition = () => {
   return {
     toSignIn,
     toSignUp,
-    toList,
+    toTop,
     toDetail,
   };
 };
