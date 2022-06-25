@@ -2,6 +2,7 @@
 //アカウント新規作成画面の内部処理
 import { reactive } from "vue";
 import { sign_up } from "@/composables/api/Auth";
+import { screenTransition } from "@/composables/common/ScreenTransition";
 
 interface SignUpInfo {
   name: string;
@@ -40,11 +41,10 @@ export const useSignUp = () => {
     isPasswordMasking: true,
   });
 
+  const { toTop } = screenTransition();
+
   const handleSignUp = async () => {
     refState.loginInfo.password_confirmation = refState.loginInfo.password;
-
-    console.log("handleSignUpを通った");
-
     await sign_up(
       refState.loginInfo.name,
       refState.loginInfo.password,
@@ -53,15 +53,14 @@ export const useSignUp = () => {
     )
       .then((res) => {
         if (res?.status === 200) {
-          console.log("成功");
+          toTop();
+          alert("アカウントを新規登録しました。");
           //ここに遷移処理を記載
         } else {
-          console.log("失敗");
+          alert("アカウント新規登録を失敗しました。");
         }
       })
       .catch((error) => {
-        console.log(".catch(error)");
-        console.log(error);
         const errorList = Object.keys(error.response?.data?.errors);
         if (errorList.indexOf("name") !== -1) {
           refState.errorMessage.name = error.response?.data.errors.name[0];
@@ -73,7 +72,6 @@ export const useSignUp = () => {
           refState.errorMessage.password =
             error.response?.data.errors.password[0];
         }
-        console.log(".catchの一番下");
       });
   };
 

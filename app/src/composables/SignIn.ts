@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { reactive } from "vue";
 import { sign_in } from "@/composables/api/Auth";
+import { screenTransition } from "@/composables/common/ScreenTransition";
 
 interface LoginInfo {
   email: string;
@@ -25,12 +26,14 @@ export const useSignIn = () => {
     isPasswordMasking: true,
   });
 
+  const { toTop } = screenTransition();
+
   const handleSignIn = async () => {
     await sign_in(refState.loginInfo.email, refState.loginInfo.password)
       .then((res) => {
         if (res?.status === 200) {
-          console.log("成功！");
-          console.log(res);
+          toTop();
+          alert("ログインしました。");
         } else {
           refState.errorMessage =
             "メールアドレスかパスワードが間違っています。";

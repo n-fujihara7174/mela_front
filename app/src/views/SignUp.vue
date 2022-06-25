@@ -12,8 +12,11 @@
       >
         新規登録
       </div>
+
+      <!-- 入力欄 -->
       <div class="mt-8">
         <form action="#" autoComplete="off">
+          <!-- ユーザー名入力欄 -->
           <div class="mb-10">
             <div
               class="rounded-lg relative z-0 w-full group px-3 border"
@@ -33,10 +36,13 @@
                 ユーザー名</label
               >
             </div>
+            <!-- エラーメッセージ表示 -->
             <div class="text-xs text-red-600">
               {{ refState.errorMessage.name }}
             </div>
           </div>
+
+          <!-- Eメール入力欄 -->
           <div class="mb-10">
             <div
               class="rounded-lg relative z-0 w-full group px-3 border border-gray-300"
@@ -56,10 +62,13 @@
                 Eメール</label
               >
             </div>
+            <!-- エラーメッセージ表示 -->
             <div class="text-xs text-red-600">
               {{ refState.errorMessage.email }}
             </div>
           </div>
+
+          <!-- パスワード入力欄 -->
           <div class="mb-10">
             <div class="flex justify-center">
               <div
@@ -80,6 +89,7 @@
                   パスワード</label
                 >
               </div>
+              <!-- パスワードマスキングON/OFF -->
               <div
                 class="flex content-center border-t border-r border-b rounded-r-lg px-3"
                 :class="setInvalidClass(refState.errorMessage.password)"
@@ -100,10 +110,13 @@
                 </button>
               </div>
             </div>
+            <!-- エラーメッセージ表示 -->
             <div class="text-xs text-red-600">
-              {{ refState.errorMessage.email }}
+              {{ refState.errorMessage.password }}
             </div>
           </div>
+
+          <!-- 新規登録ボタン -->
           <div class="flex w-full">
             <button
               type="button"
@@ -115,6 +128,8 @@
           </div>
         </form>
       </div>
+
+      <!-- アカウントを持っている人向けリンク -->
       <div class="flex items-center justify-center mt-6">
         <a
           href="#"

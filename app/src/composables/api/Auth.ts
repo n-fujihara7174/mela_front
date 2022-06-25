@@ -7,7 +7,7 @@ import {
   getAuthTokenFromStorage,
   removeAuthDataFromStorage,
   setAuthDataFromResponse,
-} from "@/utils/AuthToken";
+} from "@/composables/common/AuthToken";
 import config from "@/const";
 import { AxiosResponse, AxiosError } from "axios";
 
