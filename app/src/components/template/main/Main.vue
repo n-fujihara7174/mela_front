@@ -1,12 +1,7 @@
 <template>
   <div>
     <!-- 投稿モーダル -->
-    <div
-      v-show="refState.isShowWorkPostModal"
-      class="fixed w-screen h-screen bg-gray-700/50 flex items-center justify-center z-10"
-    >
-      <workPost v-model:isShowModal="refState.isShowWorkPostModal"></workPost>
-    </div>
+    <workPost v-model:isShowModal="refState.isShowWorkPostModal"></workPost>
 
     <!-- メインコンテンツ -->
     <div>
@@ -205,7 +200,7 @@
       <!-- 投稿ボタン -->
       <div class="fixed bottom-4 right-4 z-0">
         <button
-          class="rounded-full bg-pink-600 w-20 h-20"
+          class="rounded-full bg-green-600 w-20 h-20"
           @click="switchShowWorkPostModal"
         >
           <img src="@/assets/plus.svg" alt="" />
@@ -218,8 +213,6 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import WorkPost from "@/components/template/main/WorkPost.vue";
-import { useStore } from "@/store/store";
-import * as MutationName from "@/store/mutationName";
 import { screenTransition } from "@/composables/common/ScreenTransition";
 
 interface State {
@@ -229,8 +222,6 @@ interface State {
 export default defineComponent({
   components: { workPost: WorkPost },
   setup() {
-    const store = useStore();
-
     const { toDetail } = screenTransition();
 
     const refState = reactive<State>({
