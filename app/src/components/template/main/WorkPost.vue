@@ -14,48 +14,63 @@
         leave-active-class="animate-slide-up-top"
       >
         <div
-          class="rounded-lg bg-white shadow-lg p-2 w-50"
+          class="rounded-lg bg-white shadow-lg p-2 w-1/2 h-4/5"
           v-show="refState.isShowModal"
         >
+          <!-- モーダル閉じるボタン -->
           <div class="flex justify-end">
             <button class="w-6 h-6 bg-red-600 rounded-full" @click="closeModal">
               <img src="@/assets/cancel.svg" alt="" />
             </button>
           </div>
+
+          <!-- モーダルタイトル -->
           <div class="flex justify-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-10 w-10 text-indigo-800"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-              />
-            </svg>
+            <h1 class="text-3xl font-bold text-green-600">写真投稿</h1>
           </div>
-          <div class="text-center mt-2">
-            <h1 class="text-purple-900 font-bold text-2xl">
-              Modal Card Example
-            </h1>
-            <p class="text-gray-500 mt-3">
-              You could also insert centered tabs to make this modal even more
-              versatile.
-            </p>
-            <div class="mt-6">
-              <ul
-                class="flex justify-center space-x-6 text-indigo-800 border-b border-purple-50"
-              >
-                <li class="border-b-2 pb-3 border-indigo-600">One</li>
-                <li>Two</li>
-                <li>Forty Six</li>
-              </ul>
+
+          <!-- メイン画像 -->
+          <div class="flex justify-center h-3/5">
+            <div
+              class="flex justify-center items-center w-5/6 h-full"
+              :class="
+                refState.displayImage === ''
+                  ? 'border border-solid border-green-600 rounded-lg'
+                  : ''
+              "
+            >
+              <img
+                :src="refState.displayImage"
+                alt="画像を選択してください"
+                class="object-scale-down"
+              />
             </div>
-            <div class="py-8 border-b border-indigo-50">Content</div>
+          </div>
+
+          <!-- 画像選択 -->
+          <div
+            v-show="refState.postData.imageArray.length === 0"
+            class="text-center mt-2"
+          >
+            <div class="pt-5 flex justify-center">
+              <div class="flex justify-around">
+                <div
+                  v-for="(image, key) in refState.postData.imageArray"
+                  :key="key"
+                  class="w-24 mx-2"
+                >
+                  <img
+                    :src="image"
+                    alt=""
+                    class="h-24 object-cover"
+                    :class="{
+                      'border-solid border-2 border-green-600':
+                        image === refState.displayImage,
+                    }"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
           <div class="flex justify-center mt-8">
             <button
@@ -74,17 +89,19 @@
 import { defineComponent, reactive, PropType, watch } from "vue";
 
 export interface PostData {
-  post_contents: string;
-  main_image: string;
-  sub_image_1: string;
-  sub_image_2: string;
-  sub_image_3: string;
+  postContents: string;
+  imageArray: string[];
+  mainImage: string;
+  subImage_1: string;
+  subImage_2: string;
+  subImage_3: string;
 }
 
 export interface State {
   postData: PostData;
   isShowPostScreen: boolean;
   isShowModal: boolean;
+  displayImage: string;
 }
 
 export default defineComponent({
@@ -95,17 +112,19 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const postData: PostData = {
-      post_contents: "",
-      main_image: "",
-      sub_image_1: "",
-      sub_image_2: "",
-      sub_image_3: "",
+      postContents: "",
+      imageArray: [],
+      mainImage: "",
+      subImage_1: "",
+      subImage_2: "",
+      subImage_3: "",
     };
 
     const refState = reactive<State>({
       postData: postData,
       isShowPostScreen: false,
       isShowModal: false,
+      displayImage: "",
     });
 
     //const setInOutAnimation = () => {};
@@ -115,21 +134,29 @@ export default defineComponent({
     const previewImage = (e: Event) => {
       e.preventDefault();
       if (e.target instanceof HTMLInputElement && e.target.files) {
-        if (!postData.main_image) {
-          postData.main_image = URL.createObjectURL(e.target.files[0]);
-        } else if (!postData.sub_image_1) {
-          postData.sub_image_1 = URL.createObjectURL(e.target.files[0]);
-        } else if (!postData.sub_image_2) {
-          postData.sub_image_2 = URL.createObjectURL(e.target.files[0]);
-        } else if (!postData.sub_image_3) {
-          postData.sub_image_3 = URL.createObjectURL(e.target.files[0]);
-        }
+        postData.imageArray.push(URL.createObjectURL(e.target.files[0]));
       }
     };
+
+    //const imageArray = Object.values(refState.postData.imageArray[0]);
+
+    // const selectImage = (index: number) => {
+    //   refState.displayImage = imageArray[index];
+    // };
 
     const closeModal = () => {
       refState.isShowModal = false;
       emit("update:isShowModal", refState.isShowModal);
+    };
+
+    const setBorder = () => {
+      if (refState.displayImage === "") {
+        console.log("true側");
+        return "border border-solid border-green-600 rounded-lg";
+      } else {
+        console.log("false側");
+        return "";
+      }
     };
 
     watch(
@@ -144,6 +171,8 @@ export default defineComponent({
       refState,
       closeModal,
       previewImage,
+      setBorder,
+      //selectImage,
     };
   },
 });

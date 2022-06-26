@@ -122,11 +122,9 @@ export default defineComponent({
     const imageArray = Object.values(refState.imageList);
     console.log(imageArray);
 
-
     const selectImage = (index: number) => {
       console.log("index:" + index);
       refState.displayImage = imageArray[index];
-
     };
 
     const importImage = (imagePath: string) => {
@@ -138,7 +136,6 @@ export default defineComponent({
       importImage,
 
       selectImage,
-
     };
   },
 });
